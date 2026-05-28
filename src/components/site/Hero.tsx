@@ -1,5 +1,7 @@
 import { CommandBlock } from "./CommandBlock";
 import { ArrowUpRight } from "lucide-react";
+import { LogoMark, Logo } from "./Logo";
+
 
 export function Hero() {
   return (
