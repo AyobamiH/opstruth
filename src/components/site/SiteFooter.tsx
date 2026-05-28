@@ -11,7 +11,7 @@ export function SiteFooter() {
           </span>
         </div>
         <div className="flex items-center gap-6 font-mono text-[12px] text-muted-foreground">
-          <a href="https://github.com" className="hover:text-foreground transition-colors">github</a>
+          <a href="https://github.com/AyobamiH/opstruth" className="hover:text-foreground transition-colors">github</a>
           <a href="#checks" className="hover:text-foreground transition-colors">probes</a>
           <a href="#evidence" className="hover:text-foreground transition-colors">evidence</a>
           <span className="text-status-skip">v0.1 · pre-release</span>
