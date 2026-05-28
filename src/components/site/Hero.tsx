@@ -7,7 +7,9 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-border/60">
       <div className="absolute inset-0 bg-grid bg-grid-fade" aria-hidden />
+      <div className="relative mx-auto max-w-6xl px-6 pt-20 pb-24 md:pt-28 md:pb-32">
         <div className="flex items-center gap-4">
+
           <div className="relative inline-flex h-16 w-16 items-center justify-center rounded-xl border border-border-strong bg-surface-elevated shadow-[0_0_40px_-12px_oklch(0.72_0.11_155/0.35)]">
             <LogoMark size={40} />
           </div>
