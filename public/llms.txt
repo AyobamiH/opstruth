@@ -1,0 +1,13 @@
+# opstruth
+
+> A local, read-only CLI that verifies what is actually true after AI-assisted engineering changes. Evidence-backed findings, honest proof gaps, zero deploys.
+
+opstruth is an operational proof tool for developers who use AI coding assistants. AI tools generate, edit, and refactor code quickly, but developers still need to verify what changed, what is configured, what looks risky, and what was verified. opstruth answers those questions with a single local command — no deploys, no SaaS, no side effects.
+
+## Pages
+
+- [/](/): Landing page with product overview, what opstruth checks, example output, evidence format, scope boundaries, community links, and installation instructions.
+
+## Optional
+
+- [GitHub repository](https://github.com/AyobamiH/opstruth): Source code, issues, and contributions.
