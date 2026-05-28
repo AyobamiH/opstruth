@@ -26,6 +26,26 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:type", content: "website" },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "opstruth",
+          applicationCategory: "DeveloperApplication",
+          operatingSystem: "Windows, macOS, Linux",
+          description:
+            "A local, read-only CLI that verifies what is actually true after AI-assisted changes. Evidence-backed findings, honest proof gaps, zero deploys.",
+          url: "https://opstruth.lovable.app",
+          offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: "USD",
+          },
+        }),
+      },
+    ],
   }),
   component: Index,
 });
