@@ -21,7 +21,7 @@ export function SiteHeader() {
         </nav>
 
         <a
-          href="https://github.com"
+          href="https://github.com/AyobamiH/opstruth"
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 font-mono text-[12px] text-foreground hover:border-border-strong hover:bg-surface-elevated transition-colors"
