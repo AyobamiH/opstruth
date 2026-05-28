@@ -93,6 +93,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", type: "image/png", href: "/logo-mark.png" },
       { rel: "apple-touch-icon", href: "/logo-mark.png" },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              name: "opstruth",
+              url: "https://opstruth.lovable.app",
+              logo: "https://opstruth.lovable.app/logo-mark.png",
+            },
+            {
+              "@type": "WebSite",
+              name: "opstruth",
+              url: "https://opstruth.lovable.app",
+            },
+          ],
+        }),
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
