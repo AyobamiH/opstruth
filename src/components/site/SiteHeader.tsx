@@ -1,15 +1,13 @@
 import { Link } from "@tanstack/react-router";
-import { Github, Terminal } from "lucide-react";
+import { Github } from "lucide-react";
+import { Logo } from "./Logo";
 
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md border border-border-strong bg-surface-elevated">
-            <Terminal className="h-3.5 w-3.5 text-status-pass" strokeWidth={2.25} />
-          </div>
-          <span className="font-mono text-sm tracking-tight text-foreground">opstruth</span>
+          <Logo size={26} />
           <span className="hidden md:inline font-mono text-[11px] text-muted-foreground">
             v0.1 · read-only
           </span>

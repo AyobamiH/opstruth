@@ -1,15 +1,28 @@
 import { CommandBlock } from "./CommandBlock";
 import { ArrowUpRight } from "lucide-react";
+import { LogoMark, Logo } from "./Logo";
+
 
 export function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-border/60">
       <div className="absolute inset-0 bg-grid bg-grid-fade" aria-hidden />
       <div className="relative mx-auto max-w-6xl px-6 pt-20 pb-24 md:pt-28 md:pb-32">
-        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/80 px-3 py-1 font-mono text-[11px] text-muted-foreground">
-          <span className="h-1.5 w-1.5 rounded-full bg-status-pass" />
-          local · read-only · evidence-first
+        <div className="flex items-center gap-4">
+
+          <div className="relative inline-flex h-16 w-16 items-center justify-center rounded-xl border border-border-strong bg-surface-elevated shadow-[0_0_40px_-12px_oklch(0.72_0.11_155/0.35)]">
+            <LogoMark size={40} />
+          </div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/80 px-3 py-1 font-mono text-[11px] text-muted-foreground">
+            <span className="h-1.5 w-1.5 rounded-full bg-status-pass" />
+            local · read-only · evidence-first
+          </div>
         </div>
+
+        <div className="mt-6 md:hidden">
+          <Logo size={28} />
+        </div>
+
 
         <h1 className="mt-6 max-w-3xl text-balance text-4xl font-medium tracking-tight text-foreground md:text-6xl md:leading-[1.05]">
           AI coding tools are fast.{" "}
