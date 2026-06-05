@@ -1,6 +1,9 @@
 import { CommandBlock } from "./CommandBlock";
 import { ArrowUpRight } from "lucide-react";
 import { LogoMark, Logo } from "./Logo";
+import videoAsset from "@/assets/opstruth-launch.mp4.asset.json";
+import posterAsset from "@/assets/opstruth-poster.jpg.asset.json";
+
 
 export function Hero() {
   return (
@@ -46,7 +49,24 @@ export function Hero() {
           </a>
         </div>
 
+        <div className="mt-12 overflow-hidden rounded-xl border border-border bg-surface shadow-[0_30px_80px_-30px_oklch(0_0_0/0.6)]">
+          <video
+            className="block aspect-video w-full"
+            src={videoAsset.url}
+            poster={posterAsset.url}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-label="opstruth product demo"
+          >
+            <img src={posterAsset.url} alt="opstruth product demo preview" className="w-full" />
+          </video>
+        </div>
+
         <dl className="mt-16 grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2 md:grid-cols-4">
+
           {[
             { k: "Catalogue probes", v: "30" },
             { k: "Mutating actions", v: "0" },
