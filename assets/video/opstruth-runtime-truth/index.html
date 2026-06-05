@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #111318;
+        color: #eef0f2;
+        font-family: sans-serif;
+        font-feature-settings: "ss01", "cv11";
+      }
+
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 72% 18%, rgba(125, 190, 155, 0.11), transparent 32%),
+          radial-gradient(circle at 18% 88%, rgba(123, 155, 196, 0.12), transparent 32%),
+          linear-gradient(135deg, #111318 0%, #17191f 45%, #101217 100%);
+      }
+
+      .backdrop {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 48px 48px;
+        mask-image: radial-gradient(ellipse 75% 70% at 50% 35%, #000 20%, transparent 85%);
+      }
+
+      .grain {
+        position: absolute;
+        inset: 0;
+        opacity: 0.16;
+        background-image:
+          linear-gradient(0deg, rgba(255, 255, 255, 0.015), rgba(0, 0, 0, 0.015)),
+          repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 7px);
+        pointer-events: none;
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        padding: 88px 116px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 36px;
+      }
+
+      .scene.split {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 64px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        font-family: monospace;
+        font-size: 20px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #9ea5ad;
+      }
+
+      .headline {
+        margin: 0;
+        max-width: 1260px;
+        font-size: 82px;
+        line-height: 0.98;
+        font-weight: 560;
+        letter-spacing: 0;
+      }
+
+      .headline.tight {
+        font-size: 72px;
+      }
+
+      .muted {
+        color: #9ca3ad;
+      }
+
+      .green {
+        color: #80d39c;
+      }
+
+      .amber {
+        color: #e6c76d;
+      }
+
+      .blue {
+        color: #9fb8df;
+      }
+
+      .panel {
+        border: 1px solid rgba(151, 160, 170, 0.22);
+        background: rgba(29, 32, 39, 0.78);
+        box-shadow: 0 34px 96px rgba(0, 0, 0, 0.38);
+        backdrop-filter: blur(18px);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+
+      .terminal {
+        font-family: monospace;
+      }
+
+      .term-header {
+        height: 52px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 22px;
+        border-bottom: 1px solid rgba(151, 160, 170, 0.18);
+        color: #9ca3ad;
+        font-size: 18px;
+      }
+
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #48505a;
+      }
+
+      .term-body {
+        padding: 30px;
+        font-size: 23px;
+        line-height: 1.38;
+        white-space: pre-wrap;
+      }
+
+      .prompt {
+        color: #9fb8df;
+      }
+
+      .report-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-top: 18px;
+      }
+
+      .report-block {
+        border: 1px solid rgba(151, 160, 170, 0.16);
+        background: rgba(17, 19, 24, 0.65);
+        border-radius: 10px;
+        padding: 16px 18px;
+        min-height: 172px;
+      }
+
+      .report-block h3,
+      .evidence-card h3 {
+        margin: 0 0 12px;
+        font-family: monospace;
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .report-block ul,
+      .evidence-card ul {
+        margin: 0;
+        padding-left: 22px;
+        color: #dfe3e7;
+        font-size: 18px;
+        line-height: 1.28;
+      }
+
+      .status-line {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        padding: 13px 18px;
+        border-radius: 999px;
+        border: 1px solid rgba(230, 199, 109, 0.35);
+        background: rgba(230, 199, 109, 0.09);
+        font-family: monospace;
+        font-size: 24px;
+        color: #e6c76d;
+        width: max-content;
+      }
+
+      .status-line.pass {
+        border-color: rgba(128, 211, 156, 0.35);
+        background: rgba(128, 211, 156, 0.09);
+        color: #80d39c;
+      }
+
+      .status-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: currentColor;
+        box-shadow: 0 0 22px currentColor;
+      }
+
+      .assumption-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        max-width: 940px;
+      }
+
+      .assumption {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 25px 30px;
+        border-radius: 12px;
+        border: 1px solid rgba(151, 160, 170, 0.18);
+        background: rgba(31, 34, 40, 0.72);
+        font-size: 38px;
+      }
+
+      .assumption span:last-child {
+        font-family: monospace;
+        font-size: 22px;
+        color: #9ca3ad;
+      }
+
+      .big-proof {
+        font-size: 102px;
+        line-height: 1;
+        font-weight: 640;
+      }
+
+      .probe-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 14px;
+        width: 100%;
+      }
+
+      .probe {
+        min-height: 210px;
+        padding: 22px 18px;
+        border: 1px solid rgba(151, 160, 170, 0.18);
+        background: rgba(25, 28, 35, 0.78);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .probe strong {
+        font-family: monospace;
+        font-size: 24px;
+      }
+
+      .probe small {
+        color: #9ca3ad;
+        font-size: 18px;
+        line-height: 1.35;
+      }
+
+      .probe .state {
+        font-family: monospace;
+        font-size: 17px;
+        color: #80d39c;
+      }
+
+      .evidence-card {
+        padding: 34px;
+      }
+
+      .kv {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 13px 24px;
+        font-family: monospace;
+        font-size: 24px;
+        line-height: 1.35;
+      }
+
+      .kv .key {
+        color: #9ca3ad;
+      }
+
+      .redacted {
+        color: #e6c76d;
+        background: rgba(230, 199, 109, 0.09);
+        border: 1px solid rgba(230, 199, 109, 0.26);
+        border-radius: 8px;
+        padding: 4px 8px;
+      }
+
+      .proof-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+      }
+
+      .proof-card {
+        min-height: 460px;
+        padding: 34px;
+      }
+
+      .proof-card h2 {
+        margin: 0 0 24px;
+        font-family: monospace;
+        font-size: 32px;
+      }
+
+      .proof-card li {
+        margin-bottom: 18px;
+        font-size: 30px;
+        line-height: 1.2;
+      }
+
+      .artifact {
+        padding: 34px 40px;
+        font-family: monospace;
+        font-size: 25px;
+        line-height: 1.42;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        font-family: monospace;
+      }
+
+      .mark {
+        width: 88px;
+        height: 88px;
+        border-radius: 18px;
+        border: 1px solid rgba(151, 160, 170, 0.35);
+        background: rgba(33, 36, 43, 0.9);
+        display: grid;
+        place-items: center;
+        box-shadow: 0 0 70px rgba(128, 211, 156, 0.16);
+      }
+
+      .mark svg {
+        width: 66px;
+        height: 66px;
+      }
+
+      .wordmark {
+        font-size: 80px;
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      .footer-url {
+        font-family: monospace;
+        font-size: 30px;
+        color: #9ca3ad;
+      }
+
+      .caption {
+        max-width: 950px;
+        color: #c7ccd2;
+        font-size: 34px;
+        line-height: 1.28;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="80"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="backdrop" data-layout-ignore></div>
+      <div class="grain" data-layout-ignore></div>
+
+      <section id="cold-open" class="clip scene" data-start="0" data-duration="7" data-track-index="1">
+        <div class="eyebrow">operational truth report</div>
+        <div class="panel terminal" style="max-width: 1680px">
+          <div class="term-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span style="margin-left: 12px">opstruth evidence</span>
+          </div>
+          <div class="term-body">
+            <div class="status-line"><span class="status-dot"></span>STATUS: Partial pass</div>
+            <div class="report-grid">
+              <div class="report-block">
+                <h3 class="green">Verified</h3>
+                <ul>
+                  <li>Repository inspected</li>
+                  <li>Secret scan completed with redaction</li>
+                </ul>
+              </div>
+              <div class="report-block">
+                <h3 class="amber">Warnings</h3>
+                <ul>
+                  <li>Route checks skipped because no base URL was provided</li>
+                </ul>
+              </div>
+              <div class="report-block">
+                <h3 class="muted">Not Verified</h3>
+                <ul>
+                  <li>Production runtime was not checked</li>
+                </ul>
+              </div>
+              <div class="report-block">
+                <h3 class="blue">Next Safe Step</h3>
+                <ul>
+                  <li>Run opstruth with --base-url before trusting production.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="assumptions" class="clip scene split" data-start="7" data-duration="11" data-track-index="1">
+        <div>
+          <div class="eyebrow">assumption</div>
+          <h1 class="headline tight">Build passed.<br /><span class="muted">But what did that prove?</span></h1>
+        </div>
+        <div class="assumption-stack">
+          <div class="assumption"><span>The route should work.</span><span>unverified</span></div>
+          <div class="assumption"><span>The secret should be safe.</span><span>unverified</span></div>
+          <div class="assumption"><span>Production should be fine.</span><span>unverified</span></div>
+          <div class="big-proof amber">should ≠ verified</div>
+        </div>
+      </section>
+
+      <section id="command" class="clip scene" data-start="18" data-duration="10" data-track-index="1">
+        <div class="eyebrow">runtime truth</div>
+        <div class="panel terminal">
+          <div class="term-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span style="margin-left: 12px">terminal</span>
+          </div>
+          <div class="term-body" style="font-size: 36px">
+            <span class="prompt">advanced_pudding9228@web:~/project$</span> opstruth
+          </div>
+        </div>
+        <h1 class="headline tight">opstruth asks a better question.<br /><span class="green">What can we prove?</span></h1>
+      </section>
+
+      <section id="probes" class="clip scene" data-start="28" data-duration="14" data-track-index="1">
+        <div>
+          <div class="eyebrow">safe probes activate</div>
+          <h1 class="headline tight">Stack-aware checks.<br /><span class="muted">No deploys. No mutations.</span></h1>
+        </div>
+        <div class="probe-grid">
+          <div class="probe"><strong>Repo</strong><small>status, diff, branch, log context</small><span class="state">checked</span></div>
+          <div class="probe"><strong>Secrets</strong><small>redacted risky reference scan</small><span class="state">checked</span></div>
+          <div class="probe"><strong>Routes</strong><small>read-only HEAD/GET when configured</small><span class="state amber">explicit</span></div>
+          <div class="probe"><strong>Runtime</strong><small>explicit local port and health path</small><span class="state amber">explicit</span></div>
+          <div class="probe"><strong>Supabase</strong><small>static config and migration heuristics</small><span class="state">inspected</span></div>
+          <div class="probe"><strong>Cloudflare</strong><small>Wrangler and deployment config signals</small><span class="state">inspected</span></div>
+          <div class="probe"><strong>Evidence</strong><small>proof-oriented markdown report</small><span class="state">written</span></div>
+        </div>
+      </section>
+
+      <section id="evidence" class="clip scene split" data-start="42" data-duration="13" data-track-index="1">
+        <div>
+          <div class="eyebrow amber">warning with evidence</div>
+          <h1 class="headline tight">A finding is only useful when it shows its work.</h1>
+        </div>
+        <div class="panel evidence-card">
+          <h3 class="amber">Warning: Possible secret reference</h3>
+          <div class="kv">
+            <div class="key">File</div><div>src/config.ts</div>
+            <div class="key">Line</div><div>12</div>
+            <div class="key">Pattern</div><div>SUPABASE_SERVICE_ROLE_KEY</div>
+            <div class="key">Preview</div><div><span class="redacted">SUPABASE_SERVICE_ROLE_KEY=***REDACTED***</span></div>
+            <div class="key">Why</div><div>Service role keys must never be exposed to browser code.</div>
+            <div class="key">Next</div><div>Move real values into environment storage.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="not-verified" class="clip scene" data-start="55" data-duration="9" data-track-index="1">
+        <div class="eyebrow">proof gaps</div>
+        <div class="proof-list">
+          <div class="panel proof-card">
+            <h2 class="muted">Not Verified</h2>
+            <ul>
+              <li>Production runtime</li>
+              <li>Database mutation safety</li>
+              <li>Publishing/job side effects</li>
+            </ul>
+          </div>
+          <div class="panel proof-card">
+            <h2 class="green">Honest Confidence</h2>
+            <p class="caption">opstruth does not pretend unknowns are safe. It separates evidence from assumptions.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="pass-run" class="clip scene split" data-start="64" data-duration="8" data-track-index="1">
+        <div>
+          <div class="status-line pass"><span class="status-dot"></span>STATUS: Pass</div>
+          <h1 class="headline tight" style="margin-top: 34px">Now the checked surfaces are clear.</h1>
+        </div>
+        <div class="panel artifact">
+Verified:
+- Repository inspected
+- Quality checks passed
+- Routes responded
+- Secrets scan completed with redaction
+
+Overall Confidence:
+Strong local confidence for the checks performed.
+
+Evidence:
+- evidence/opstruth-report.md
+        </div>
+      </section>
+
+      <section id="reveal" class="clip scene" data-start="72" data-duration="8" data-track-index="1">
+        <div class="logo">
+          <div class="mark">
+            <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+              <rect x="0.5" y="0.5" width="31" height="31" rx="6.5" fill="#22262e" stroke="#59616b" />
+              <path d="M8 9 L15 16 L8 23" stroke="#9ca3ad" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M14 17 L18.5 22 L25 11" stroke="#80d39c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div class="wordmark"><span>ops</span><span class="green">truth</span></div>
+        </div>
+        <h1 class="headline tight">AI coding tools are fast.<br /><span class="muted">opstruth checks what is actually true afterward.</span></h1>
+        <div class="footer-url">github.com/AyobamiH/opstruth</div>
+      </section>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      function fromIf(selector, vars, at) {
+        if (document.querySelector(selector)) {
+          tl.from(selector, vars, at);
+        }
+      }
+
+      function enter(scene, at) {
+        fromIf(scene + " .eyebrow", { opacity: 0, y: 20, duration: 0.6, ease: "power3.out" }, at);
+        fromIf(scene + " .headline", { opacity: 0, y: 34, duration: 0.8, ease: "power3.out" }, at + 0.12);
+        fromIf(scene + " .panel", { opacity: 0, y: 42, scale: 0.985, duration: 0.8, ease: "power3.out" }, at + 0.18);
+      }
+
+      enter("#cold-open", 0.2);
+      tl.from("#cold-open .report-block", { opacity: 0, y: 22, stagger: 0.16, duration: 0.55, ease: "power3.out" }, 1.2);
+      tl.to("#cold-open", { opacity: 0, y: -24, duration: 0.65, ease: "power2.in" }, 6.25);
+
+      enter("#assumptions", 7.2);
+      tl.from("#assumptions .assumption", { opacity: 0, x: 44, stagger: 0.22, duration: 0.55, ease: "power3.out" }, 8.0);
+      tl.from("#assumptions .big-proof", { opacity: 0, y: 30, duration: 0.7, ease: "power3.out" }, 11.0);
+      tl.to("#assumptions", { opacity: 0, y: -26, duration: 0.65, ease: "power2.in" }, 17.3);
+
+      enter("#command", 18.2);
+      tl.from("#command .term-body", { opacity: 0, y: 18, duration: 0.55, ease: "power3.out" }, 19.1);
+      tl.to("#command", { opacity: 0, y: -26, duration: 0.65, ease: "power2.in" }, 27.3);
+
+      enter("#probes", 28.2);
+      tl.from("#probes .probe", { opacity: 0, y: 35, stagger: 0.12, duration: 0.58, ease: "power3.out" }, 30.2);
+      tl.to("#probes", { opacity: 0, y: -26, duration: 0.65, ease: "power2.in" }, 41.3);
+
+      enter("#evidence", 42.2);
+      tl.from("#evidence .kv > div", { opacity: 0, y: 14, stagger: 0.045, duration: 0.35, ease: "power2.out" }, 44.0);
+      tl.to("#evidence", { opacity: 0, y: -26, duration: 0.65, ease: "power2.in" }, 54.3);
+
+      enter("#not-verified", 55.2);
+      tl.from("#not-verified li", { opacity: 0, x: 28, stagger: 0.16, duration: 0.5, ease: "power3.out" }, 56.3);
+      tl.to("#not-verified", { opacity: 0, y: -26, duration: 0.65, ease: "power2.in" }, 63.3);
+
+      enter("#pass-run", 64.2);
+      tl.from("#pass-run .status-line", { opacity: 0, scale: 0.94, duration: 0.6, ease: "power3.out" }, 64.3);
+      tl.to("#pass-run", { opacity: 0, y: -26, duration: 0.65, ease: "power2.in" }, 71.3);
+      tl.set("#pass-run", { opacity: 0 }, 72.0);
+
+      enter("#reveal", 72.2);
+      tl.from("#reveal .logo", { opacity: 0, y: 22, duration: 0.75, ease: "power3.out" }, 72.25);
+      tl.from("#reveal .footer-url", { opacity: 0, y: 20, duration: 0.6, ease: "power3.out" }, 75.2);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
