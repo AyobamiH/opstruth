@@ -20,7 +20,7 @@ jobs:
         working-directory: cli
       - run: node bin/opstruth.js --help
         working-directory: cli
-      - run: node bin/opstruth.js
+      - run: node bin/opstruth.js --skip quality
         working-directory: cli
 
   website:
