@@ -1,6 +1,9 @@
 import { CommandBlock } from "./CommandBlock";
 import { ArrowUpRight } from "lucide-react";
 import { LogoMark, Logo } from "./Logo";
+import videoAsset from "@/assets/opstruth-launch.mp4.asset.json";
+import posterAsset from "@/assets/opstruth-poster.jpg.asset.json";
+
 
 export function Hero() {
   return (
