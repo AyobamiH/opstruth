@@ -1,5 +1,28 @@
 # opstruth Runtime Truth Launch Video
 
+## Production Hero Asset Decision
+
+Decision date: 2026-06-05.
+
+Decision: USE_LOVABLE_VIDEO for the website hero while preserving the HyperFrames storyboard as source material.
+
+The live Lovable asset was downloaded from the deployed public page and compared against the locally rendered HyperFrames MP4. The Lovable video is shorter, smaller, and more suitable for a looping homepage hero: 18 seconds, 1920x1080, about 3.6 MB. The local HyperFrames render is more faithful to the full runtime-truth narrative, but it is 80 seconds and about 8.4 MB, which is too long for the primary hero loop.
+
+The chosen production path is:
+
+```text
+website/public/demo/opstruth-runtime-truth.mp4
+```
+
+The website references it as:
+
+```text
+/demo/opstruth-runtime-truth.mp4
+```
+
+The selected asset must remain operationally honest: no fake customers, fake metrics, raw secrets, production claims, or AI magic. The HyperFrames composition can still be used later for a longer flagship video if the render path has a faster Chrome/headless-shell setup.
+
+
 ## Concept
 
 Create a 60-90 second flagship product video for opstruth, built from the product's own runtime language:
@@ -48,7 +71,7 @@ Now I know what is true.
 
 ## Scene List
 
-Target runtime: 80 seconds.
+Storyboard target runtime: 80 seconds. The current website hero asset is the selected 18-second production cut described above.
 
 | Time | Scene | Purpose |
 | --- | --- | --- |
@@ -433,7 +456,7 @@ Generated assets:
 
 - `assets/video/opstruth-runtime-truth/index.html` for the HyperFrames composition.
 - `assets/video/opstruth-runtime-truth/snapshots/` for rendered verification stills and a contact sheet.
-- `public/demo/opstruth-runtime-truth.mp4` for the final rendered 1920x1080 launch video.
+- `website/public/demo/opstruth-runtime-truth.mp4` for the selected website hero video asset.
 - No stock footage.
 - No fake production screenshots.
 - No raw private repo paths or secrets.
@@ -480,7 +503,7 @@ Validate and render from that directory:
 cd assets/video/opstruth-runtime-truth
 npx hyperframes lint
 npx hyperframes inspect --samples 15
-npx hyperframes render --output ../../../public/demo/opstruth-runtime-truth.mp4 --quality high --fps 30
+npx hyperframes render --output ../../../website/public/demo/opstruth-runtime-truth.mp4 --quality high --fps 30
 ```
 
 The rendered output path is:

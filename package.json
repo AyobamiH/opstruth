@@ -13,7 +13,9 @@
     "lint:cli": "cd cli && npm run lint",
     "lint:website": "cd website && npm run lint",
     "test": "cd cli && npm test",
-    "ci": "npm run lint && npm run test && npm run build"
+    "ci": "npm run lint && npm run test && npm run build",
+    "preview:cloudflare": "npm run build:website && npx wrangler dev",
+    "deploy:cloudflare": "npm run build:website && npx wrangler deploy"
   },
   "engines": {
     "node": ">=20"

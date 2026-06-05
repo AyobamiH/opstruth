@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "opstruth",
+  "main": "./website/dist/server/server.js",
+  "compatibility_date": "2026-06-05",
+  "assets": {
+    "directory": "./website/dist/client",
+    "not_found_handling": "single-page-application"
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}
