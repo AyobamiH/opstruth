@@ -1,0 +1,208 @@
+# opstruth
+
+Read-only operational truth checks for AI-assisted engineering.
+
+AI coding tools are fast, but developers still need proof:
+
+- what changed
+- what is configured
+- what looks risky
+- what was verified
+- what was not verified
+
+`opstruth` is a stack-aware, read-only CLI. It inspects the repo, detects the stack, runs safe probes, collects evidence, explains risks, and produces a proof-oriented report.
+
+```bash
+opstruth
+```
+
+## Example Output
+
+Cleaned example from a fixture run:
+
+```text
+STATUS: Partial pass
+
+What Matters Most
+- No failures
+
+Verified
+- Project boundary: /tmp/opstruth-fixture-runs/vite-react-app
+- Probe catalogue entries: 30
+- Automatic safe probes selected: 15
+- Project language detected: TypeScript
+- Platforms detected: TypeScript, React, Vite, Node ESM
+
+Skipped Or Not Configured
+- routes.head_root: Not relevant to detected stack or missing configuration
+- local.ports: Not relevant to detected stack or missing configuration
+
+Not Verified
+- Production/public route availability was not checked
+- Local runtime liveness was not checked
+
+Overall Confidence
+Basic checks passed. Runtime or production verification may still be incomplete.
+```
+
+## Install
+
+Local development:
+
+```bash
+git clone <repo-url>
+cd opstruth
+cd cli
+npm install
+npm link
+opstruth
+```
+
+One-off use after npm publication:
+
+```bash
+npx opstruth
+```
+
+`npx opstruth` is future-facing until the package is published.
+
+## Commands
+
+```bash
+opstruth
+opstruth welcome
+opstruth init
+opstruth repo
+opstruth quality
+opstruth routes --base-url https://example.com
+opstruth secrets
+opstruth supabase
+opstruth cloudflare
+opstruth local --port 3000 --health /health
+opstruth evidence
+opstruth probes
+```
+
+Useful flags:
+
+```bash
+opstruth --strict
+opstruth --json
+opstruth --out evidence/opstruth.md
+opstruth --skip routes
+opstruth --only secrets
+```
+
+## Safety Model
+
+opstruth is read-only by default. It does not:
+
+- deploy
+- mutate databases
+- trigger jobs or queues
+- publish content
+- call OpenAI
+- restart services
+- kill processes
+- print raw secrets
+
+Skipped is not failed. Unverified is not safe. opstruth reports proof gaps instead of pretending they are confidence.
+
+## Who It Is For
+
+- Codex users
+- Cursor users
+- Claude Code users
+- Lovable, Replit, and bolt users
+- solo founders
+- agencies
+- developers reviewing AI-generated changes
+
+## Example Workflows
+
+Before trusting AI changes:
+
+```bash
+opstruth
+```
+
+Before deployment, with public route evidence:
+
+```bash
+opstruth --base-url https://example.com
+```
+
+Local runtime check:
+
+```bash
+opstruth local --port 3000 --health /health
+```
+
+CI:
+
+```bash
+opstruth --strict --out evidence/opstruth.md
+```
+
+Inspect the probe catalogue:
+
+```bash
+opstruth probes
+```
+
+## Project Boundaries
+
+If opstruth starts inside a git repository, the git root is the project boundary. If no git repository is detected, opstruth scans only the current directory with safety ignores and prints:
+
+```text
+No git repository detected. opstruth is scanning the current directory with safety ignores. For best results, run inside a project repo.
+```
+
+## Probe Catalogue
+
+The initial catalogue covers:
+
+- git status, diff checks, diff stats, log context, and merge conflict marker scan
+- Node, TypeScript, Vite, Next.js, React, ESLint, Vitest, Playwright, and package scripts
+- route and local runtime checks when explicitly configured
+- secret and risky reference scans with redaction
+- static Supabase, Cloudflare/Wrangler, Docker, GitHub Actions, Vercel, and Netlify detection
+
+Each probe defines what evidence it collects, what it proves, what it does not prove, and the next safe step.
+
+## Current Limitations
+
+- Some probes are static-only.
+- Route checks need `--base-url` or route config.
+- Local runtime checks need `--port`, `--health`, process, or service inputs.
+- The package is not published yet.
+- opstruth is not a replacement for a security audit.
+- opstruth does not prove production state unless you provide production/staging route or runtime inputs.
+
+## Development
+
+This repository is a monorepo:
+
+- `cli/` contains the opstruth package and probe implementation.
+- `website/` contains the Lovable/TanStack frontend.
+- `docs/` and `evidence/` contain project documentation and proof outputs.
+
+CLI checks:
+
+```bash
+cd cli
+npm run lint
+npm test
+node bin/opstruth.js
+./scripts/demo-fixtures.sh
+```
+
+Website checks:
+
+```bash
+cd website
+npm run lint
+npm run build
+```
+
+Fixture evidence is written to root `evidence/fixture-runs/`.

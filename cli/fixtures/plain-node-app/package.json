@@ -1,0 +1,8 @@
+{
+  "name": "opstruth-fixture-plain-node-app",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --version"
+  }
+}

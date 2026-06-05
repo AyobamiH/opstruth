@@ -1,0 +1,25 @@
+name: opstruth Example
+
+on:
+  workflow_dispatch:
+
+jobs:
+  opstruth:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+        working-directory: cli
+      - name: Run opstruth from this checkout
+        run: node bin/opstruth.js --strict --out ../evidence/opstruth.md
+        working-directory: cli
+      # After npm publication, downstream projects can use:
+      # - run: npx opstruth --strict --out evidence/opstruth.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: opstruth-evidence
+          path: evidence/opstruth.md

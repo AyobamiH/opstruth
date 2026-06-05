@@ -1,0 +1,33 @@
+{
+  "name": "opstruth",
+  "version": "0.1.0",
+  "description": "Read-only operational truth checks for AI-assisted engineering workflows.",
+  "type": "module",
+  "bin": {
+    "opstruth": "bin/opstruth.js"
+  },
+  "scripts": {
+    "typecheck": "node --check bin/opstruth.js",
+    "lint": "node --check bin/opstruth.js && find src -name '*.js' -print -exec node --check {} \\;",
+    "test": "node --test",
+    "build": "node --check bin/opstruth.js",
+    "ci": "npm run lint && npm test && npm run build",
+    "demo:fixtures": "./scripts/demo-fixtures.sh"
+  },
+  "keywords": [
+    "cli",
+    "ai-engineering",
+    "ai-assisted-development",
+    "codex",
+    "devops",
+    "evidence",
+    "read-only",
+    "typescript",
+    "cloudflare",
+    "supabase"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}

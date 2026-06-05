@@ -4,7 +4,6 @@ import { LogoMark, Logo } from "./Logo";
 import videoAsset from "@/assets/opstruth-launch.mp4.asset.json";
 import posterAsset from "@/assets/opstruth-poster.jpg.asset.json";
 
-
 export function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-border/60">
@@ -66,7 +65,6 @@ export function Hero() {
         </div>
 
         <dl className="mt-16 grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2 md:grid-cols-4">
-
           {[
             { k: "Catalogue probes", v: "30" },
             { k: "Mutating actions", v: "0" },

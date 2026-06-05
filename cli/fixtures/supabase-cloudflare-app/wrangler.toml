@@ -1,0 +1,6 @@
+name = "opstruth-fixture-worker"
+main = "src/worker.ts"
+compatibility_date = "2026-01-01"
+routes = [
+  { pattern = "fixture.example.com/*", custom_domain = true }
+]
