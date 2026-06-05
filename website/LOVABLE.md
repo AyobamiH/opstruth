@@ -32,7 +32,11 @@ This folder (`website/`) is the canonical website app root.
    - Images, fonts, and other public files go here.
 
 5. **Do not touch the CLI.**
-   - The CLI lives outside `website/`. Leave `cli/`, `src/`, `bin/`, and root monorepo files alone.
+   - The CLI lives outside `website/`. Leave `cli/` and root monorepo files alone.
+   - Do not modify `cli/package.json`, `cli/bin/`, `cli/src/`, `cli/test/`, `cli/fixtures/`, `cli/examples/`, or `cli/scripts/`.
+
+6. **Do not touch repository infrastructure.**
+   - Leave `docs/`, `evidence/`, `.codex/`, and `.github/` alone unless the user explicitly asks.
 
 ## Quick Reference
 
@@ -45,4 +49,5 @@ This folder (`website/`) is the canonical website app root.
 
 - Do not move files out of `website/` to the repo root.
 - Do not create root-level frontend files.
-- Do not modify CLI code or root monorepo configuration.
+- Do not create `src/`, `public/`, `vite.config.*`, `tailwind.config.*`, `tsconfig.json`, or `components.json` at the repo root.
+- Do not modify CLI code, docs, evidence, Codex skills, GitHub workflows, or root monorepo configuration.

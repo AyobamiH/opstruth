@@ -20,9 +20,6 @@ This is a **monorepo**.
   evidence/   # evidence examples and fixture runs
   .codex/     # Codex workflow skills
   .github/    # GitHub workflows and templates
-  src/        # CLI source code — belongs to the CLI, not the frontend
-  bin/        # CLI entry points
-  test/       # CLI tests
 ```
 
 ## Lovable Working Rules
@@ -34,7 +31,7 @@ This is a **monorepo**.
 
 2. **`cli/` must not be touched.**
    - Do not modify CLI source, commands, or configuration.
-   - Do not change root-level package files (e.g. root `package.json`, `bin/`, `src/`, `test/`) for frontend work.
+   - Do not change `cli/package.json`, `cli/bin/`, `cli/src/`, `cli/test/`, `cli/fixtures/`, `cli/examples/`, or `cli/scripts/` for frontend work.
 
 3. **Do not move the frontend back to repo root.**
    - The website app root is intentionally `website/`.
@@ -51,11 +48,11 @@ This is a **monorepo**.
 ## Allowed Root Changes
 
 - This `LOVABLE.md` file.
-- Files explicitly belonging to the CLI or shared monorepo infrastructure.
 - Anything the user explicitly requests outside `website/`.
 
 ## Disallowed Root Changes
 
 - Do not create `src/`, `public/`, `vite.config.*`, `tailwind.config.*`, `tsconfig.json`, or `components.json` at the root for frontend work.
 - Do not move files out of `website/` to the root.
-- Do not modify CLI code, tests, or documentation unless explicitly asked.
+- Do not modify `cli/`, `docs/`, `evidence/`, `.codex/`, or `.github/` unless explicitly asked.
+- Do not modify root monorepo infrastructure for frontend work.

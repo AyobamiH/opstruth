@@ -6,7 +6,7 @@ The frontend website for opstruth — a local, read-only CLI that verifies what 
 
 This folder (`website/`) is the canonical website app root. All frontend work happens here.
 
-> **Reminder:** Root-level files (e.g. `README.md`, `package.json`, `src/`, `bin/`) belong to the CLI/monorepo. Do not modify them for frontend work.
+> **Reminder:** Root-level files and folders belong to the CLI/monorepo. Do not create root-level `src/`, `public/`, frontend config, or package files for website work.
 
 ## Tech Stack
 
@@ -75,6 +75,8 @@ website/
 ## Notes
 
 - This is a monorepo. The CLI lives outside `website/`.
+- CLI work belongs in `cli/`.
 - Keep all website dependencies inside `website/package.json`.
 - Keep all website source inside `website/src/`.
 - Do not create root-level frontend files.
+- Do not modify `cli/`, `docs/`, `evidence/`, `.codex/`, or `.github/` for website work.
