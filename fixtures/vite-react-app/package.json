@@ -1,0 +1,20 @@
+{
+  "name": "opstruth-fixture-vite-react-app",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@vitejs/plugin-react": "^5.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "vite": "^6.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "typecheck": "node --version",
+    "lint": "node --version",
+    "test": "node --version",
+    "build": "node --version"
+  }
+}

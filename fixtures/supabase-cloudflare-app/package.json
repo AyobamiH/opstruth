@@ -1,0 +1,16 @@
+{
+  "name": "opstruth-fixture-supabase-cloudflare-app",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "wrangler": "^4.0.0"
+  },
+  "scripts": {
+    "typecheck": "node --version",
+    "deploy": "wrangler deploy"
+  }
+}
