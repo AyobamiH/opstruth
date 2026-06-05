@@ -30,3 +30,5 @@ website/*.local
 
 # Historical local checkout location; keep out of the canonical repo.
 tempo/
+website/build/
+website/.cache/

@@ -1,0 +1,21 @@
+{
+  "name": "opstruth-monorepo",
+  "private": true,
+  "description": "Monorepo for opstruth CLI and public website.",
+  "scripts": {
+    "build": "node scripts/build-website.js",
+    "build:website": "node scripts/build-website.js",
+    "build:bun": "cd website && bun install && bun run build && cd .. && node scripts/sync-website-dist.js",
+    "build:npm": "cd website && npm install && npm run build && cd .. && node scripts/sync-website-dist.js",
+    "dev": "cd website && bun run dev",
+    "preview": "cd website && bun run preview",
+    "lint": "npm run lint:cli && npm run lint:website",
+    "lint:cli": "cd cli && npm run lint",
+    "lint:website": "cd website && npm run lint",
+    "test": "cd cli && npm test",
+    "ci": "npm run lint && npm run test && npm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
