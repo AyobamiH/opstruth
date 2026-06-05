@@ -1,5 +1,13 @@
 # LOVABLE.md — Website App Root
 
+## Full Knowledge Base
+
+Before making frontend changes, read:
+
+`docs/lovable-knowledge-base.md`
+
+That file contains the full repo map, website file map, messaging rules, and Lovable boundaries.
+
 ## Canonical App Root
 
 This folder (`website/`) is the canonical website app root.
