@@ -5,4 +5,4 @@ build = "bun --cwd website run build"
 preview = "bun --cwd website run preview"
 
 [build]
-output = "website/dist"
+output = "website/dist/client"
