@@ -1,0 +1,8 @@
+[run]
+install = "bun install --cwd website"
+dev = "bun --cwd website run dev"
+build = "bun --cwd website run build"
+preview = "bun --cwd website run preview"
+
+[build]
+output = "website/dist/client"
