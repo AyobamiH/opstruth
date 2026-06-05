@@ -7,7 +7,7 @@ export function Problem() {
             <div className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
               The gap
             </div>
-            <h2 className="mt-3 text-2xl font-medium tracking-tight text-foreground md:text-3xl">
+            <h2 className="mt-3 text-lg font-medium tracking-tight text-foreground sm:text-2xl md:text-3xl">
               Generation is fast. Certainty isn&apos;t.
             </h2>
           </div>

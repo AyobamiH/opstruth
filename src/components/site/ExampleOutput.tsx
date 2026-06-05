@@ -11,8 +11,9 @@ export function ExampleOutput() {
               Calm. Structured. Honest about gaps.
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              No panic colors. No vague &ldquo;everything is broken.&rdquo; Every line either has
-              evidence, or is explicitly marked as not verified.
+              This excerpt is from the local checkout with evidence writing skipped for display. The
+              normal run writes a markdown evidence pack to <code>evidence/opstruth-report.md</code>
+              .
             </p>
 
             <ul className="mt-6 space-y-2 font-mono text-[12px] text-muted-foreground">
@@ -41,33 +42,40 @@ export function ExampleOutput() {
               <span className="w-10" />
             </div>
 
-            <pre className="overflow-x-auto px-5 py-5 font-mono text-[12.5px] leading-[1.7] text-foreground/90">
-              <Line prompt>opstruth</Line>
-              <Line muted>→ detected stack: typescript, react, vite, supabase</Line>
-              <Line muted>→ selected 11 probes (read-only)</Line>
+            <pre className="max-w-full overflow-x-auto px-5 py-5 font-mono text-[12.5px] leading-[1.7] text-foreground/90">
+              <Line prompt>node bin/opstruth.js --skip evidence</Line>
+              <Line muted>Operational truth checks for AI-assisted engineering.</Line>
               <Line> </Line>
               <Line strong>STATUS: Partial pass</Line>
+              <Line muted>One-command operational truth check completed.</Line>
               <Line> </Line>
               <Line tag="pass">Verified</Line>
-              <Line indent>repo · clean working tree on <Mono>main</Mono></Line>
-              <Line indent>stack · tsconfig strict mode enabled</Line>
-              <Line indent>secrets · scan completed, 0 leaks, 14 patterns redacted</Line>
-              <Line indent>supabase · RLS enabled on <Mono>public.profiles</Mono></Line>
+              <Line indent>
+                Project boundary: <Mono>/home/johnh/opstruth</Mono>
+              </Line>
+              <Line indent>
+                Probe catalogue entries: <Mono>30</Mono>
+              </Line>
+              <Line indent>
+                Automatic safe probes selected: <Mono>15</Mono>
+              </Line>
+              <Line indent>Platforms detected: TypeScript, Node ESM, GitHub Actions</Line>
               <Line> </Line>
               <Line tag="warn">Warnings</Line>
-              <Line indent>
-                supabase · anon key referenced in <Mono>src/lib/client.ts:12</Mono>
-              </Line>
-              <Line indent dim>↳ expected for browser client. confirm RLS coverage.</Line>
+              <Line indent>None</Line>
               <Line> </Line>
               <Line tag="skip">Not Verified</Line>
-              <Line indent>routes · no base URL provided</Line>
-              <Line indent>runtime · production environment not reachable from local</Line>
+              <Line indent>Production/public route availability was not checked</Line>
+              <Line indent>Local runtime liveness was not checked</Line>
+              <Line indent>Supabase database exposure was not checked</Line>
               <Line> </Line>
               <Line tag="not">Did NOT do</Line>
-              <Line indent>· deploy · mutate db · restart services · call external APIs</Line>
+              <Line indent>
+                No deploys, database mutations, OpenAI calls, publishing, queue triggers, restarts,
+                or kills
+              </Line>
               <Line> </Line>
-              <Line muted>→ wrote evidence pack: <Mono>.opstruth/2026-05-28-1409.md</Mono></Line>
+              <Line muted>Next: add --base-url or --port when route or runtime proof matters.</Line>
             </pre>
           </div>
         </div>
@@ -95,23 +103,23 @@ function Line({ children, prompt, muted, dim, strong, indent, tag }: LineProps) 
     tag === "pass"
       ? "text-status-pass"
       : tag === "warn"
-      ? "text-status-warn"
-      : tag === "skip"
-      ? "text-status-skip"
-      : tag === "not"
-      ? "text-status-fail"
-      : "";
+        ? "text-status-warn"
+        : tag === "skip"
+          ? "text-status-skip"
+          : tag === "not"
+            ? "text-status-fail"
+            : "";
 
   const tagLabel =
     tag === "pass"
       ? "✓ "
       : tag === "warn"
-      ? "! "
-      : tag === "skip"
-      ? "○ "
-      : tag === "not"
-      ? "× "
-      : "";
+        ? "! "
+        : tag === "skip"
+          ? "○ "
+          : tag === "not"
+            ? "× "
+            : "";
 
   if (tag) {
     return (

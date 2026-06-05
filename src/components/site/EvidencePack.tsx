@@ -10,8 +10,8 @@ export function EvidencePack() {
             One markdown file. Reviewable. Attachable. Boring on purpose.
           </h2>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            Every run writes a timestamped report you can paste into a PR, attach to a CI artifact,
-            or hand to a reviewer. No dashboard required.
+            Every default run writes a report you can paste into a PR, attach to a CI artifact, or
+            hand to a reviewer. No dashboard required.
           </p>
         </div>
 
@@ -19,38 +19,40 @@ export function EvidencePack() {
           <article className="rounded-lg border border-border-strong bg-background">
             <header className="flex items-center justify-between border-b border-border px-4 py-2.5">
               <span className="font-mono text-[11px] text-muted-foreground">
-                .opstruth/2026-05-28-1409.md
+                evidence/fixture-runs/risky-secret-app.md
               </span>
               <span className="font-mono text-[11px] text-status-pass">read-only</span>
             </header>
             <div className="px-5 py-5 font-mono text-[12.5px] leading-[1.75] text-foreground/90">
-              <p className="text-foreground"># opstruth evidence pack</p>
+              <p className="text-foreground"># opstruth Evidence Pack</p>
               <p className="text-muted-foreground">
-                generated: 2026-05-28T14:09:02Z
+                Status: Partial pass
                 <br />
-                stack: typescript, react, vite, supabase
+                Working directory: /tmp/opstruth-fixture-runs/risky-secret-app
                 <br />
-                probes: 11 selected · 9 ran · 2 skipped
+                Commands run: git diff --check, npm run test
               </p>
-              <p className="mt-4 text-foreground">## Finding · supabase anon key in client</p>
+              <p className="mt-4 text-foreground">## Risks And Gaps</p>
               <p className="text-muted-foreground">
-                severity: warn
+                warn: <span className="text-foreground">src/config.js:1</span> matched OpenAI key
+                pattern
                 <br />
-                file: <span className="text-foreground">src/lib/client.ts:12</span>
+                evidence: redacted preview: service key value was replaced with [REDACTED]
                 <br />
-                evidence: <span className="text-foreground">VITE_SUPABASE_ANON_KEY=eyJh…[redacted]</span>
+                warn: <span className="text-foreground">src/config.js:2</span> matched Supabase
+                service role pattern
                 <br />
-                proves: anon key reaches the browser bundle.
+                why it matters: secret-like values can create account, data, or infrastructure
+                exposure.
                 <br />
-                does not prove: RLS coverage is sufficient.
-                <br />
-                next: confirm RLS on all <span className="text-foreground">public.*</span> tables.
+                next: move real secrets to secret storage and keep placeholders in source.
               </p>
               <p className="mt-4 text-foreground">## Not verified</p>
               <p className="text-muted-foreground">
-                · routes — no base URL provided
+                · production/public route availability was not checked
                 <br />
-                · runtime — production not reachable from local
+                · local runtime liveness was not checked
+                <br />· no OpenAI usage was monitored
               </p>
             </div>
           </article>
@@ -60,7 +62,7 @@ export function EvidencePack() {
             <ul className="mt-4 space-y-3 text-[13px] text-muted-foreground">
               <li className="flex items-baseline gap-3">
                 <span className="font-mono text-status-skip">→</span>
-                Pull request descriptions, as the &ldquo;what I verified&rdquo; section.
+                Pull request descriptions, as the &ldquo;what was verified&rdquo; section.
               </li>
               <li className="flex items-baseline gap-3">
                 <span className="font-mono text-status-skip">→</span>

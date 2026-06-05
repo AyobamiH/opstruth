@@ -2,9 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Hero } from "@/components/site/Hero";
 import { Problem } from "@/components/site/Problem";
 import { WhatItChecks } from "@/components/site/WhatItChecks";
+import { ProofGap } from "@/components/site/ProofGap";
 import { WillNotDo } from "@/components/site/WillNotDo";
 import { ExampleOutput } from "@/components/site/ExampleOutput";
 import { EvidencePack } from "@/components/site/EvidencePack";
+import { GitHubWorkflow } from "@/components/site/GitHubWorkflow";
 import { Community } from "@/components/site/Community";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
@@ -25,6 +27,9 @@ export const Route = createFileRoute("/")({
           "Read-only operational truth checks for AI-assisted engineering. One command. Evidence, not vibes.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "/og-card.png" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "/og-card.png" },
     ],
     scripts: [
       {
@@ -37,7 +42,7 @@ export const Route = createFileRoute("/")({
           operatingSystem: "Windows, macOS, Linux",
           description:
             "A local, read-only CLI that verifies what is actually true after AI-assisted changes. Evidence-backed findings, honest proof gaps, zero deploys.",
-          url: "https://opstruth.lovable.app",
+          url: "https://github.com/ayobamih/opstruth",
           offers: {
             "@type": "Offer",
             price: "0",
@@ -52,13 +57,15 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <SiteHeader />
       <main>
         <Hero />
         <Problem />
+        <ProofGap />
         <WhatItChecks />
         <ExampleOutput />
+        <GitHubWorkflow />
         <WillNotDo />
         <EvidencePack />
         <Community />

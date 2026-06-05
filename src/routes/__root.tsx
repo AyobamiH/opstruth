@@ -73,20 +73,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "opstruth — Operational proof for AI-assisted engineering" },
-      { name: "description", content: "opstruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes. Evidence-backed findings, honest proof gaps, zero deploys." },
+      {
+        name: "description",
+        content:
+          "opstruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes. Evidence-backed findings, honest proof gaps, zero deploys.",
+      },
       { name: "author", content: "opstruth" },
       { name: "theme-color", content: "#0a0a0f" },
       { property: "og:title", content: "opstruth — Operational proof for AI-assisted engineering" },
-      { property: "og:description", content: "opstruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes. Evidence-backed findings, honest proof gaps, zero deploys." },
+      {
+        property: "og:description",
+        content:
+          "opstruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes. Evidence-backed findings, honest proof gaps, zero deploys.",
+      },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://opstruth.lovable.app" },
-      { property: "og:image", content: "https://opstruth.lovable.app/og-card.png" },
+      { property: "og:url", content: "https://github.com/ayobamih/opstruth" },
+      { property: "og:image", content: "/og-card.png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "opstruth — Operational proof for AI-assisted engineering" },
-      { name: "twitter:description", content: "opstruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes." },
-      { name: "twitter:image", content: "https://opstruth.lovable.app/og-card.png" },
+      {
+        name: "twitter:title",
+        content: "opstruth — Operational proof for AI-assisted engineering",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "opstruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes.",
+      },
+      { name: "twitter:image", content: "/og-card.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -102,13 +117,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             {
               "@type": "Organization",
               name: "opstruth",
-              url: "https://opstruth.lovable.app",
-              logo: "https://opstruth.lovable.app/logo-mark.png",
+              url: "https://github.com/ayobamih/opstruth",
+              logo: "/logo-mark.png",
             },
             {
               "@type": "WebSite",
               name: "opstruth",
-              url: "https://opstruth.lovable.app",
+              url: "https://github.com/ayobamih/opstruth",
             },
           ],
         }),

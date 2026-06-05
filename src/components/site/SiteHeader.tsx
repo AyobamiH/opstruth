@@ -14,14 +14,25 @@ export function SiteHeader() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-7 font-mono text-[13px] text-muted-foreground">
-          <a href="#checks" className="hover:text-foreground transition-colors">checks</a>
-          <a href="#output" className="hover:text-foreground transition-colors">output</a>
-          <a href="#boundaries" className="hover:text-foreground transition-colors">boundaries</a>
-          <a href="#evidence" className="hover:text-foreground transition-colors">evidence</a>
+          <a href="#checks" className="hover:text-foreground transition-colors">
+            probes
+          </a>
+          <a href="#output" className="hover:text-foreground transition-colors">
+            output
+          </a>
+          <a href="#github" className="hover:text-foreground transition-colors">
+            github
+          </a>
+          <a href="#boundaries" className="hover:text-foreground transition-colors">
+            boundaries
+          </a>
+          <a href="#evidence" className="hover:text-foreground transition-colors">
+            evidence
+          </a>
         </nav>
 
         <a
-          href="https://github.com/AyobamiH/opstruth"
+          href="https://github.com/ayobamih/opstruth"
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 font-mono text-[12px] text-foreground hover:border-border-strong hover:bg-surface-elevated transition-colors"
