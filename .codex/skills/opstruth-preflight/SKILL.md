@@ -19,6 +19,7 @@ Always check state first:
 
 ```bash
 git status --short
+cd cli
 npm run lint
 npm test
 node bin/opstruth.js --help
@@ -45,13 +46,13 @@ evidence/preflight.md
 ## Required Checks
 
 - `git status --short`
-- `npm run lint`
-- `npm test`
-- `node bin/opstruth.js --help`
-- `node bin/opstruth.js welcome`
-- `node bin/opstruth.js probes`
-- `node bin/opstruth.js --skip evidence`
-- `./scripts/demo-fixtures.sh`
+- `cd cli && npm run lint`
+- `cd cli && npm test`
+- `cd cli && node bin/opstruth.js --help`
+- `cd cli && node bin/opstruth.js welcome`
+- `cd cli && node bin/opstruth.js probes`
+- `cd cli && node bin/opstruth.js --skip evidence`
+- `cd cli && ./scripts/demo-fixtures.sh`
 - Confirm `evidence/preflight.md` records commands, status, warnings, failures, and next safe step.
 
 ## Failure Handling

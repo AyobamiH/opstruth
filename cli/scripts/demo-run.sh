@@ -2,8 +2,9 @@
 set -eu
 
 ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+REPO_ROOT="$(CDPATH= cd -- "$ROOT/.." && pwd)"
 BIN="$ROOT/bin/opstruth.js"
-OUT_DIR="$ROOT/evidence/fixture-runs"
+OUT_DIR="$REPO_ROOT/evidence/fixture-runs"
 TMP_ROOT="${TMPDIR:-/tmp}/opstruth-demo-run-$$"
 
 mkdir -p "$OUT_DIR" "$TMP_ROOT"

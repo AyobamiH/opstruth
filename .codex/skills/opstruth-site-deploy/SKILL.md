@@ -19,15 +19,17 @@ Always check state first:
 
 ```bash
 git status --short
+cd cli
 node bin/opstruth.js --skip evidence
+cd ..
 ```
 
 Inspect:
 
 ```text
 package.json
-site/
-dist/
+website/
+website/dist/
 docs/webpage.md
 GitHub Pages config
 Cloudflare Pages config
@@ -36,7 +38,7 @@ Cloudflare Pages config
 Run:
 
 ```bash
-npm run build
+npm --prefix website run build
 ```
 
 ## Safety Boundaries
@@ -53,7 +55,7 @@ npm run build
 - Confirm opstruth run completed before deploy preparation.
 - Inspect build scripts and output directory.
 - Inspect GitHub Pages and Cloudflare Pages signals/config.
-- Run `npm run build`.
+- Run `npm --prefix website run build`.
 
 ## Failure Handling
 

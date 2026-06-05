@@ -22,12 +22,12 @@ Suggested topics:
 Before marking a release public:
 
 - README reflects current CLI behavior.
-- `npm run lint` passes.
-- `npm test` passes.
-- `node bin/opstruth.js --help` works.
-- `node bin/opstruth.js welcome` works.
-- `node bin/opstruth.js probes` works.
-- `./scripts/demo-fixtures.sh` regenerates fixture evidence.
+- `cd cli && npm run lint` passes.
+- `cd cli && npm test` passes.
+- `cd cli && node bin/opstruth.js --help` works.
+- `cd cli && node bin/opstruth.js welcome` works.
+- `cd cli && node bin/opstruth.js probes` works.
+- `cd cli && ./scripts/demo-fixtures.sh` regenerates fixture evidence.
 - No real secrets are present in fixtures, docs, or evidence.
 - GitHub issue/PR templates are present.
 - CI workflows are present.

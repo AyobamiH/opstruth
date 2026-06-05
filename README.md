@@ -52,6 +52,7 @@ Local development:
 ```bash
 git clone <repo-url>
 cd opstruth
+cd cli
 npm install
 npm link
 opstruth
@@ -180,11 +181,28 @@ Each probe defines what evidence it collects, what it proves, what it does not p
 
 ## Development
 
+This repository is a monorepo:
+
+- `cli/` contains the opstruth package and probe implementation.
+- `website/` contains the Lovable/TanStack frontend.
+- `docs/` and `evidence/` contain project documentation and proof outputs.
+
+CLI checks:
+
 ```bash
+cd cli
 npm run lint
 npm test
 node bin/opstruth.js
 ./scripts/demo-fixtures.sh
 ```
 
-Fixture evidence is written to `evidence/fixture-runs/`.
+Website checks:
+
+```bash
+cd website
+npm run lint
+npm run build
+```
+
+Fixture evidence is written to root `evidence/fixture-runs/`.

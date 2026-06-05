@@ -5,12 +5,14 @@ opstruth does not require a recording tool, but the demo scripts make terminal c
 ## Quick Demo
 
 ```bash
+cd cli
 ./scripts/demo-run.sh
 ```
 
 ## Fixture Evidence Demo
 
 ```bash
+cd cli
 ./scripts/demo-fixtures.sh
 ```
 
@@ -20,6 +22,7 @@ If you already use asciinema:
 
 ```bash
 asciinema rec opstruth-demo.cast
+cd cli
 ./scripts/demo-run.sh
 exit
 ```
@@ -27,7 +30,8 @@ exit
 ## Simple Terminal Capture
 
 ```bash
-./scripts/demo-run.sh | tee evidence/demo-output.txt
+cd cli
+./scripts/demo-run.sh | tee ../evidence/demo-output.txt
 ```
 
 Before sharing screenshots or recordings, check that no private paths, URLs, or secret-like values are visible.

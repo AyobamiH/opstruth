@@ -7,6 +7,7 @@ opstruth is a read-only operational truth checker. Contributions should improve 
 ## Local Checks
 
 ```bash
+cd cli
 npm run lint
 npm test
 node bin/opstruth.js

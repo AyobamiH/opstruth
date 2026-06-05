@@ -10,7 +10,9 @@ Until the package is published, run opstruth from the checkout:
   with:
     node-version: 20
 - run: npm install
-- run: node bin/opstruth.js --strict --out evidence/opstruth.md
+  working-directory: cli
+- run: node bin/opstruth.js --strict --out ../evidence/opstruth.md
+  working-directory: cli
 ```
 
 ## Future npx Usage

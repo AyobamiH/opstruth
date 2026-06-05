@@ -9,4 +9,24 @@ coverage/
 dist/
 build/
 .cache/
+
+# CLI workspace
+cli/node_modules/
+cli/coverage/
+cli/dist/
+cli/build/
+
+# Website workspace
+website/node_modules/
+website/dist/
+website/dist-ssr/
+website/.output/
+website/.vinxi/
+website/.tanstack/
+website/.nitro/
+website/.wrangler/
+website/.dev.vars
+website/*.local
+
+# Historical local checkout location; keep out of the canonical repo.
 tempo/

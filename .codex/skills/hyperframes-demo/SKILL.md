@@ -19,7 +19,9 @@ Always check state first:
 
 ```bash
 git status --short
+cd cli
 node bin/opstruth.js --skip evidence
+cd ..
 ```
 
 Inspect Hyperframes availability:
@@ -48,7 +50,7 @@ docs/hyperframes-terminal-demo-prompt.md
 ## Required Checks
 
 - `git status --short`
-- `node bin/opstruth.js --skip evidence`
+- `cd cli && node bin/opstruth.js --skip evidence`
 - `hyperframes --help`
 - Confirm any generated prompt, screenshot, or video path exists before reporting it as done.
 

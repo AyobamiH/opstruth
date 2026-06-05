@@ -19,7 +19,9 @@ Always check state first:
 
 ```bash
 git status --short
+cd cli
 node bin/opstruth.js --skip evidence
+cd ..
 git tag --list
 gh auth status
 gh repo view
@@ -45,7 +47,7 @@ gh release create vX.Y.Z --title "<title>" --notes "<notes>"
 ## Required Checks
 
 - Working tree state is understood.
-- `node bin/opstruth.js --skip evidence` completed.
+- `cd cli && node bin/opstruth.js --skip evidence` completed.
 - Requested tag is not present in `git tag --list`.
 - `gh auth status` succeeds.
 - `gh repo view` points to the intended repository.

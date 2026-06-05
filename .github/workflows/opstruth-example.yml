@@ -12,8 +12,10 @@ jobs:
         with:
           node-version: 20
       - run: npm install
+        working-directory: cli
       - name: Run opstruth from this checkout
-        run: node bin/opstruth.js --strict --out evidence/opstruth.md
+        run: node bin/opstruth.js --strict --out ../evidence/opstruth.md
+        working-directory: cli
       # After npm publication, downstream projects can use:
       # - run: npx opstruth --strict --out evidence/opstruth.md
       - uses: actions/upload-artifact@v4

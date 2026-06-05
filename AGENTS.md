@@ -1,7 +1,7 @@
 # Agent Instructions
 
-- Run `opstruth repo` before changes to establish repository ground truth.
-- Run `opstruth` after changes unless the user asks for a narrower check.
+- Run `node cli/bin/opstruth.js repo` before changes to establish repository ground truth.
+- Run `node cli/bin/opstruth.js` after changes unless the user asks for a narrower check.
 - Never deploy without explicit user approval.
 - Never print secrets.
 - Never mutate production by default.
@@ -9,7 +9,7 @@
 - Treat warnings as unresolved proof gaps, not success.
 - Keep stack detection inside the project boundary.
 - Prefer evidence-backed findings with redacted previews, why it matters, and a next safe step.
-- Use `opstruth welcome` for first-run explanation and `opstruth init --yes` only when the user wants a config file.
+- Use `node cli/bin/opstruth.js welcome` for first-run explanation and `node cli/bin/opstruth.js init --yes` only when the user wants a config file.
 
 ## Local Codex Skills
 

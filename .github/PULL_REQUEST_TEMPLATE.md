@@ -12,6 +12,7 @@
 ## Evidence
 
 ```bash
+cd cli
 npm run lint
 npm test
 node bin/opstruth.js

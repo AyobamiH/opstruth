@@ -35,6 +35,7 @@ Findings include file, line, matched pattern, redacted preview, why it matters, 
 ## Fixture Runs
 
 ```bash
+cd cli
 ./scripts/demo-fixtures.sh
 ```
 

@@ -25,10 +25,12 @@ git log --oneline -5
 Run preflight:
 
 ```bash
+cd cli
 npm run lint
 npm test
 node bin/opstruth.js --skip evidence
 node bin/opstruth.js secrets
+cd ..
 git remote -v
 ```
 
@@ -53,10 +55,10 @@ git push origin main
 
 - `git status --short`
 - `git log --oneline -5`
-- `npm run lint`
-- `npm test`
-- `node bin/opstruth.js --skip evidence`
-- `node bin/opstruth.js secrets`
+- `cd cli && npm run lint`
+- `cd cli && npm test`
+- `cd cli && node bin/opstruth.js --skip evidence`
+- `cd cli && node bin/opstruth.js secrets`
 - `git remote -v`
 - Confirm no generated or secret files are accidentally staged.
 
