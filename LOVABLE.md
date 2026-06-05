@@ -1,5 +1,13 @@
 # LOVABLE.md — Monorepo Guardrails
 
+## Full Knowledge Base
+
+Before making frontend changes, read:
+
+`docs/lovable-knowledge-base.md`
+
+That file contains the full repo map, website file map, messaging rules, and Lovable boundaries.
+
 ## Project Structure
 
 This is a **monorepo**.
