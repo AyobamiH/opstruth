@@ -1,0 +1,12 @@
+{
+  "baseUrl": "https://example.com",
+  "routes": [
+    { "path": "/", "method": "HEAD", "expectStatus": [200, 301, 302] },
+    { "path": "/login", "method": "HEAD", "expectStatus": [200, 301, 302] },
+    { "path": "/healthz", "method": "GET", "expectStatus": [200] }
+  ],
+  "requiredHeaders": [
+    "content-security-policy",
+    "strict-transport-security"
+  ]
+}

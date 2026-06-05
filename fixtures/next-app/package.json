@@ -1,0 +1,19 @@
+{
+  "name": "opstruth-fixture-next-app",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "typecheck": "node --version",
+    "lint": "node --version",
+    "test": "node --version",
+    "build": "node --version"
+  }
+}
