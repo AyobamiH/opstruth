@@ -4,6 +4,15 @@ import { detectPackageManager, detectPackageScripts } from '../lib/detect.js';
 import { resolveProjectBoundary } from '../lib/boundary.js';
 
 const DEFAULT_SCRIPTS = ['typecheck', 'lint', 'test', 'build', 'ci'];
+
+export function isDefaultPlaceholderTestScript(script = '') {
+  return /^echo\s+["']?Error:\s*no test specified["']?\s*(?:&&|;)\s*exit\s+1$/i.test(script.trim());
+}
+
+function isRunnableQualityScript(name, script) {
+  return !(name === 'test' && isDefaultPlaceholderTestScript(script));
+}
+
 function runnerFor(manager) {
   if (manager === 'pnpm') return ['pnpm', ['run']];
   if (manager === 'yarn') return ['yarn', []];
@@ -16,12 +25,17 @@ export async function runQuality({ cwd = process.cwd(), continueOnFailure = fals
   const packageManager = await detectPackageManager(cwd);
   const availableScripts = await detectPackageScripts(cwd);
   const requested = wantedScripts?.length ? wantedScripts : DEFAULT_SCRIPTS;
-  const selected = requested.filter((name) => Object.prototype.hasOwnProperty.call(availableScripts, name));
-  const skippedScripts = requested.filter((name) => !Object.prototype.hasOwnProperty.call(availableScripts, name));
+  const selected = requested.filter((name) => Object.prototype.hasOwnProperty.call(availableScripts, name) && isRunnableQualityScript(name, availableScripts[name]));
+  const skippedScripts = requested.filter((name) => !Object.prototype.hasOwnProperty.call(availableScripts, name) || !isRunnableQualityScript(name, availableScripts[name]));
   const checks = [];
   const warnings = [];
   const failures = [];
-  const skipped = skippedScripts.map((name) => 'package script not found, skipped: ' + name);
+  const skipped = skippedScripts.map((name) => {
+    if (Object.prototype.hasOwnProperty.call(availableScripts, name) && !isRunnableQualityScript(name, availableScripts[name])) {
+      return 'default npm placeholder test script skipped';
+    }
+    return 'package script not found, skipped: ' + name;
+  });
   if (boundary.message) skipped.push(boundary.message);
   if (boundary.isGitRepo) {
     const diff = await runCommand('git', ['diff', '--check'], { cwd, timeoutMs: 60000 });

@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { pathExists } from './fs.js';
+import { isDefaultPlaceholderTestScript } from '../commands/quality.js';
 
 function fileDetector(file) {
   return async (root) => pathExists(path.join(root, file));
@@ -240,8 +241,8 @@ export const PROBE_CATALOGUE = [
     name: 'Test script',
     area: 'quality',
     stack: 'node',
-    description: 'Runs the existing package `test` script only when package.json exposes it and records exit code, duration, and a short redacted excerpt.',
-    detector: async (_root, stack) => Boolean(stack.scripts?.test),
+    description: 'Runs the existing package `test` script only when package.json exposes a real test command; npm placeholder scripts are skipped, not failed.',
+    detector: async (_root, stack) => Boolean(stack.scripts?.test && !isDefaultPlaceholderTestScript(stack.scripts.test)),
     safetyLevel: 'safe_readonly',
     defaultMode: 'automatic',
     command: '<package-manager> run test',

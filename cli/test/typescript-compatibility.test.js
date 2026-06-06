@@ -100,6 +100,38 @@ test('quality skips missing scripts instead of failing them', async () => {
   assert.equal(result.failures.length, 0);
 });
 
+test('quality skips npm default placeholder test script', async () => {
+  const root = await fixture({
+    'package.json': JSON.stringify({ scripts: { test: 'echo "Error: no test specified" && exit 1' } })
+  });
+  const result = await runQuality({ cwd: root, scripts: ['test'] });
+  assert.equal(result.status, 'pass');
+  assert.deepEqual(result.data.selectedScripts, []);
+  assert.ok(result.data.skippedScripts.includes('test'));
+  assert.ok(result.skipped.some((item) => item.includes('default npm placeholder test script')));
+  assert.equal(result.failures.length, 0);
+});
+
+test('quality still fails for a real failing test script', async () => {
+  const root = await fixture({
+    'package.json': JSON.stringify({ scripts: { test: 'node -e "process.exit(1)"' } })
+  });
+  const result = await runQuality({ cwd: root, scripts: ['test'] });
+  assert.equal(result.status, 'fail');
+  assert.deepEqual(result.data.selectedScripts, ['test']);
+  assert.ok(result.failures.includes('test failed'));
+});
+
+test('quality runs an existing valid test script', async () => {
+  const root = await fixture({
+    'package.json': JSON.stringify({ scripts: { test: 'node --version' } })
+  });
+  const result = await runQuality({ cwd: root, scripts: ['test'] });
+  assert.equal(result.status, 'pass');
+  assert.deepEqual(result.data.selectedScripts, ['test']);
+  assert.ok(result.checks.some((check) => check.name === 'package script test' && check.status === 'pass'));
+});
+
 
 test('suppresses opstruth internal scanner pattern definitions', async () => {
   const root = await fixture({
