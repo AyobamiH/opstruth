@@ -2,6 +2,16 @@
 
 opstruth treats Lovable as a frontend editing surface, not the production deployment source of truth. Production website deployment should use Cloudflare from the canonical monorepo.
 
+## Production URL
+
+The current production website is served by Cloudflare Workers:
+
+```text
+https://opstruth.woeinvests.workers.dev
+```
+
+Lovable is not the production deployment source. GitHub Actions deploys from the canonical monorepo using GitHub repository secrets; Cloudflare credentials must never be committed to the repository.
+
 ## Build Output
 
 The website lives in `website/` and builds to:

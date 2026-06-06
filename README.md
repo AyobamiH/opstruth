@@ -206,3 +206,15 @@ npm run build
 ```
 
 Fixture evidence is written to root `evidence/fixture-runs/`.
+
+## Website Deployment
+
+The production website is served by Cloudflare Workers:
+
+```text
+https://opstruth.woeinvests.workers.dev
+```
+
+Lovable is the frontend editing surface, not the production deployment source. Production deploys run from the canonical monorepo through `.github/workflows/deploy-cloudflare.yml`, using only GitHub repository secrets for Cloudflare credentials. Website dependencies stay in `website/package.json`.
+
+See `docs/deployment.md` and `docs/cloudflare-deployment.md` for the deployment model and local preview commands.
