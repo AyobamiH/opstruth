@@ -13,10 +13,12 @@ import { runSecrets } from '../src/commands/secrets.js';
 import { selectProbes } from '../src/lib/probes.js';
 import { runRoutes } from '../src/commands/routes.js';
 import { runCli } from '../src/cli.js';
+import { evidenceMarkdown, statusLabel } from '../src/lib/markdown.js';
 
 const execFileAsync = promisify(execFile);
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const cliBin = path.join(repoRoot, 'bin/opstruth.js');
+const ANSI_RE = /\x1B\[[0-?]*[ -/]*[@-~]/;
 
 async function captureCli(args, cwd) {
   let output = '';
@@ -163,6 +165,59 @@ test('welcome mode explains read-only safety', async () => {
   assert.match(stdout, /It will not deploy/);
   assert.match(stdout, /call OpenAI/);
   assert.equal(exitCode, 0);
+});
+
+test('terminal colour can be forced and disabled', async () => {
+  const root = await fixture({ 'package.json': '{}' });
+  const originalNoColor = process.env.NO_COLOR;
+  try {
+    delete process.env.NO_COLOR;
+    const forced = await captureCli(['repo', '--color'], root);
+    assert.match(forced.stdout, ANSI_RE);
+    assert.match(forced.stdout, /STATUS:/);
+
+    const disabled = await captureCli(['repo', '--color', '--no-color'], root);
+    assert.doesNotMatch(disabled.stdout, ANSI_RE);
+
+    process.env.NO_COLOR = '1';
+    const noColorEnv = await captureCli(['repo'], root);
+    assert.doesNotMatch(noColorEnv.stdout, ANSI_RE);
+  } finally {
+    if (originalNoColor === undefined) delete process.env.NO_COLOR;
+    else process.env.NO_COLOR = originalNoColor;
+  }
+});
+
+test('machine-readable and file outputs stay ANSI-free', async () => {
+  const root = await fixture({ 'package.json': '{}' });
+  const originalNoColor = process.env.NO_COLOR;
+  try {
+    delete process.env.NO_COLOR;
+    const json = await captureCli(['repo', '--json', '--color'], root);
+    assert.doesNotMatch(json.stdout, ANSI_RE);
+    assert.equal(JSON.parse(json.stdout).command, 'repo');
+
+    const out = path.join(root, 'repo.md');
+    const human = await captureCli(['repo', '--out', out, '--color'], root);
+    assert.match(human.stdout, ANSI_RE);
+    const written = await fs.readFile(out, 'utf8');
+    assert.doesNotMatch(written, ANSI_RE);
+    assert.match(written, /STATUS: Partial pass/);
+
+    const evidence = evidenceMarkdown({ title: 'Test Evidence', status: 'warn', scope: ['src/app.js'] });
+    assert.doesNotMatch(evidence, ANSI_RE);
+  } finally {
+    if (originalNoColor === undefined) delete process.env.NO_COLOR;
+    else process.env.NO_COLOR = originalNoColor;
+  }
+});
+
+test('status labels stay stable for terminal and markdown renderers', () => {
+  assert.equal(statusLabel('pass'), 'Pass');
+  assert.equal(statusLabel('warn'), 'Partial pass');
+  assert.equal(statusLabel('fail'), 'Fail');
+  assert.equal(statusLabel('skipped'), 'Skipped');
+  assert.equal(statusLabel('not_verified'), 'Not verified');
 });
 
 test('init mode writes config only with yes flag', async () => {

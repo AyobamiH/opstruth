@@ -104,7 +104,10 @@ opstruth --json
 opstruth --out evidence/opstruth.md
 opstruth --skip routes
 opstruth --only secrets
+opstruth --no-color
 ```
+
+Human terminal output is colourised when supported, using the same calm status language as the website. Use `--no-color` or `NO_COLOR=1` to disable colour, or `--color` to force colour for terminal demos. `--json` remains machine-readable and ANSI-free.
 
 ## Safety Model
 

@@ -30,6 +30,12 @@ opstruth routes --base-url https://example.com
 opstruth local --port 3000 --health /health
 ```
 
+## Terminal Output
+
+Human output uses a restrained colour theme for status, warnings, proof gaps, evidence, and next safe steps when the terminal supports ANSI colour.
+
+Use `--no-color` or `NO_COLOR=1` to disable colour. Use `--color` to force colour for demos. JSON output remains machine-readable and does not include ANSI codes.
+
 ## Safety Model
 
 opstruth is read-only by default. CLI checks do not deploy, mutate databases, trigger queues or jobs, call OpenAI, restart services, publish content, or print raw secrets.

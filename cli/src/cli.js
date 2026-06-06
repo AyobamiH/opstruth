@@ -12,6 +12,7 @@ import { runLocal } from './commands/local.js';
 import { runEvidence } from './commands/evidence.js';
 import { runProbes } from './commands/probes.js';
 import { resultToMarkdown } from './lib/markdown.js';
+import { formatTerminalOutput } from './lib/terminal.js';
 import { writeFileSafe } from './lib/fs.js';
 import { redactObject } from './lib/redact.js';
 import { exitCodeFor } from './lib/result.js';
@@ -26,6 +27,8 @@ export function parseArgs(argv) {
     if (!arg.startsWith('-') && !command && COMMANDS.has(arg)) { command = arg; continue; }
     if (arg === '--help' || arg === '-h') options.help = true;
     if (arg === '--json') options.json = true;
+    else if (arg === '--color') options.color = true;
+    else if (arg === '--no-color') options.noColor = true;
     else if (arg === '--out') options.out = take(argv, i++);
     else if (arg === '--base-url') options.baseUrl = take(argv, i++);
     else if (arg === '--routes') options.routesFile = take(argv, i++);
@@ -108,6 +111,8 @@ function helpText(command) {
     '  --out <file>        Write command output/evidence',
     '  --skip <area|id>    Skip a command or probe area',
     '  --only <area|id>    Select a probe area or id',
+    '  --color             Force colour for human terminal output',
+    '  --no-color          Disable colour for human terminal output',
     '  -h, --help          Print help and exit 0'
   ];
   const route = [
@@ -120,6 +125,8 @@ function helpText(command) {
     '  --base-url <url>    Base URL to probe',
     '  --routes <file>     JSON route config',
     '  --json              Print JSON output',
+    '  --color             Force colour for human terminal output',
+    '  --no-color          Disable colour for human terminal output',
     '  -h, --help          Print help and exit 0'
   ];
   const repo = [
@@ -130,6 +137,8 @@ function helpText(command) {
     '',
     'Options:',
     '  --json              Print JSON output',
+    '  --color             Force colour for human terminal output',
+    '  --no-color          Disable colour for human terminal output',
     '  -h, --help          Print help and exit 0'
   ];
   if (command === 'routes') return route.join('\n') + '\n';
@@ -234,13 +243,13 @@ export async function runCli(argv, cwd = process.cwd()) {
   const { command, options } = parseArgs(argv);
   options.cwd = cwd;
   if (options.help) {
-    await writeStdout(helpText(command));
+    await writeStdout(formatTerminalOutput(helpText(command), options));
     process.exitCode = 0;
     return;
   }
   const result = await dispatch(command, options);
   if (typeof result === 'string') {
-    await writeStdout(result);
+    await writeStdout(formatTerminalOutput(result, options));
     process.exitCode = 0;
     return;
   }
@@ -249,6 +258,6 @@ export async function runCli(argv, cwd = process.cwd()) {
     const outPath = path.isAbsolute(options.out) ? options.out : path.join(cwd, options.out);
     await writeFileSafe(outPath, output);
   }
-  await writeStdout(output);
+  await writeStdout(options.json ? output : formatTerminalOutput(output, options));
   process.exitCode = exitCodeFor(result, { strict: options.strict });
 }

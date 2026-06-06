@@ -9,7 +9,7 @@ const ASCII_HEADER = `   ____        _______          __  __
 
 Operational truth checks for AI-assisted engineering.`;
 
-function statusLabel(status) {
+export function statusLabel(status) {
   if (status === 'pass') return 'Pass';
   if (status === 'warn') return 'Partial pass';
   if (status === 'fail') return 'Fail';

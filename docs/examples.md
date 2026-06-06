@@ -17,6 +17,16 @@ npx opstruth
 
 This runs the published package without a global install.
 
+## Terminal Colour
+
+```bash
+opstruth --color
+opstruth --no-color
+NO_COLOR=1 opstruth
+```
+
+Human terminal output is colourised only for readability. `opstruth --json` stays machine-readable and ANSI-free.
+
 ## One Command
 
 ```bash
