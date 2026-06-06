@@ -4,8 +4,17 @@
   "description": "Read-only operational truth checks for AI-assisted engineering workflows.",
   "type": "module",
   "bin": {
-    "opstruth": "bin/opstruth.js"
+    "opstruth": "./bin/opstruth.js"
   },
+  "files": [
+    "bin/",
+    "src/",
+    "examples/",
+    "fixtures/",
+    "scripts/",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "typecheck": "node --check bin/opstruth.js",
     "lint": "node --check bin/opstruth.js && find src -name '*.js' -print -exec node --check {} \\;",
@@ -15,19 +24,30 @@
     "demo:fixtures": "./scripts/demo-fixtures.sh"
   },
   "keywords": [
-    "cli",
-    "ai-engineering",
     "ai-assisted-development",
     "codex",
-    "devops",
-    "evidence",
-    "read-only",
-    "typescript",
+    "devtools",
+    "cli",
+    "operational-truth",
     "cloudflare",
-    "supabase"
+    "supabase",
+    "typescript",
+    "evidence"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AyobamiH/opstruth.git",
+    "directory": "cli"
+  },
+  "homepage": "https://opstruth.woeinvests.workers.dev",
+  "bugs": {
+    "url": "https://github.com/AyobamiH/opstruth/issues"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
