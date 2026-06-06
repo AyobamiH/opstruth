@@ -1,27 +1,34 @@
 # opstruth Runtime Truth Launch Video
 
-## Production Hero Asset Decision
+## Current Production Video Decision
 
-Decision date: 2026-06-05.
+Decision date: 2026-06-06.
 
-Decision: USE_LOVABLE_VIDEO for the website hero while preserving the HyperFrames storyboard as source material.
+Decision: SUPERSEDE the Lovable-origin hero asset with current-truth video assets generated from inspected repo, CLI, npm, GitHub release, and Cloudflare evidence.
 
-The live Lovable asset was downloaded from the deployed public page and compared against the locally rendered HyperFrames MP4. The Lovable video is shorter, smaller, and more suitable for a looping homepage hero: 18 seconds, 1920x1080, about 3.6 MB. The local HyperFrames render is more faithful to the full runtime-truth narrative, but it is 80 seconds and about 8.4 MB, which is too long for the primary hero loop.
-
-The chosen production path is:
+The previous production hero path remains historical material:
 
 ```text
 website/public/demo/opstruth-runtime-truth.mp4
 ```
 
-The website references it as:
+It should not be treated as the current product truth asset because it came from Lovable's frontend-only understanding.
+
+The active website video paths are:
 
 ```text
-/demo/opstruth-runtime-truth.mp4
+website/public/demo/opstruth-hero-runtime-truth.mp4
+website/public/demo/opstruth-current-runtime-truth.mp4
 ```
 
-The selected asset must remain operationally honest: no fake customers, fake metrics, raw secrets, production claims, or AI magic. The HyperFrames composition can still be used later for a longer flagship video if the render path has a faster Chrome/headless-shell setup.
+The website references them as:
 
+```text
+/demo/opstruth-hero-runtime-truth.mp4
+/demo/opstruth-current-runtime-truth.mp4
+```
+
+The older long HyperFrames plan below is now historical source material and narrative reference. Future render work must start from `docs/current-video-truth-brief.md` and re-inspect current product truth before creating new assets.
 
 ## Concept
 
@@ -73,15 +80,15 @@ Now I know what is true.
 
 Storyboard target runtime: 80 seconds. The current website hero asset is the selected 18-second production cut described above.
 
-| Time | Scene | Purpose |
-| --- | --- | --- |
-| 0-5s | Cold open: runtime report | Start with opstruth's language before explaining it. |
-| 5-18s | Assumption wall | Show ordinary engineering assumptions breaking down. |
-| 18-28s | Product command | Introduce `opstruth` as the better question: what can we prove? |
-| 28-45s | Probe activation | Show stack-aware safe probes: repo, secrets, routes, runtime, Supabase, Cloudflare, evidence. |
-| 45-62s | Evidence and proof gaps | Show redacted finding, not verified list, and next safe step. |
-| 62-72s | Cleaner run | Show stronger confidence with explicit checked surfaces. |
-| 72-80s | Product reveal | Close with opstruth name and GitHub URL. |
+| Time   | Scene                     | Purpose                                                                                       |
+| ------ | ------------------------- | --------------------------------------------------------------------------------------------- |
+| 0-5s   | Cold open: runtime report | Start with opstruth's language before explaining it.                                          |
+| 5-18s  | Assumption wall           | Show ordinary engineering assumptions breaking down.                                          |
+| 18-28s | Product command           | Introduce `opstruth` as the better question: what can we prove?                               |
+| 28-45s | Probe activation          | Show stack-aware safe probes: repo, secrets, routes, runtime, Supabase, Cloudflare, evidence. |
+| 45-62s | Evidence and proof gaps   | Show redacted finding, not verified list, and next safe step.                                 |
+| 62-72s | Cleaner run               | Show stronger confidence with explicit checked surfaces.                                      |
+| 72-80s | Product reveal            | Close with opstruth name and GitHub URL.                                                      |
 
 ## Shot List
 
@@ -456,7 +463,8 @@ Generated assets:
 
 - `assets/video/opstruth-runtime-truth/index.html` for the HyperFrames composition.
 - `assets/video/opstruth-runtime-truth/snapshots/` for rendered verification stills and a contact sheet.
-- `website/public/demo/opstruth-runtime-truth.mp4` for the selected website hero video asset.
+- `website/public/demo/opstruth-hero-runtime-truth.mp4` for the active website hero loop.
+- `website/public/demo/opstruth-current-runtime-truth.mp4` for the active controlled product film.
 - No stock footage.
 - No fake production screenshots.
 - No raw private repo paths or secrets.
@@ -497,17 +505,18 @@ The HyperFrames project lives at:
 assets/video/opstruth-runtime-truth/
 ```
 
-Validate and render from that directory:
+Validate and render from that directory. These instructions are historical for the old HyperFrames composition and should be refreshed against `docs/current-video-truth-brief.md` before use:
 
 ```bash
 cd assets/video/opstruth-runtime-truth
 npx hyperframes lint
 npx hyperframes inspect --samples 15
-npx hyperframes render --output ../../../website/public/demo/opstruth-runtime-truth.mp4 --quality high --fps 30
+npx hyperframes render --output ../../../website/public/demo/opstruth-current-runtime-truth.mp4 --quality high --fps 30
 ```
 
-The rendered output path is:
+The current rendered output paths are:
 
 ```text
-public/demo/opstruth-runtime-truth.mp4
+public/demo/opstruth-hero-runtime-truth.mp4
+public/demo/opstruth-current-runtime-truth.mp4
 ```

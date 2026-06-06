@@ -1,47 +1,50 @@
 # HyperFrames Video Roadmap
 
-## Current state
+## Current State
 
-The production homepage currently uses the selected 18-second runtime-truth hero asset.
+The website no longer treats the Lovable-origin video as the authoritative product truth asset.
 
-That asset is good enough for the v0.1 public testing release because it is short, direct, and aligned with the current website performance needs.
+The active website videos are:
 
-The longer HyperFrames runtime-truth concept remains future flagship material, not a v0.1 blocker.
+- `website/public/demo/opstruth-hero-runtime-truth.mp4`
+- `website/public/demo/opstruth-current-runtime-truth.mp4`
 
-## Next video goal
+They are derived from the current repo, source CLI output, npm package metadata, GitHub release state, and Cloudflare production response.
 
-Create a stronger 45-60 second product video that explains the movement from assumption to proof without becoming a generic SaaS promo.
+## Historical Material
 
-The next cut should make the runtime report itself the design system:
+The old website asset remains historical launch material:
 
-- `STATUS`
-- `Verified`
-- `Warnings`
-- `Not Verified`
-- `Overall Confidence`
-- `Next Safe Step`
-- `Evidence Pack`
+```text
+website/public/demo/opstruth-runtime-truth.mp4
+```
 
-## Source materials
+It should not be reused as the final truth source for future homepage work because it came from Lovable's frontend-only understanding.
 
-- `docs/hyperframes-runtime-truth-video.md`
-- `scripts/video-demo-runtime-truth.sh`
-- Existing runtime truth language from actual opstruth output
-- Real evidence-pack structure and redacted findings
-- The production 18-second hero video at `website/public/demo/opstruth-runtime-truth.mp4`
+The older long HyperFrames runtime-truth render and storyboard remain useful source material, but they should not be restored as the final product video without another evidence refresh.
 
-## Future requirements
+## Current Video Brief
 
-- Stronger first 5 seconds.
-- Runtime output becomes the motion language.
-- Show what was verified separately from what was not verified.
-- Keep proof gaps visible instead of treating unknowns as safe.
-- Use real or realistic opstruth command surfaces.
-- Avoid generic SaaS promo pacing.
-- Avoid fake customers.
-- Avoid fake metrics.
-- Avoid fake production claims.
+Use this file as the current video source of truth:
 
-## Not a v0.1 blocker
+```text
+docs/current-video-truth-brief.md
+```
 
-The v0.1 public testing release does not need the longer flagship video. The current production video is acceptable for launch while the longer runtime-truth piece remains a focused follow-up.
+The refreshed video direction is:
+
+- show the movement from assumption to proof
+- use opstruth report language as the visual system
+- keep proof gaps visible
+- separate package truth from source-runtime truth
+- avoid fake production confidence
+- avoid generic SaaS promo pacing
+
+## Future Requirements
+
+- Re-run current product truth inspection before any future video refresh.
+- Verify npm, GitHub release, Cloudflare production, source CLI output, and website asset paths.
+- If HyperFrames is locally available, render through the real HyperFrames workflow.
+- If HyperFrames is unavailable or blocked, use a deterministic local code-render path and document the limitation.
+- Do not claim a render exists unless the MP4 exists.
+- Do not publish npm, create releases, deploy, or modify Lovable settings during video generation.

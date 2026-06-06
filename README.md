@@ -234,3 +234,14 @@ https://opstruth.woeinvests.workers.dev
 Lovable is the frontend editing surface, not the production deployment source. Production deploys run from the canonical monorepo through `.github/workflows/deploy-cloudflare.yml`, using only GitHub repository secrets for Cloudflare credentials. Website dependencies stay in `website/package.json`.
 
 See `docs/deployment.md` and `docs/cloudflare-deployment.md` for the deployment model and local preview commands.
+
+## Website Videos
+
+The current website videos are generated from inspected repo, source CLI, npm, GitHub release, and Cloudflare production truth:
+
+```text
+website/public/demo/opstruth-hero-runtime-truth.mp4
+website/public/demo/opstruth-current-runtime-truth.mp4
+```
+
+The older `website/public/demo/opstruth-runtime-truth.mp4` asset is historical launch material, not the current product truth source. See `docs/current-video-truth-brief.md` for the video evidence brief.

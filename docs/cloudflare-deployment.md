@@ -70,16 +70,28 @@ Do not commit Cloudflare tokens, account credentials, `.dev.vars`, or `.env` fil
 
 Secrets for Cloudflare and release operations belong in GitHub, Cloudflare, or npm-controlled secret storage. They must not be committed to the repository.
 
-## Production Asset
+## Production Assets
 
-The website hero video is served from:
+The current website hero loop is served from:
 
 ```text
-/demo/opstruth-runtime-truth.mp4
+/demo/opstruth-hero-runtime-truth.mp4
 ```
 
 The canonical source file is:
 
 ```text
-website/public/demo/opstruth-runtime-truth.mp4
+website/public/demo/opstruth-hero-runtime-truth.mp4
+```
+
+The controlled current-truth product film is served from:
+
+```text
+/demo/opstruth-current-runtime-truth.mp4
+```
+
+The canonical source file is:
+
+```text
+website/public/demo/opstruth-current-runtime-truth.mp4
 ```

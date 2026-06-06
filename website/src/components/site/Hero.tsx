@@ -2,7 +2,7 @@ import { CommandBlock } from "./CommandBlock";
 import { ArrowUpRight } from "lucide-react";
 import { LogoMark, Logo } from "./Logo";
 
-const launchVideoSrc = "/demo/opstruth-runtime-truth.mp4";
+const launchVideoSrc = "/demo/opstruth-hero-runtime-truth.mp4";
 
 export function Hero() {
   return (
@@ -55,10 +55,10 @@ export function Hero() {
         <div className="mt-12 overflow-hidden rounded-xl border border-border bg-surface shadow-[0_30px_80px_-30px_oklch(0_0_0/0.6)]">
           <div className="flex flex-col gap-1 border-b border-border bg-background/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
-              Runtime truth, rendered from the product itself.
+              Current runtime truth, rendered from inspected product state.
             </p>
             <p className="font-mono text-[11px] text-muted-foreground">
-              /demo/opstruth-runtime-truth.mp4
+              /demo/opstruth-hero-runtime-truth.mp4
             </p>
           </div>
           <video
@@ -70,9 +70,9 @@ export function Hero() {
             playsInline
             controls
             preload="metadata"
-            aria-label="opstruth runtime truth launch video"
+            aria-label="opstruth current runtime truth hero loop"
           >
-            <a href={launchVideoSrc}>Watch the opstruth runtime truth launch video.</a>
+            <a href={launchVideoSrc}>Watch the opstruth current runtime truth hero loop.</a>
           </video>
         </div>
 

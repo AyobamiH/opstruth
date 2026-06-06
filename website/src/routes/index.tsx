@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Hero } from "@/components/site/Hero";
+import { CurrentTruthFilm } from "@/components/site/CurrentTruthFilm";
 import { Problem } from "@/components/site/Problem";
 import { WhatItChecks } from "@/components/site/WhatItChecks";
 import { ProofGap } from "@/components/site/ProofGap";
@@ -61,6 +62,7 @@ function Index() {
       <SiteHeader />
       <main>
         <Hero />
+        <CurrentTruthFilm />
         <Problem />
         <ProofGap />
         <WhatItChecks />
