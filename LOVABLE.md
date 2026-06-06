@@ -38,7 +38,8 @@ This is a **monorepo**.
    - Do not create frontend files at the repository root.
 
 4. **Do not merge website dependencies into root package files.**
-   - The root `package.json` is for the CLI only.
+   - The root `package.json` is for monorepo orchestration scripts.
+   - CLI dependencies live in `cli/package.json`.
    - Website dependencies live in `website/package.json` and `website/bun.lock`.
 
 5. **If Lovable cannot safely target `website/`, stop and explain the limitation.**
