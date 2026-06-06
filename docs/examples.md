@@ -1,5 +1,22 @@
 # Examples
 
+## Install
+
+```bash
+npm install -g opstruth
+opstruth
+```
+
+The public npm package is `opstruth@0.1.1`.
+
+## One-Off Usage
+
+```bash
+npx opstruth
+```
+
+This runs the published package without a global install.
+
 ## One Command
 
 ```bash
@@ -40,3 +57,8 @@ cd cli
 ```
 
 This copies local fixtures to temporary directories, initializes git where appropriate, runs opstruth, and writes evidence to `evidence/fixture-runs/`.
+
+## Release Links
+
+- GitHub release: `https://github.com/AyobamiH/opstruth/releases/tag/v0.1.1`
+- Production website: `https://opstruth.woeinvests.workers.dev`

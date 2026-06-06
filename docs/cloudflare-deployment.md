@@ -12,6 +12,25 @@ https://opstruth.woeinvests.workers.dev
 
 Lovable is not the production deployment source. GitHub Actions deploys from the canonical monorepo using GitHub repository secrets; Cloudflare credentials must never be committed to the repository.
 
+The CLI is published to npm independently as `opstruth@0.1.1`:
+
+```bash
+npm install -g opstruth
+opstruth
+```
+
+One-off usage is available with:
+
+```bash
+npx opstruth
+```
+
+GitHub release:
+
+```text
+https://github.com/AyobamiH/opstruth/releases/tag/v0.1.1
+```
+
 ## Build Output
 
 The website lives in `website/` and builds to:
@@ -48,6 +67,8 @@ Do not commit Cloudflare tokens, account credentials, `.dev.vars`, or `.env` fil
 ## GitHub Actions
 
 `.github/workflows/deploy-cloudflare.yml` deploys the website on `main` changes that affect the website or Cloudflare deployment config. It reads Cloudflare credentials only from GitHub secrets.
+
+Secrets for Cloudflare and release operations belong in GitHub, Cloudflare, or npm-controlled secret storage. They must not be committed to the repository.
 
 ## Production Asset
 

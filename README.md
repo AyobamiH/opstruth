@@ -47,10 +47,25 @@ Basic checks passed. Runtime or production verification may still be incomplete.
 
 ## Install
 
+Published package:
+
+```bash
+npm install -g opstruth
+opstruth
+```
+
+One-off usage:
+
+```bash
+npx opstruth
+```
+
+The public npm package is `opstruth@0.1.1`. This is a v0.1 public testing release, not a claim of mature production coverage.
+
 Local development:
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/AyobamiH/opstruth.git
 cd opstruth
 cd cli
 npm install
@@ -58,13 +73,11 @@ npm link
 opstruth
 ```
 
-One-off use after npm publication:
+Release:
 
-```bash
-npx opstruth
+```text
+https://github.com/AyobamiH/opstruth/releases/tag/v0.1.1
 ```
-
-`npx opstruth` is future-facing until the package is published.
 
 ## Commands
 
@@ -175,7 +188,7 @@ Each probe defines what evidence it collects, what it proves, what it does not p
 - Some probes are static-only.
 - Route checks need `--base-url` or route config.
 - Local runtime checks need `--port`, `--health`, process, or service inputs.
-- The package is not published yet.
+- `opstruth@0.1.1` is a v0.1 public testing release.
 - opstruth is not a replacement for a security audit.
 - opstruth does not prove production state unless you provide production/staging route or runtime inputs.
 

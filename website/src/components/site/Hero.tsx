@@ -36,7 +36,11 @@ export function Hero() {
         </p>
 
         <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <CommandBlock command="opstruth" />
+          <div className="flex flex-col gap-2">
+            <CommandBlock command="npm install -g opstruth" />
+            <CommandBlock command="opstruth" />
+            <CommandBlock command="npx opstruth" />
+          </div>
           <a
             href="https://github.com/ayobamih/opstruth"
             target="_blank"
