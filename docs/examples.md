@@ -7,7 +7,7 @@ npm install -g opstruth
 opstruth
 ```
 
-The public npm package is `opstruth@0.1.1`.
+The public npm package is `opstruth@0.1.2`.
 
 ## One-Off Usage
 
@@ -25,7 +25,7 @@ opstruth --no-color
 NO_COLOR=1 opstruth
 ```
 
-Human terminal output is colourised only for readability. `opstruth --json` stays machine-readable and ANSI-free.
+Human terminal output is colourised only for readability. `opstruth --json` stays machine-readable and ANSI-free. Evidence markdown output remains ANSI-free.
 
 ## One Command
 
@@ -70,5 +70,5 @@ This copies local fixtures to temporary directories, initializes git where appro
 
 ## Release Links
 
-- GitHub release: `https://github.com/AyobamiH/opstruth/releases/tag/v0.1.1`
+- GitHub release: `https://github.com/AyobamiH/opstruth/releases/tag/v0.1.2`
 - Production website: `https://opstruth.woeinvests.workers.dev`

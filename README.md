@@ -60,7 +60,7 @@ One-off usage:
 npx opstruth
 ```
 
-The public npm package is `opstruth@0.1.1`. This is a v0.1 public testing release, not a claim of mature production coverage.
+The public npm package is `opstruth@0.1.2`. This is a v0.1 public testing release, not a claim of mature production coverage.
 
 Local development:
 
@@ -76,7 +76,7 @@ opstruth
 Release:
 
 ```text
-https://github.com/AyobamiH/opstruth/releases/tag/v0.1.1
+https://github.com/AyobamiH/opstruth/releases/tag/v0.1.2
 ```
 
 ## Commands
@@ -104,7 +104,9 @@ opstruth --json
 opstruth --out evidence/opstruth.md
 opstruth --skip routes
 opstruth --only secrets
+opstruth --color
 opstruth --no-color
+NO_COLOR=1 opstruth
 ```
 
 Human terminal output is colourised when supported, using the same calm status language as the website. Use `--no-color` or `NO_COLOR=1` to disable colour, or `--color` to force colour for terminal demos. `--json` remains machine-readable and ANSI-free.
@@ -191,7 +193,7 @@ Each probe defines what evidence it collects, what it proves, what it does not p
 - Some probes are static-only.
 - Route checks need `--base-url` or route config.
 - Local runtime checks need `--port`, `--health`, process, or service inputs.
-- `opstruth@0.1.1` is a v0.1 public testing release.
+- `opstruth@0.1.2` is a v0.1 public testing release.
 - opstruth is not a replacement for a security audit.
 - opstruth does not prove production state unless you provide production/staging route or runtime inputs.
 

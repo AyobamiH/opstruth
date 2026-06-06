@@ -6,12 +6,14 @@ Read-only operational truth checks for AI-assisted engineering workflows.
 
 ## Install
 
-After npm publication:
+Current published package:
 
 ```bash
 npm install -g opstruth
 opstruth
 ```
+
+The public npm package is `opstruth@0.1.2`.
 
 One-off usage:
 
@@ -34,7 +36,7 @@ opstruth local --port 3000 --health /health
 
 Human output uses a restrained colour theme for status, warnings, proof gaps, evidence, and next safe steps when the terminal supports ANSI colour.
 
-Use `--no-color` or `NO_COLOR=1` to disable colour. Use `--color` to force colour for demos. JSON output remains machine-readable and does not include ANSI codes.
+Use `--no-color` or `NO_COLOR=1` to disable colour. Use `--color` to force colour for demos. JSON output remains machine-readable and does not include ANSI codes. Evidence markdown output remains ANSI-free.
 
 ## Safety Model
 
