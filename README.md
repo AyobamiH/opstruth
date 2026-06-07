@@ -126,6 +126,16 @@ opstruth is read-only by default. It does not:
 
 Skipped is not failed. Unverified is not safe. opstruth reports proof gaps instead of pretending they are confidence.
 
+## Completion Gate
+
+Codex work in this repo is not complete until the completion gate has run and the final report includes proof:
+
+```bash
+./scripts/opstruth-completion-gate.sh
+```
+
+See `docs/completion-gate.md`.
+
 ## Who It Is For
 
 - Codex users

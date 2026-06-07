@@ -52,6 +52,16 @@ Release should only happen after:
 - GitHub release notes match actual behavior
 - npm publishing is explicitly requested
 
+## Completion Gate
+
+No opstruth task is complete until the completion gate has run and the final report includes proof:
+
+```bash
+./scripts/opstruth-completion-gate.sh
+```
+
+See `docs/completion-gate.md`. Skipped checks remain proof gaps, not passes.
+
 ## Maturity Work In This Pass
 
 This pass focuses on trust surfaces that can be improved safely without changing the product promise:

@@ -18,3 +18,35 @@ First public product message:
 ```text
 AI coding tools are fast. opstruth checks whether the project is actually safe, working, and explainable afterward.
 ```
+
+## Completion Gate
+
+Before reporting work as complete, run:
+
+```bash
+./scripts/opstruth-completion-gate.sh
+```
+
+No task is complete until the output has been reviewed.
+
+If the completion gate fails, report the failure instead of claiming success.
+
+If the task touched probes or fixtures, also run the fixture matrix if available:
+
+```bash
+./scripts/run-fixture-matrix.sh
+```
+
+If the task touched npm publishing, verify:
+
+```bash
+npm view opstruth version description homepage repository bin --json
+```
+
+If the task touched production or website assets, verify:
+
+```bash
+curl -I https://opstruth.woeinvests.workers.dev
+```
+
+and any relevant asset URLs.
