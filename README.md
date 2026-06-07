@@ -60,7 +60,7 @@ One-off usage:
 npx opstruth
 ```
 
-The public npm package is `opstruth@0.1.2`. This is a v0.1 public testing release, not a claim of mature production coverage.
+The public npm package is `opstruth@0.1.3`. This is a v0.1 public testing release, not a claim of mature production coverage.
 
 Local development:
 
@@ -76,7 +76,7 @@ opstruth
 Release:
 
 ```text
-https://github.com/AyobamiH/opstruth/releases/tag/v0.1.2
+https://github.com/AyobamiH/opstruth/releases/tag/v0.1.3
 ```
 
 ## Commands
@@ -213,7 +213,7 @@ See `docs/configuration.md`.
 - Some probes are static-only.
 - Route checks need `--base-url` or route config.
 - Local runtime checks need `--port`, `--health`, process, or service inputs.
-- `opstruth@0.1.2` is a v0.1 public testing release.
+- `opstruth@0.1.3` is a v0.1 public testing release.
 - opstruth is not a replacement for a security audit.
 - opstruth does not prove production state unless you provide production/staging route or runtime inputs.
 

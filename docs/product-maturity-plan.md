@@ -2,9 +2,9 @@
 
 ## Current Product State
 
-- npm package: `opstruth@0.1.2`
+- npm package: `opstruth@0.1.3`
 - GitHub repository: `https://github.com/AyobamiH/opstruth`
-- GitHub release: `v0.1.2`
+- GitHub release: `v0.1.3`
 - Production website: `https://opstruth.woeinvests.workers.dev`
 - Production runtime: Cloudflare Workers
 - CLI source path: `cli/`
@@ -17,7 +17,7 @@ Known limitations:
 - Route checks need `--base-url` or route config before production availability can be verified.
 - Local runtime checks need explicit port, health, process, or service inputs.
 - Supabase and Cloudflare checks are mostly static unless explicit route/runtime inputs are provided.
-- `opstruth@0.1.2` is a v0.1 public testing release, not a mature production coverage claim.
+- `opstruth@0.1.3` is a v0.1 public testing release, not a mature production coverage claim.
 - opstruth is not a replacement for a security audit, deployment monitor, or incident response system.
 
 ## Maturity Definition
@@ -41,7 +41,7 @@ A stranger can install opstruth, run it on a messy repo, trust the output, under
 
 This maturity work should not automatically publish npm.
 
-The version bump comes later after local checks, fixture matrix evidence, public install testing, and CI review pass. A likely future release could be `v0.1.3`.
+The `v0.1.3` maturity release was published only after local checks, fixture matrix evidence, npm auth verification, public install testing, and source push completed.
 
 Release should only happen after:
 

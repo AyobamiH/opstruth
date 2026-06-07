@@ -7,7 +7,7 @@ npm install -g opstruth
 opstruth
 ```
 
-The public npm package is `opstruth@0.1.2`.
+The public npm package is `opstruth@0.1.3`.
 
 ## One-Off Usage
 
@@ -88,5 +88,5 @@ opstruth local --port 3000 --health /health
 
 ## Release Links
 
-- GitHub release: `https://github.com/AyobamiH/opstruth/releases/tag/v0.1.2`
+- GitHub release: `https://github.com/AyobamiH/opstruth/releases/tag/v0.1.3`
 - Production website: `https://opstruth.woeinvests.workers.dev`

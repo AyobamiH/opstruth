@@ -13,7 +13,7 @@ npm install -g opstruth
 opstruth
 ```
 
-The public npm package is `opstruth@0.1.2`.
+The public npm package is `opstruth@0.1.3`.
 
 One-off usage:
 

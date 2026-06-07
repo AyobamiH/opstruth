@@ -6,10 +6,11 @@ Date: 2026-06-07
 
 - Repository: `https://github.com/AyobamiH/opstruth`
 - Branch during work: `main`
-- Commit before work: `3ed25c3 Document opstruth v0.1.2 CLI identity release`
-- Commit after work: recorded in the final handoff for this pass
-- npm package: `opstruth@0.1.2`
-- GitHub release: `v0.1.2`
+- Commit before maturity work: `3ed25c3 Document opstruth v0.1.2 CLI identity release`
+- Maturity implementation commit: `49a0f52 Improve opstruth product maturity`
+- CLI version commit: `6af2105 Bump opstruth CLI to v0.1.3`
+- npm package: `opstruth@0.1.3`
+- GitHub release: `v0.1.3`
 - Production website: `https://opstruth.woeinvests.workers.dev`
 - Production runtime: Cloudflare Workers
 - CLI source: `cli/`
@@ -29,7 +30,7 @@ Date: 2026-06-07
 - Secret findings now distinguish `secret-like value` from `secret reference` and label fixture/demo and documentation contexts.
 - Root fixture matrix added for common repo shapes.
 - CI, configuration, probe quality, evidence pack, route/runtime, Supabase, and Cloudflare maturity docs added.
-- Website and docs version references aligned to `opstruth@0.1.2` and GitHub release `v0.1.2`.
+- Website and docs version references aligned to `opstruth@0.1.3` and GitHub release `v0.1.3`.
 
 ## Fixture Matrix Summary
 
@@ -114,19 +115,19 @@ Results:
 Public package validation:
 
 ```bash
-npm install -g opstruth@0.1.2 --prefix /tmp/opstruth-maturity-prefix
-/tmp/opstruth-maturity-prefix/bin/opstruth --help
-/tmp/opstruth-maturity-prefix/bin/opstruth welcome
-/tmp/opstruth-maturity-prefix/bin/opstruth probes
-/tmp/opstruth-maturity-prefix/bin/opstruth --skip evidence
-/tmp/opstruth-maturity-prefix/bin/opstruth --json --skip evidence
+npm install -g opstruth@0.1.3 --prefix /tmp/opstruth-public-0.1.3-prefix
+/tmp/opstruth-public-0.1.3-prefix/bin/opstruth --help
+/tmp/opstruth-public-0.1.3-prefix/bin/opstruth welcome
+/tmp/opstruth-public-0.1.3-prefix/bin/opstruth probes --json
+/tmp/opstruth-public-0.1.3-prefix/bin/opstruth --skip evidence
+/tmp/opstruth-public-0.1.3-prefix/bin/opstruth --json --skip evidence
 ```
 
 Results:
 
-- Initial sandboxed npm install hit `EAI_AGAIN` for `registry.npmjs.org`.
-- Escalated retry succeeded.
-- Installed `opstruth@0.1.2` command surfaces ran successfully from `/tmp`.
+- Registry install succeeded with a timed npm command and `/tmp` cache.
+- Installed `opstruth@0.1.3` command surfaces ran successfully from `/tmp`.
+- Published package metadata confirmed `bin.opstruth` points to `bin/opstruth.js`.
 
 Production reachability:
 
@@ -150,15 +151,13 @@ Results:
 - Supabase checks remain static and do not verify live database permissions.
 - Cloudflare checks do not inspect dashboard state and do not deploy.
 - Secret scanner intentionally warns on redacted demo/documentation references when they match risky names.
-- `opstruth@0.1.2` remains a v0.1 public testing release.
+- `opstruth@0.1.3` remains a v0.1 public testing release.
 
 ## What Was Not Done
 
-- No npm publish.
-- No version bump.
-- No GitHub release.
 - No manual deployment.
 - No Lovable setting changes.
+- No video work.
 - No production architecture change.
 - No secrets committed.
 - No `.env`, `.npmrc`, tarballs, node_modules, dist/build/cache output, `.wrangler`, temp auth files, or generated junk intentionally staged.
