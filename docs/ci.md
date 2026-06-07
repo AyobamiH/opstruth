@@ -1,8 +1,23 @@
 # CI Usage
 
-## Current Local Checkout Usage
+## Published Package Usage
 
-Until the package is published, run opstruth from the checkout:
+The public npm package is `opstruth@0.1.2`.
+
+```yaml
+- uses: actions/checkout@v4
+- uses: actions/setup-node@v4
+  with:
+    node-version: 20
+- run: npm install -g opstruth@0.1.2
+- run: mkdir -p evidence
+- run: opstruth --out evidence/opstruth.md
+- run: opstruth --json --skip evidence > evidence/opstruth.json
+```
+
+## Local Checkout Usage
+
+When validating this repository itself, run from the checkout:
 
 ```yaml
 - uses: actions/checkout@v4
@@ -15,12 +30,10 @@ Until the package is published, run opstruth from the checkout:
   working-directory: cli
 ```
 
-## Future npx Usage
-
-After publication:
+## npx Usage
 
 ```yaml
-- run: npx opstruth --strict --out evidence/opstruth.md
+- run: npx opstruth@0.1.2 --out evidence/opstruth.md
 ```
 
 ## Upload Evidence
@@ -30,9 +43,13 @@ After publication:
   if: always()
   with:
     name: opstruth-evidence
-    path: evidence/opstruth.md
+    path: evidence/
 ```
 
 ## Strict Mode
 
 `--strict` returns a non-zero exit code for warnings. This is useful when CI should block on unresolved proof gaps, but it can be noisy for early adoption. Start without strict mode if you are exploring.
+
+## Safety
+
+Recommended CI usage does not deploy, publish, mutate databases, call OpenAI, or require production secrets.

@@ -188,6 +188,26 @@ The initial catalogue covers:
 
 Each probe defines what evidence it collects, what it proves, what it does not prove, and the next safe step.
 
+The current catalogue also reports skipped-probe reasons, explicit inputs required, proof limitations, and metadata suitable for JSON automation:
+
+```bash
+opstruth probes --json
+```
+
+See `docs/probe-quality-model.md` for the maturity model.
+
+## Configuration
+
+Create a starter config:
+
+```bash
+opstruth init --yes
+```
+
+`opstruth.config.json` can provide route paths, local ports/health paths, and secret-scan allowlists. Runtime checks still require explicit safe inputs such as `--base-url` or local service details before opstruth can prove live behavior.
+
+See `docs/configuration.md`.
+
 ## Current Limitations
 
 - Some probes are static-only.

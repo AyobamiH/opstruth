@@ -1,0 +1,6 @@
+{
+  "name": "route-config-app",
+  "scripts": {
+    "test": "node --version"
+  }
+}

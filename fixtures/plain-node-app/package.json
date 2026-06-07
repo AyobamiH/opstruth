@@ -1,0 +1,8 @@
+{
+  "name": "plain-node-app",
+  "type": "module",
+  "scripts": {
+    "test": "node src/index.js",
+    "build": "node --check src/index.js"
+  }
+}

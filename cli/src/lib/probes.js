@@ -10,7 +10,7 @@ function nodeDependencyDetector(name) {
   return async (_root, stack) => stack.dependencies?.includes(name);
 }
 
-export const PROBE_CATALOGUE = [
+const RAW_PROBE_CATALOGUE = [
   {
     id: 'git.status',
     name: 'Git status',
@@ -463,6 +463,48 @@ export const PROBE_CATALOGUE = [
   }
 ];
 
+function inputsRequiredFor(probe) {
+  if (probe.id.startsWith('routes.')) return ['--base-url or route config'];
+  if (probe.id === 'local.ports') return ['--port or local config'];
+  if (probe.id === 'local.health') return ['--port and --health or local config'];
+  if (probe.id === 'supabase.migrations') return ['supabase/migrations directory'];
+  if (probe.id === 'cloudflare.wrangler') return ['wrangler.toml, wrangler.json, or wrangler.jsonc'];
+  if (probe.id.startsWith('quality.')) return ['matching package.json script'];
+  if (probe.id.startsWith('node.')) return ['matching package metadata/config/source'];
+  if (probe.id.startsWith('git.')) return ['git repository'];
+  return [];
+}
+
+function skipReasonFor(probe) {
+  if (probe.id.startsWith('routes.')) return 'Requires --base-url, --routes, or opstruth.config.json route entries';
+  if (probe.id === 'local.ports') return 'Requires --port or opstruth.config.json local ports';
+  if (probe.id === 'local.health') return 'Requires --port with --health or opstruth.config.json local health paths';
+  if (probe.id === 'supabase.migrations') return 'Requires a Supabase migrations directory';
+  if (probe.id === 'cloudflare.wrangler') return 'Requires Wrangler configuration';
+  if (probe.id.startsWith('quality.')) return 'Requires a matching non-placeholder package.json script';
+  if (probe.id.startsWith('git.')) return 'Requires a git repository';
+  return 'Not relevant to detected stack or missing configuration';
+}
+
+function normalizeProbe(probe) {
+  const inputsRequired = probe.inputsRequired || inputsRequiredFor(probe);
+  return {
+    ...probe,
+    mode: probe.mode || probe.defaultMode,
+    mutability: probe.mutability || 'none',
+    inputsRequired,
+    evidenceExpectation: probe.evidenceExpectation || probe.evidenceCollected || [],
+    skipReason: probe.skipReason || skipReasonFor(probe),
+    proofLimitation: probe.proofLimitation || probe.doesNotProve,
+    supportedStacks: probe.supportedStacks || [probe.stack],
+    notVerified: probe.notVerified || [probe.doesNotProve],
+    falsePositiveRisk: probe.falsePositiveRisk || 'Low to medium; depends on project conventions and fixture/demo content.',
+    falseNegativeRisk: probe.falseNegativeRisk || 'Does not prove absence outside scanned files, configured inputs, or supported stack heuristics.'
+  };
+}
+
+export const PROBE_CATALOGUE = RAW_PROBE_CATALOGUE.map(normalizeProbe);
+
 export async function selectProbes({ root, stack, boundary, options = {} }) {
   const only = new Set(options.only || []);
   const skip = new Set(options.skip || []);
@@ -483,7 +525,7 @@ export async function selectProbes({ root, stack, boundary, options = {} }) {
     }
     const relevant = await probe.detector(root, stack, boundary, options);
     if (relevant) selected.push(probe);
-    else skipped.push({ ...probe, reason: 'Not relevant to detected stack or missing configuration' });
+    else skipped.push({ ...probe, reason: probe.skipReason || 'Not relevant to detected stack or missing configuration' });
   }
   return { selected, skipped, catalogueSize: PROBE_CATALOGUE.length };
 }

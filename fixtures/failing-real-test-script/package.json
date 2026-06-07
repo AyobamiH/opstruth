@@ -1,0 +1,6 @@
+{
+  "name": "failing-real-test-script",
+  "scripts": {
+    "test": "node -e \"process.exit(1)\""
+  }
+}

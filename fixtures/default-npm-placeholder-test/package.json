@@ -1,0 +1,6 @@
+{
+  "name": "default-npm-placeholder-test",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

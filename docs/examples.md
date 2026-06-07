@@ -68,6 +68,24 @@ cd cli
 
 This copies local fixtures to temporary directories, initializes git where appropriate, runs opstruth, and writes evidence to `evidence/fixture-runs/`.
 
+## Public Fixture Matrix
+
+```bash
+./scripts/run-fixture-matrix.sh
+```
+
+This copies root fixtures to `/tmp`, runs the core opstruth commands, and writes commit-friendly summaries to `evidence/fixture-matrix/`.
+
+## Configuration
+
+```bash
+opstruth init --yes
+opstruth routes --base-url https://example.com
+opstruth local --port 3000 --health /health
+```
+
+`opstruth.config.json` can provide route paths, local ports/health paths, and secret-scan allowlists. CLI flags remain the clearest way to provide runtime inputs.
+
 ## Release Links
 
 - GitHub release: `https://github.com/AyobamiH/opstruth/releases/tag/v0.1.2`

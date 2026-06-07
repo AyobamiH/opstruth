@@ -1,0 +1,79 @@
+# opstruth Product Maturity Plan
+
+## Current Product State
+
+- npm package: `opstruth@0.1.2`
+- GitHub repository: `https://github.com/AyobamiH/opstruth`
+- GitHub release: `v0.1.2`
+- Production website: `https://opstruth.woeinvests.workers.dev`
+- Production runtime: Cloudflare Workers
+- CLI source path: `cli/`
+- Website source path: `website/`
+- Evidence path: `evidence/`
+
+Known limitations:
+
+- Some probes are static-only and do not prove live runtime behavior.
+- Route checks need `--base-url` or route config before production availability can be verified.
+- Local runtime checks need explicit port, health, process, or service inputs.
+- Supabase and Cloudflare checks are mostly static unless explicit route/runtime inputs are provided.
+- `opstruth@0.1.2` is a v0.1 public testing release, not a mature production coverage claim.
+- opstruth is not a replacement for a security audit, deployment monitor, or incident response system.
+
+## Maturity Definition
+
+A stranger can install opstruth, run it on a messy repo, trust the output, understand the proof gaps, and know the next safe action.
+
+## Maturity Pillars
+
+1. Probe quality
+2. Real-world repo fixture testing
+3. Evidence pack quality
+4. First-run onboarding
+5. CLI command UX
+6. Configuration and explicit inputs
+7. CI/GitHub Action usage
+8. Safety and secret handling
+9. Release discipline
+10. Production/docs alignment
+
+## Release Discipline
+
+This maturity work should not automatically publish npm.
+
+The version bump comes later after local checks, fixture matrix evidence, public install testing, and CI review pass. A likely future release could be `v0.1.3`.
+
+Release should only happen after:
+
+- source validation passes
+- public install behavior is confirmed
+- generated evidence is reviewed
+- no secrets or generated junk are staged
+- GitHub release notes match actual behavior
+- npm publishing is explicitly requested
+
+## Maturity Work In This Pass
+
+This pass focuses on trust surfaces that can be improved safely without changing the product promise:
+
+- richer probe metadata
+- clearer skipped/proof-gap reporting
+- JSON probe catalogue output
+- safer config defaults
+- route and local runtime config support
+- secret allowlists with redaction preserved
+- fixture matrix coverage for common repo shapes
+- evidence pack section standards
+- first-run and subcommand help improvements
+- CI and GitHub Action guidance
+
+## What Maturity Does Not Mean Yet
+
+Maturity does not mean opstruth can prove every operational fact. The tool should remain honest about what it did not check.
+
+Examples:
+
+- A passing static Cloudflare config check does not prove the deployed Worker is healthy.
+- A passing Supabase migration scan does not prove live database permissions.
+- A passing quality script does not prove route availability.
+- A skipped route probe is a proof gap, not a clean bill of health.

@@ -10,8 +10,10 @@ import { detectPackageManager, detectStack } from '../src/lib/detect.js';
 import { runQuality } from '../src/commands/quality.js';
 import { resolveProjectBoundary } from '../src/lib/boundary.js';
 import { runSecrets } from '../src/commands/secrets.js';
-import { selectProbes } from '../src/lib/probes.js';
+import { PROBE_CATALOGUE, selectProbes } from '../src/lib/probes.js';
 import { runRoutes } from '../src/commands/routes.js';
+import { runSupabase } from '../src/commands/supabase.js';
+import { runCloudflare } from '../src/commands/cloudflare.js';
 import { runCli } from '../src/cli.js';
 import { evidenceMarkdown, statusLabel } from '../src/lib/markdown.js';
 
@@ -53,6 +55,13 @@ async function fixture(files) {
 async function fixtureProject(name, { git = true } = {}) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), `opstruth-${name}-`));
   await fs.cp(path.join(repoRoot, 'fixtures', name), root, { recursive: true });
+  if (git) await execFileAsync('git', ['init'], { cwd: root });
+  return root;
+}
+
+async function rootFixtureProject(name, { git = true } = {}) {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), `opstruth-root-${name}-`));
+  await fs.cp(path.join(repoRoot, '..', 'fixtures', name), root, { recursive: true });
   if (git) await execFileAsync('git', ['init'], { cwd: root });
   return root;
 }
@@ -149,7 +158,7 @@ test('suppresses opstruth internal scanner pattern definitions', async () => {
 
 test('help modes print help without running checks', async () => {
   const root = await fixture({});
-  for (const args of [['--help'], ['-h'], ['repo', '--help'], ['routes', '--help']]) {
+  for (const args of [['--help'], ['-h'], ['repo', '--help'], ['quality', '--help'], ['routes', '--help'], ['secrets', '--help'], ['supabase', '--help'], ['cloudflare', '--help'], ['local', '--help'], ['probes', '--help'], ['evidence', '--help'], ['init', '--help']]) {
     const { stdout, exitCode } = await captureCli(args, root);
     assert.match(stdout, /Usage:/);
     assert.match(stdout, /Operational truth checks/);
@@ -206,6 +215,9 @@ test('machine-readable and file outputs stay ANSI-free', async () => {
 
     const evidence = evidenceMarkdown({ title: 'Test Evidence', status: 'warn', scope: ['src/app.js'] });
     assert.doesNotMatch(evidence, ANSI_RE);
+    assert.match(evidence, /## Skipped \/ Not Configured/);
+    assert.match(evidence, /## Not Verified/);
+    assert.match(evidence, /## Confidence/);
   } finally {
     if (originalNoColor === undefined) delete process.env.NO_COLOR;
     else process.env.NO_COLOR = originalNoColor;
@@ -225,7 +237,10 @@ test('init mode writes config only with yes flag', async () => {
   const { stdout } = await captureCli(['init', '--yes'], root);
   assert.match(stdout, /Created opstruth.config.json/);
   const config = JSON.parse(await fs.readFile(path.join(root, 'opstruth.config.json'), 'utf8'));
-  assert.deepEqual(config.routes.paths, ['/', '/login', '/healthz']);
+  assert.equal(config.projectName, 'example');
+  assert.deepEqual(config.routes.map((route) => route.path), ['/', '/health']);
+  assert.deepEqual(config.local.healthPaths, ['/health']);
+  assert.deepEqual(config.secrets.allowlistPaths, []);
   assert.ok(config.ignore.includes('node_modules'));
 });
 
@@ -258,6 +273,43 @@ test('secret findings include redacted evidence', async () => {
   assert.doesNotMatch(result.findings[0].evidence.join('\n'), /sk-test-secret-value/);
 });
 
+test('secret scan skips env and cache files while preserving redacted source findings', async () => {
+  const root = await fixture({
+    '.env': 'OPENAI_API_KEY=sk-env-value-should-not-print\n',
+    'node_modules/pkg/index.js': 'const token = "node-module-token";\n',
+    'dist/bundle.js': 'const api_key = "dist-token";\n',
+    'src/app.js': 'const refresh_token = "source-token";\n'
+  });
+  const result = await runSecrets({ cwd: root });
+  const findings = JSON.stringify(result.findings);
+  assert.equal(result.findings.length, 1);
+  assert.match(findings, /src\/app.js/);
+  assert.match(findings, /REDACTED/);
+  assert.doesNotMatch(findings, /sk-env-value-should-not-print|node-module-token|dist-token|source-token/);
+});
+
+test('secret allowlist paths suppress configured fixture warnings only', async () => {
+  const root = await fixture({
+    'opstruth.config.json': JSON.stringify({ secrets: { allowlistPaths: ['fixtures/demo.js'] } }),
+    'fixtures/demo.js': 'const OPENAI_API_KEY = "fake_fixture_value";\n',
+    'src/app.js': 'const api_key = "real-looking-fixture-value";\n'
+  });
+  const result = await runSecrets({ cwd: root });
+  assert.equal(result.status, 'warn');
+  assert.equal(result.findings.length, 1);
+  assert.ok(result.findings[0].evidence.some((item) => item.includes('src/app.js')));
+  assert.equal(result.data.allowlistPaths[0], 'fixtures/demo.js');
+});
+
+test('secret findings classify fixture values without leaking them', async () => {
+  const root = await rootFixtureProject('risky-secret-app');
+  const result = await runSecrets({ cwd: root });
+  assert.equal(result.status, 'warn');
+  assert.ok(result.findings.every((finding) => finding.evidence.some((item) => item.includes('kind:'))));
+  assert.ok(result.findings.every((finding) => finding.evidence.some((item) => item.includes('context: fixture/demo file'))));
+  assert.doesNotMatch(JSON.stringify(result.findings), /fake-openai-key-for-redaction|fake-service-role-for-redaction/);
+});
+
 test('route evidence captures URL status latency and missing headers', async () => {
   const root = await fixture({});
   const result = await runRoutes({ cwd: root, baseUrl: 'http://127.0.0.1:9' });
@@ -283,6 +335,76 @@ test('probe orchestration selects and skips catalogue entries', async () => {
   assert.ok(selection.selected.some((probe) => probe.id === 'quality.test'));
   assert.ok(selection.selected.some((probe) => probe.id === 'cloudflare.wrangler'));
   assert.ok(selection.skipped.some((probe) => probe.reason));
+});
+
+test('every probe exposes maturity metadata', () => {
+  for (const probe of PROBE_CATALOGUE) {
+    assert.ok(probe.id);
+    assert.ok(probe.area);
+    assert.ok(probe.mode);
+    assert.ok(probe.safetyLevel);
+    assert.ok(probe.description);
+    assert.ok(Array.isArray(probe.evidenceExpectation));
+    assert.ok(probe.skipReason);
+    assert.ok(probe.nextSafeStep);
+    assert.ok(probe.proofLimitation);
+    assert.ok(Array.isArray(probe.inputsRequired));
+  }
+});
+
+test('probes json includes skipped reasons and ANSI-free metadata', async () => {
+  const root = await fixture({ 'package.json': '{}' });
+  const { stdout, exitCode } = await captureCli(['probes', '--json', '--color'], root);
+  assert.doesNotMatch(stdout, ANSI_RE);
+  const result = JSON.parse(stdout);
+  assert.equal(exitCode, 0);
+  assert.ok(result.data.catalogue.every((probe) => probe.proofLimitation && probe.nextSafeStep));
+  assert.ok(result.data.skipped.every((probe) => probe.reason));
+});
+
+test('route config supports current opstruth.config.json schema', async () => {
+  const root = await fixture({
+    'opstruth.config.json': JSON.stringify({ routes: [{ path: '/', expectedStatus: 200 }] })
+  });
+  const result = await runRoutes({ cwd: root, baseUrl: 'http://127.0.0.1:9' });
+  assert.equal(result.status, 'fail');
+  assert.equal(result.data.routes[0].expectStatus[0], 200);
+});
+
+test('local command can read ports and health paths from config', async () => {
+  const root = await fixture({
+    'opstruth.config.json': JSON.stringify({ local: { ports: [9], healthPaths: ['/health'] } })
+  });
+  const { stdout } = await captureCli(['local', '--json'], root);
+  const result = JSON.parse(stdout);
+  assert.equal(result.status, 'warn');
+  assert.ok(result.checks.some((check) => check.name === 'port 9 listening'));
+});
+
+test('invalid config warns clearly for config-driven routes', async () => {
+  const root = await fixture({ 'opstruth.config.json': '{ invalid json' });
+  const result = await runRoutes({ cwd: root, baseUrl: 'https://example.com' });
+  assert.equal(result.status, 'warn');
+  assert.match(result.warnings[0], /Invalid route config opstruth.config.json/);
+  assert.ok(result.notVerified.includes('Public route availability'));
+});
+
+test('supabase static audit detects migration and frontend proof gaps', async () => {
+  const root = await rootFixtureProject('supabase-app');
+  const result = await runSupabase({ cwd: root, protectedTable: ['agent_jobs'] });
+  assert.equal(result.command, 'supabase');
+  assert.ok(result.verified.some((item) => item.includes('Supabase migrations inspected')));
+  assert.ok(result.data.policies.length >= 1);
+  assert.ok(result.notVerified.includes('Live Supabase permissions were not checked'));
+});
+
+test('cloudflare static audit detects wrangler config without deploying', async () => {
+  const root = await rootFixtureProject('cloudflare-worker-app');
+  const result = await runCloudflare({ cwd: root });
+  assert.equal(result.command, 'cloudflare');
+  assert.ok(result.verified.some((item) => item.includes('Cloudflare config detected')));
+  assert.equal(result.data.configFile, 'wrangler.toml');
+  assert.ok(result.notVerified.includes('No Cloudflare deploy was executed'));
 });
 
 test('strict mode treats warnings as failures in CLI exit code', async () => {

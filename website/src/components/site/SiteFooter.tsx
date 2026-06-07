@@ -23,7 +23,7 @@ export function SiteFooter() {
           <a href="#evidence" className="hover:text-foreground transition-colors">
             evidence
           </a>
-          <span className="text-status-skip">v0.1.1 · public testing</span>
+          <span className="text-status-skip">v0.1.2 · public testing</span>
         </div>
       </div>
     </footer>

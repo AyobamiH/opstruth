@@ -25,6 +25,29 @@ function nextStepFor(aggregate) {
   return 'Attach the evidence pack to the change or handoff.';
 }
 
+function probeJson(probe) {
+  return {
+    id: probe.id,
+    name: probe.name,
+    area: probe.area,
+    stack: probe.stack,
+    mode: probe.mode,
+    safetyLevel: probe.safetyLevel,
+    defaultMode: probe.defaultMode,
+    mutability: probe.mutability,
+    inputsRequired: probe.inputsRequired,
+    evidenceCollected: probe.evidenceCollected,
+    evidenceExpectation: probe.evidenceExpectation,
+    proves: probe.proves,
+    doesNotProve: probe.doesNotProve,
+    proofLimitation: probe.proofLimitation,
+    skipReason: probe.skipReason,
+    nextSafeStep: probe.nextSafeStep,
+    supportedStacks: probe.supportedStacks,
+    notVerified: probe.notVerified
+  };
+}
+
 export async function runOrchestrator(options = {}) {
   const startCwd = options.cwd || process.cwd();
   const boundary = await resolveProjectBoundary(startCwd);
@@ -75,18 +98,8 @@ export async function runOrchestrator(options = {}) {
       stack,
       probes: {
         catalogueSize: probeSelection.catalogueSize,
-        selected: probeSelection.selected.map((probe) => ({
-          id: probe.id,
-          name: probe.name,
-          area: probe.area,
-          stack: probe.stack,
-          safetyLevel: probe.safetyLevel,
-          defaultMode: probe.defaultMode,
-          proves: probe.proves,
-          doesNotProve: probe.doesNotProve,
-          evidenceCollected: probe.evidenceCollected
-        })),
-        skipped: probeSelection.skipped.map((probe) => ({ id: probe.id, area: probe.area, stack: probe.stack, reason: probe.reason }))
+        selected: probeSelection.selected.map(probeJson),
+        skipped: probeSelection.skipped.map((probe) => ({ ...probeJson(probe), reason: probe.reason }))
       },
       childResults
     },

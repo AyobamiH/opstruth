@@ -1,0 +1,12 @@
+{
+  "name": "tanstack-app",
+  "type": "module",
+  "dependencies": {
+    "@tanstack/react-router": "^1.0.0",
+    "react": "^19.0.0",
+    "vite": "^7.0.0"
+  },
+  "scripts": {
+    "build": "node --version"
+  }
+}

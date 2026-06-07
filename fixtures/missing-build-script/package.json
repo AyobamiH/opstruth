@@ -1,0 +1,6 @@
+{
+  "name": "missing-build-script",
+  "scripts": {
+    "test": "node --version"
+  }
+}

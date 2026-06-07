@@ -1,0 +1,17 @@
+{
+  "projectName": "route-config-app",
+  "routes": [
+    {
+      "path": "/",
+      "expectedStatus": 200
+    }
+  ],
+  "local": {
+    "ports": [],
+    "healthPaths": ["/health"]
+  },
+  "secrets": {
+    "allowlistPaths": [],
+    "allowlistPatterns": []
+  }
+}

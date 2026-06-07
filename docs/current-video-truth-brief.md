@@ -6,14 +6,14 @@ This brief is the source of truth for the refreshed opstruth website videos.
 
 ## Current Product State
 
-- npm package: `opstruth@0.1.1`
+- npm package: `opstruth@0.1.2`
 - npm package description: `Read-only operational truth checks for AI-assisted engineering workflows.`
 - npm package homepage: `https://opstruth.woeinvests.workers.dev`
 - npm package binary: `opstruth -> bin/opstruth.js`
 - production website: `https://opstruth.woeinvests.workers.dev`
 - production runtime: Cloudflare Workers
 - production response inspected: `HTTP/2 200`
-- GitHub release: `v0.1.1`
+- GitHub release: `v0.1.2`
 - CLI source: `cli/`
 - website source: `website/`
 - read-only model: no deploys, no database mutations, no queue/job triggers, no OpenAI calls, no service restarts, no raw secret printing
@@ -38,7 +38,7 @@ Not Verified:
 - Local runtime liveness was not checked without port/process inputs
 ```
 
-The published npm package was verified for package metadata, installability, and the `--help`, `welcome`, and `probes` command surfaces. A full published `opstruth@0.1.1 --skip evidence` run against the current monorepo reported `STATUS: Fail` because the package's quality build check failed against today's tree. The refreshed videos therefore do not claim the published default run fully passes the current repository. They show package truth separately from source-runtime truth.
+The published npm package was verified for package metadata, installability, and the `--help`, `welcome`, `probes`, human one-command, and JSON one-command command surfaces. The refreshed videos should still show package truth separately from source-runtime truth because the public package remains a v0.1 testing release and source work may move ahead before the next npm publish.
 
 ## Video Direction
 

@@ -1,0 +1,8 @@
+{
+  "name": "cloudflare-worker-app",
+  "type": "module",
+  "scripts": {
+    "build": "node --version",
+    "deploy": "wrangler deploy"
+  }
+}

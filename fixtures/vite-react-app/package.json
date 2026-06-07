@@ -1,0 +1,15 @@
+{
+  "name": "vite-react-app",
+  "type": "module",
+  "dependencies": {
+    "react": "^19.0.0",
+    "vite": "^7.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "build": "node --version",
+    "test": "node --version"
+  }
+}

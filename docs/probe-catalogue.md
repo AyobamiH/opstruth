@@ -12,11 +12,20 @@ Each probe declares:
 - `detector`
 - `safetyLevel`
 - `defaultMode`
+- `mode`
+- `mutability`
+- `inputsRequired`
 - `command` or `staticCheck`
 - `evidenceCollected`
+- `evidenceExpectation`
 - `proves`
 - `doesNotProve`
+- `proofLimitation`
+- `skipReason`
 - `nextSafeStep`
+- `supportedStacks`
+- `notVerified`
+- false-positive and false-negative risk notes
 
 Safety levels:
 
@@ -36,5 +45,9 @@ Inspect the catalogue:
 opstruth probes
 opstruth probes --json
 ```
+
+The JSON output is intended for automation and stays ANSI-free.
+
+Skipped probes are proof gaps, not failures. The catalogue reports why a probe skipped and which explicit input would improve confidence.
 
 The v0.1 catalogue covers git, Node/TypeScript, quality scripts, route probes, local runtime probes, secret scans, Supabase, Cloudflare/Wrangler, Docker, GitHub Actions, Vercel, and Netlify.

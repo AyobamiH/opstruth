@@ -8,12 +8,12 @@ export async function runRoutes({ cwd = process.cwd(), baseUrl, routesFile, stri
   const boundary = await resolveProjectBoundary(cwd);
   cwd = boundary.root;
   let config = routesFile ? await loadRoutesConfig(cwd, routesFile) : null;
-  if (config?.routes?.baseUrl !== undefined || config?.routes?.paths) config = config.routes;
-  if (!config) config = (await findDefaultRoutesConfig(cwd))?.config;
+  const defaultConfig = config ? null : await findDefaultRoutesConfig(cwd);
+  if (!config) config = defaultConfig?.config;
+  if (defaultConfig?.warning) return createResult('routes', 'warn', { warnings: [defaultConfig.warning], notVerified: ['Public route availability'], nextSafeStep: 'Fix opstruth.config.json or pass --routes with valid JSON.' });
   const finalBase = baseUrl || config?.baseUrl;
   if (!finalBase) return createResult('routes', 'skipped', { skipped: ['Route checks skipped because no --base-url or route config was provided'], notVerified: ['Public route availability'], nextSafeStep: 'Run opstruth routes --base-url https://example.com or provide --routes.' });
-  const paths = config?.paths?.length ? config.paths.map((routePath) => ({ path: routePath, method: routePath.includes('health') ? 'GET' : 'HEAD', expectStatus: [200, 301, 302] })) : [];
-  const routes = config?.routes?.length ? config.routes : paths.length ? paths : [{ path: '/', method: 'HEAD', expectStatus: [200, 301, 302] }];
+  const routes = config?.routes?.length ? config.routes : [{ path: '/', method: 'HEAD', expectStatus: [200, 301, 302] }];
   const requiredHeaders = config?.requiredHeaders || DEFAULT_HEADERS;
   const checks = [];
   const warnings = [];

@@ -1,0 +1,13 @@
+{
+  "name": "next-app",
+  "dependencies": {
+    "next": "^15.0.0",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "build": "node --version"
+  }
+}

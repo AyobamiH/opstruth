@@ -1,9 +1,15 @@
 import { createFinding, createResult, finalizeStatus } from '../lib/result.js';
 import { runCommand } from '../lib/exec.js';
 import { probeUrl } from '../lib/http.js';
+import { loadOpstruthConfig } from '../lib/config.js';
 
 export async function runLocal({ cwd = process.cwd(), port = [], health = '/', process: processName, service, strict = false } = {}) {
-  const ports = Array.isArray(port) ? port : [port].filter(Boolean);
+  const loaded = await loadOpstruthConfig(cwd);
+  const configLocal = loaded.config?.local || {};
+  const ports = (Array.isArray(port) && port.length ? port : Array.isArray(configLocal.ports) ? configLocal.ports : [port].filter(Boolean));
+  const healthPaths = Array.isArray(configLocal.healthPaths) ? configLocal.healthPaths : [configLocal.healthPath].filter(Boolean);
+  if ((!health || health === '/') && healthPaths.length) health = healthPaths[0];
+  if (loaded.warning && !ports.length && !processName && !service) return createResult('local', 'warn', { warnings: [loaded.warning], notVerified: ['Local runtime liveness'], nextSafeStep: 'Fix opstruth.config.json or pass --port and --health explicitly.' });
   if (!ports.length && !processName && !service) return createResult('local', 'skipped', { skipped: ['Local runtime checks skipped because no --port, --process, or --service was provided'], notVerified: ['Local runtime liveness'], nextSafeStep: 'Run opstruth local --port 3000 --health /health when the app is running.' });
   const checks = [];
   const warnings = [];

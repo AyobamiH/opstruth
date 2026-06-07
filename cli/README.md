@@ -26,10 +26,13 @@ npx opstruth
 ```bash
 opstruth
 opstruth welcome
+opstruth init --yes
 opstruth probes
 opstruth secrets
 opstruth routes --base-url https://example.com
 opstruth local --port 3000 --health /health
+opstruth --json
+opstruth --no-color
 ```
 
 ## Terminal Output
@@ -43,6 +46,16 @@ Use `--no-color` or `NO_COLOR=1` to disable colour. Use `--color` to force colou
 opstruth is read-only by default. CLI checks do not deploy, mutate databases, trigger queues or jobs, call OpenAI, restart services, publish content, or print raw secrets.
 
 Skipped checks and not-verified areas are reported as proof gaps instead of being treated as safe.
+
+## Configuration
+
+`opstruth.config.json` can provide route paths, local ports/health paths, and secret allowlists. Generate a starter config:
+
+```bash
+opstruth init --yes
+```
+
+CLI flags remain the clearest way to provide runtime inputs.
 
 ## Repository
 

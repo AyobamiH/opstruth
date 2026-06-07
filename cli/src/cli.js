@@ -115,34 +115,43 @@ function helpText(command) {
     '  --no-color          Disable colour for human terminal output',
     '  -h, --help          Print help and exit 0'
   ];
-  const route = [
-    ASCII_HEADER,
-    'Usage: opstruth routes --base-url <url> [--routes file] [--strict]',
-    '',
-    'Read-only route probes collect URL, method, status, latency, redirects, and security-header evidence.',
-    '',
-    'Options:',
-    '  --base-url <url>    Base URL to probe',
-    '  --routes <file>     JSON route config',
-    '  --json              Print JSON output',
-    '  --color             Force colour for human terminal output',
-    '  --no-color          Disable colour for human terminal output',
-    '  -h, --help          Print help and exit 0'
-  ];
-  const repo = [
-    ASCII_HEADER,
-    'Usage: opstruth repo [--json] [--strict]',
-    '',
-    'Read-only repository inspection reports cwd, git root, branch, latest commit, dirty files, and detected stack.',
-    '',
-    'Options:',
-    '  --json              Print JSON output',
-    '  --color             Force colour for human terminal output',
-    '  --no-color          Disable colour for human terminal output',
-    '  -h, --help          Print help and exit 0'
-  ];
-  if (command === 'routes') return route.join('\n') + '\n';
-  if (command === 'repo') return repo.join('\n') + '\n';
+  const commandHelp = {
+    repo: ['Usage: opstruth repo [--json] [--strict]', 'Inspect cwd, git root, branch, latest commit, dirty files, and detected stack.'],
+    quality: ['Usage: opstruth quality [--script name] [--continue] [--json]', 'Run only existing safe package scripts; missing scripts and npm placeholder tests are skipped.'],
+    routes: ['Usage: opstruth routes --base-url <url> [--routes file] [--json]', 'Collect read-only URL, method, status, latency, redirect, and header evidence.'],
+    secrets: ['Usage: opstruth secrets [--json]', 'Scan source text for risky secret/auth references with redacted previews; .env contents are skipped.'],
+    supabase: ['Usage: opstruth supabase [--protected-table name] [--frontend-dir dir] [--migrations-dir dir]', 'Run a static Supabase migration/frontend exposure audit without credentials or database calls.'],
+    cloudflare: ['Usage: opstruth cloudflare [--url https://example.com] [--json]', 'Inspect Wrangler config, deploy scripts, and optional read-only route status; no deploy is run.'],
+    local: ['Usage: opstruth local --port 3000 [--health /health] [--process name] [--service name]', 'Check explicit local runtime inputs without starting, stopping, or killing services.'],
+    probes: ['Usage: opstruth probes [--json] [--only area|id] [--skip area|id]', 'Inspect probe catalogue metadata, eligible probes, skipped probes, required inputs, and proof gaps.'],
+    evidence: ['Usage: opstruth evidence [--title text] [--out evidence/opstruth.md] [--include file]', 'Write a markdown evidence pack with verified facts, proof gaps, boundaries, and next safe step.'],
+    init: ['Usage: opstruth init [--yes]', 'Create a safe starter opstruth.config.json after confirmation.']
+  };
+  if (commandHelp[command]) {
+    const [usage, description] = commandHelp[command];
+    return [
+      ASCII_HEADER,
+      usage,
+      '',
+      description,
+      '',
+      'Examples:',
+      '  opstruth',
+      '  opstruth --base-url https://example.com',
+      '  opstruth routes --base-url https://example.com',
+      '  opstruth local --port 3000 --health /health',
+      '  opstruth --json',
+      '  opstruth --no-color',
+      '  opstruth --color',
+      '',
+      'Options:',
+      '  --json              Print JSON output',
+      '  --strict            Treat warnings/skips as failing confidence',
+      '  --color             Force colour for human terminal output',
+      '  --no-color          Disable colour for human terminal output',
+      '  -h, --help          Print help and exit 0'
+    ].join('\n') + '\n';
+  }
   return common.join('\n') + '\n';
 }
 
@@ -165,7 +174,16 @@ function welcomeText() {
     '- opstruth --strict',
     '- opstruth routes --base-url https://example.com',
     '- opstruth local --port 3000 --health /health',
+    '- opstruth --json',
+    '- opstruth --no-color',
+    '- opstruth --color',
     '- opstruth evidence --title "Release proof"',
+    '',
+    'Improving confidence:',
+    '- provide --base-url or route config when route proof matters',
+    '- provide --port and --health when local runtime proof matters',
+    '- run inside a git repo for stronger change evidence',
+    '- attach evidence/opstruth-report.md to reviews or CI artifacts',
     '',
     'Safety philosophy:',
     'opstruth prefers skipped or not verified over pretending something is safe. Dangerous actions require explicit approval and are not part of the default run.',
@@ -174,26 +192,33 @@ function welcomeText() {
 }
 
 const INIT_CONFIG = {
-  routes: {
-    baseUrl: '',
-    paths: ['/', '/login', '/healthz'],
-    requiredHeaders: [
-      'content-security-policy',
-      'strict-transport-security',
-      'x-frame-options',
-      'referrer-policy'
-    ]
-  },
+  projectName: 'example',
+  routes: [
+    { path: '/', expectedStatus: 200 },
+    { path: '/health', expectedStatus: 200 }
+  ],
   local: {
     ports: [],
-    healthPath: '/health'
+    healthPaths: ['/health']
+  },
+  quality: {
+    skipScripts: [],
+    requiredScripts: []
+  },
+  secrets: {
+    allowlistPaths: [],
+    allowlistPatterns: []
   },
   supabase: {
+    enabled: true,
     protectedTables: [
       'agent_jobs',
       'platform_credentials',
       'worker_logs'
     ]
+  },
+  cloudflare: {
+    enabled: true
   },
   ignore: [
     '.cache',

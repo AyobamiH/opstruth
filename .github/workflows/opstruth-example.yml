@@ -11,15 +11,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install
-        working-directory: cli
-      - name: Run opstruth from this checkout
-        run: node bin/opstruth.js --strict --out ../evidence/opstruth.md
-        working-directory: cli
-      # After npm publication, downstream projects can use:
-      # - run: npx opstruth --strict --out evidence/opstruth.md
+      - name: Install published opstruth
+        run: npm install -g opstruth@0.1.2
+      - name: Prepare evidence directory
+        run: mkdir -p evidence
+      - name: Run opstruth markdown evidence
+        run: opstruth --out evidence/opstruth.md
+      - name: Run opstruth JSON evidence
+        run: opstruth --json --skip evidence > evidence/opstruth.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: opstruth-evidence
-          path: evidence/opstruth.md
+          path: evidence/
