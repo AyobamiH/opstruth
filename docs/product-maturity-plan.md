@@ -62,6 +62,12 @@ No opstruth task is complete until the completion gate has run and the final rep
 
 See `docs/completion-gate.md`. Skipped checks remain proof gaps, not passes.
 
+## Real-World Validation
+
+Wagging Web Wins is now tracked as a real-repo validation case study. It demonstrates the product distinction between merged code, static source review, PR evidence, and unverified production truth.
+
+See `docs/case-studies/wagging-web-wins.md` and `evidence/real-world-validation-wagging-web-wins.md`.
+
 ## Maturity Work In This Pass
 
 This pass focuses on trust surfaces that can be improved safely without changing the product promise:

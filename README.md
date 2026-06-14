@@ -178,6 +178,12 @@ Inspect the probe catalogue:
 opstruth probes
 ```
 
+## Real-World Validation
+
+The Wagging Web Wins case study documents an OpsTruth-style review of a real app repo: authorization hardening, scheduler proof gaps, secret-boundary handling, GitHub PR gates, and the deliberate stop before Supabase mutation.
+
+See `docs/case-studies/wagging-web-wins.md`.
+
 ## Project Boundaries
 
 If opstruth starts inside a git repository, the git root is the project boundary. If no git repository is detected, opstruth scans only the current directory with safety ignores and prints:
