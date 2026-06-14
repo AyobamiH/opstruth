@@ -31,6 +31,8 @@ No task is complete until the output has been reviewed.
 
 If the completion gate fails, report the failure instead of claiming success.
 
+The gate uses per-step timeouts: build phases get longer timeouts, optional network checks are warning-only, and timeouts must be reported as blockers with the exact failing phase.
+
 If the task touched probes or fixtures, also run the fixture matrix if available:
 
 ```bash

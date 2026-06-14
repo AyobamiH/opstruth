@@ -62,6 +62,8 @@ No opstruth task is complete until the completion gate has run and the final rep
 
 See `docs/completion-gate.md`. Skipped checks remain proof gaps, not passes.
 
+The completion gate now uses named per-step timeouts. Build steps get longer timeouts, network checks are warning-only, and a timeout is a blocker to investigate rather than a pass.
+
 ## Real-World Validation
 
 Wagging Web Wins is now tracked as a real-repo validation case study. It demonstrates the product distinction between merged code, static source review, PR evidence, and unverified production truth.
