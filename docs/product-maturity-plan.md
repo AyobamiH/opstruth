@@ -76,7 +76,9 @@ Use extended mode when root build or website build is slow because of cold depen
 
 Wagging Web Wins is now tracked as a real-repo validation case study. It demonstrates the product distinction between merged code, static source review, PR evidence, and unverified production truth.
 
-See `docs/case-studies/wagging-web-wins.md` and `evidence/real-world-validation-wagging-web-wins.md`.
+The 2026-06-16 source CLI run against Wagging Web Wins also showed why this distinction matters. OpsTruth parsed JSON successfully and verified repo/probe/secret-scan surfaces, but the one-command result stayed `STATUS: Fail` because Wagging's local `lint` script exited `127`. Supabase production mutation was not approved, so live scheduler, secret, database, and Edge Function behavior remained proof gaps.
+
+See `docs/case-studies/wagging-web-wins.md`, `evidence/real-world-validation-wagging-web-wins.md`, and `evidence/real-world-validation-wagging-opstruth-run.md`.
 
 ## Maturity Work In This Pass
 

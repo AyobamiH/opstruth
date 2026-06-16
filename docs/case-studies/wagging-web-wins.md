@@ -34,6 +34,7 @@ PR #12 added a guarded scheduler migration draft and security documentation. It 
 - PR #12 files: `docs/import-reddit-tips-security.md` and `supabase/migrations/20260613211912_update_import_reddit_tips_scheduler_secret.sql`.
 - PR #12 merge commit: `d2f2014db18ff38deb69cd47b61288914bd069d1`.
 - Local workflow logs recorded checks, skipped production steps, and remaining gates.
+- OpsTruth source CLI validation evidence: `evidence/real-world-validation-wagging-opstruth-run.md`.
 
 ## What Was Verified
 
@@ -64,6 +65,8 @@ The work showed the difference between "code changed" and "production truth veri
 ## Result
 
 Wagging Web Wins became a real OpsTruth validation case: the workflow improved an authorization boundary, recorded evidence, protected secrets, used PR gates, and stopped before production mutation. The stop was not a failure. It was an honest proof gap.
+
+The 2026-06-16 OpsTruth run against Wagging was intentionally pre-application validation. It confirmed repo and stack detection, probe catalogue inspection, redacted secret scanning, and parseable JSON output. It also reported `STATUS: Fail` because Wagging's local `lint` script exited `127`, and it kept Supabase production behavior in `Not Verified`.
 
 ## Remaining Gates
 
