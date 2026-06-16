@@ -43,7 +43,15 @@ No task is complete until the output has been reviewed.
 
 If the completion gate fails, report the failure instead of claiming success.
 
-The completion gate uses named per-step timeouts. Build steps get longer timeouts, optional network checks warn without failing, and any timeout is a blocker to investigate. Report the exact failing phase.
+The completion gate defaults to standard mode and also supports quick and extended modes:
+
+```bash
+./scripts/opstruth-completion-gate.sh --mode quick
+./scripts/opstruth-completion-gate.sh --mode standard
+./scripts/opstruth-completion-gate.sh --mode extended
+```
+
+The gate uses named per-step timeouts. Build steps get mode-specific timeouts, optional network checks warn without failing, and any timeout is a blocker to investigate. A timeout is not a pass; report the exact failing phase, selected mode, and suggested rerun command.
 
 If the task touched probes or fixtures, also run the fixture matrix if available:
 

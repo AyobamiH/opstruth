@@ -64,6 +64,14 @@ See `docs/completion-gate.md`. Skipped checks remain proof gaps, not passes.
 
 The completion gate now uses named per-step timeouts. Build steps get longer timeouts, network checks are warning-only, and a timeout is a blocker to investigate rather than a pass.
 
+The gate is mode-aware:
+
+- `quick` skips heavy website/root build proof and is only for fast local confidence.
+- `standard` is the default completion proof path.
+- `extended` keeps the same required proof surface as standard with longer build and Wrangler timeouts.
+
+Use extended mode when root build or website build is slow because of cold dependency installs or constrained execution environments.
+
 ## Real-World Validation
 
 Wagging Web Wins is now tracked as a real-repo validation case study. It demonstrates the product distinction between merged code, static source review, PR evidence, and unverified production truth.
