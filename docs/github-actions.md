@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install -g opstruth@0.1.2
+      - run: npm install -g opstruth@0.1.3
       - run: mkdir -p evidence
       - run: opstruth --out evidence/opstruth.md
       - run: opstruth --json --skip evidence > evidence/opstruth.json

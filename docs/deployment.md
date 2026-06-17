@@ -6,7 +6,7 @@ The production opstruth website is deployed from the canonical monorepo to Cloud
 https://opstruth.woeinvests.workers.dev
 ```
 
-The public CLI is published separately on npm as `opstruth@0.1.2`:
+The public CLI is published separately on npm as `opstruth@0.1.3`:
 
 ```bash
 npm install -g opstruth
@@ -72,5 +72,5 @@ Most production deploys should happen through GitHub Actions after changes land 
 
 ## Release Links
 
-- GitHub release: `https://github.com/AyobamiH/opstruth/releases/tag/v0.1.2`
-- npm package: `opstruth@0.1.2`
+- GitHub release: `https://github.com/AyobamiH/opstruth/releases/tag/v0.1.3`
+- npm package: `opstruth@0.1.3`
