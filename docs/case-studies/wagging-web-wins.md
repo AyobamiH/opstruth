@@ -66,7 +66,7 @@ The work showed the difference between "code changed" and "production truth veri
 
 Wagging Web Wins became a real OpsTruth validation case: the workflow improved an authorization boundary, recorded evidence, protected secrets, used PR gates, and stopped before production mutation. The stop was not a failure. It was an honest proof gap.
 
-The 2026-06-16 OpsTruth run against Wagging was intentionally pre-application validation. It confirmed repo and stack detection, probe catalogue inspection, redacted secret scanning, and parseable JSON output. It also reported `STATUS: Fail` because Wagging's local `lint` script exited `127`, and it kept Supabase production behavior in `Not Verified`.
+The 2026-06-17 OpsTruth run against Wagging was intentionally pre-application validation. It confirmed repo and stack detection, npm package-manager detection, probe catalogue inspection, redacted secret scanning, and parseable JSON output. It also reported `STATUS: Fail` because Wagging's local `lint` script exited `1` with real lint errors, and it kept Supabase production behavior in `Not Verified`.
 
 ## Remaining Gates
 
