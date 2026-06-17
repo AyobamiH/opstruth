@@ -276,7 +276,7 @@ From `website/package.json` and `website/vite.config.ts`:
 - Build command: `bun run build` from `website/`.
 - Build tool: Vite 7 + TanStack Start.
 - Likely output: `website/dist/client` + `website/dist/server` (SSR-capable). Nitro target / hosting adapter — *not verified in this knowledge pass.*
-- Published URL: `https://opstruth.lovable.app` (Lovable-managed).
+- Production URL: `https://opstruth.woeinvests.workers.dev` (Cloudflare Workers, deployed from the canonical monorepo).
 
 **Not verified:**
 - Whether Lovable's production build serves SSR or static output for this project.
@@ -310,7 +310,7 @@ Do not invent deployment settings. Ask the user before changing build config.
 
 - Exact Lovable deployment pipeline behavior for a monorepo with the app root at `website/` (whether Lovable auto-detects the subdirectory).
 - Whether the website's SSR runtime is Workers-style edge or Node — affects which server-side libraries are safe.
-- Current hosting configuration beyond the `opstruth.lovable.app` published URL.
+- Current hosting configuration beyond the Cloudflare Workers production URL.
 - Whether the `opstruth` npm package has been published publicly.
 - Whether the GitHub repository `ayobamih/opstruth` is public or private at the time of reading.
 - Real-world adoption metrics — do not assert any without source.

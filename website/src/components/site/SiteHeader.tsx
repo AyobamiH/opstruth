@@ -9,7 +9,7 @@ export function SiteHeader() {
         <Link to="/" className="flex items-center gap-2 group">
           <Logo size={26} />
           <span className="hidden md:inline font-mono text-[11px] text-muted-foreground">
-            v0.1.2 · read-only
+            v0.1.3 · read-only
           </span>
         </Link>
 

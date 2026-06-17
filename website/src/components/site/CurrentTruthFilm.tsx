@@ -1,8 +1,8 @@
 const currentTruthFilmSrc = "/demo/opstruth-current-runtime-truth.mp4";
 
 const proofPoints = [
-  { label: "Package", value: "opstruth@0.1.2" },
-  { label: "Release", value: "GitHub v0.1.2" },
+  { label: "Package", value: "opstruth@0.1.3" },
+  { label: "Release", value: "GitHub v0.1.3" },
   { label: "Production", value: "Cloudflare HTTP 200" },
   { label: "Catalogue", value: "30 safe read-only probes" },
 ];

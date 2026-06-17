@@ -1,19 +1,20 @@
 # Current Video Truth Brief
 
-Date: 2026-06-06.
+Original date: 2026-06-06.
+Truth alignment updated: 2026-06-17.
 
 This brief is the source of truth for the refreshed opstruth website videos.
 
 ## Current Product State
 
-- npm package: `opstruth@0.1.2`
+- npm package: `opstruth@0.1.3`
 - npm package description: `Read-only operational truth checks for AI-assisted engineering workflows.`
 - npm package homepage: `https://opstruth.woeinvests.workers.dev`
 - npm package binary: `opstruth -> bin/opstruth.js`
 - production website: `https://opstruth.woeinvests.workers.dev`
 - production runtime: Cloudflare Workers
 - production response inspected: `HTTP/2 200`
-- GitHub release: `v0.1.2`
+- GitHub release: `v0.1.3`
 - CLI source: `cli/`
 - website source: `website/`
 - read-only model: no deploys, no database mutations, no queue/job triggers, no OpenAI calls, no service restarts, no raw secret printing

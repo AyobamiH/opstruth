@@ -2,14 +2,14 @@
 
 ## Published Package Usage
 
-The public npm package is `opstruth@0.1.2`.
+The public npm package is `opstruth@0.1.3`.
 
 ```yaml
 - uses: actions/checkout@v4
 - uses: actions/setup-node@v4
   with:
     node-version: 20
-- run: npm install -g opstruth@0.1.2
+- run: npm install -g opstruth@0.1.3
 - run: mkdir -p evidence
 - run: opstruth --out evidence/opstruth.md
 - run: opstruth --json --skip evidence > evidence/opstruth.json
@@ -33,7 +33,7 @@ When validating this repository itself, run from the checkout:
 ## npx Usage
 
 ```yaml
-- run: npx opstruth@0.1.2 --out evidence/opstruth.md
+- run: npx opstruth@0.1.3 --out evidence/opstruth.md
 ```
 
 ## Upload Evidence

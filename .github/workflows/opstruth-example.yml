@@ -12,7 +12,7 @@ jobs:
         with:
           node-version: 20
       - name: Install published opstruth
-        run: npm install -g opstruth@0.1.2
+        run: npm install -g opstruth@0.1.3
       - name: Prepare evidence directory
         run: mkdir -p evidence
       - name: Run opstruth markdown evidence
