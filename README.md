@@ -146,6 +146,18 @@ See `docs/completion-gate.md`.
 - agencies
 - developers reviewing AI-generated changes
 
+## Focused Diagnostic Reviews
+
+Start with the open-source CLI. If an opstruth report exposes risk you cannot interpret safely,
+the same evidence can frame a focused diagnostic review for an AI-built website, app, automation,
+or deployment setup.
+
+A deeper review can look at repo structure, deployment path, secret exposure risk, runtime checks,
+and the proof gaps to resolve before production changes. opstruth supports that review workflow; it
+does not replace a security audit or guarantee that an app is safe.
+
+For now, open a GitHub issue with the evidence pack and the narrow question you need answered.
+
 ## Example Workflows
 
 Before trusting AI changes:
