@@ -68,6 +68,8 @@ Wagging Web Wins became a real OpsTruth validation case: the workflow improved a
 
 The 2026-06-17 OpsTruth run against Wagging was intentionally pre-application validation. It confirmed repo and stack detection, npm package-manager detection, probe catalogue inspection, redacted secret scanning, and parseable JSON output. It also reported `STATUS: Fail` because Wagging's local `lint` script exited `1` with real lint errors, and it kept Supabase production behavior in `Not Verified`.
 
+The 2026-06-18 follow-up reduced the lint backlog from 42 errors and 20 warnings to 32 errors and 20 warnings without disabling rules or changing Supabase behavior. Wagging also gained local-only OpsTruth runtime inputs for Vite preview at `127.0.0.1:4173`. Direct route probes reached `/`, `/services`, and `/faq` with HTTP `200`, and direct local runtime probes confirmed port `4173` and `/` health. The one-command result still stayed `STATUS: Fail` because lint remained failing, and production Supabase mutation was still not approved.
+
 ## Remaining Gates
 
 - Approve Supabase remote secret setup preflight.
@@ -76,3 +78,5 @@ The 2026-06-17 OpsTruth run against Wagging was intentionally pre-application va
 - Deploy the hardened Edge Function.
 - Verify runtime behavior with admin, non-admin, scheduler, missing-secret, invalid-secret, and rate-limit cases.
 - Confirm deployed RLS/grants and function logs.
+- Finish lint remediation or explicitly triage remaining rule categories.
+- Fix the OpsTruth one-command local orchestration gap so config-provided local inputs are not skipped.

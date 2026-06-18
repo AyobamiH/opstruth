@@ -78,6 +78,8 @@ Wagging Web Wins is now tracked as a real-repo validation case study. It demonst
 
 The 2026-06-17 source CLI run against Wagging Web Wins also showed why this distinction matters. OpsTruth parsed JSON successfully and verified repo/probe/secret-scan surfaces, but the one-command result stayed `STATUS: Fail` because Wagging's local `lint` script exited `1` with real lint errors. A stale Bun lockfile had previously caused ambiguous `127` quality failures, so the run also reinforced package-manager consistency as operational evidence. Supabase production mutation was not approved, so live scheduler, secret, database, and Edge Function behavior remained proof gaps.
 
+The 2026-06-18 follow-up showed incremental proof improvement without overclaiming. Wagging's lint backlog dropped from 42 errors and 20 warnings to 32 errors and 20 warnings, local Vite preview routes responded with HTTP `200`, and the local runtime probe confirmed port `4173`. The one-command result still remained `STATUS: Fail` because lint still failed, local preview did not prove production headers, and Supabase production application was still unapproved.
+
 See `docs/case-studies/wagging-web-wins.md`, `evidence/real-world-validation-wagging-web-wins.md`, and `evidence/real-world-validation-wagging-opstruth-run.md`.
 
 ## Maturity Work In This Pass
