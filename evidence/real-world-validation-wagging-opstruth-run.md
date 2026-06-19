@@ -2,23 +2,26 @@
 
 ## Date
 
-2026-06-18
+2026-06-19
 
 ## Target Repo
 
 - Repo: `AyobamiH/wagging-web-wins`
 - Local path: `/home/johnh/wagging-web-wins`
 - Target branch: `main`
-- Latest commit during validation: `338f0d6 Add Wagging OpsTruth runtime validation inputs`
+- Latest commit during validation: `8875ec8 Reduce Wagging lint backlog safely`
 
 ## Validation Timing
 
 This was still pre-application validation. The reviewed Supabase execution packet remained ready, but the exact approval line for mutation was absent.
 
-The run followed two safe Wagging updates:
+The run followed three safe, bounded updates:
 
 - `ae9840e Triage Wagging lint quality issues`
 - `338f0d6 Add Wagging OpsTruth runtime validation inputs`
+- `8875ec8 Reduce Wagging lint backlog safely`
+
+It also followed the OpsTruth orchestration fix in `33054b7 Honor local config in OpsTruth one-command run`.
 
 ## Supabase Application Status
 
@@ -47,8 +50,8 @@ node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js quality
 node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js routes
 node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js local
 node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js --skip evidence
-node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js --json --skip evidence > /tmp/opstruth-wagging-validation-after-lint-triage.json
-node -e "JSON.parse(require('fs').readFileSync('/tmp/opstruth-wagging-validation-after-lint-triage.json','utf8')); console.log('wagging json parsed after lint triage')"
+node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js --json --skip evidence > /tmp/opstruth-wagging-validation-after-orchestration.json
+node -e "JSON.parse(require('fs').readFileSync('/tmp/opstruth-wagging-validation-after-orchestration.json','utf8')); console.log('wagging json parsed after orchestration')"
 ```
 
 The route and local checks were run against a bounded Vite preview server on `127.0.0.1:4173`. Raw JSON output was not printed.
@@ -63,8 +66,11 @@ The route and local checks were run against a bounded Vite preview server on `12
 - JSON output from the source CLI parsed successfully.
 - `npm run build` completed and pre-rendered public pages.
 - `git diff --check` completed.
+- `npm run lint` completed with zero errors and 20 warnings after the backlog moved from 42 errors to 32 errors and then to zero errors.
 - Direct `opstruth routes` reached `/`, `/services`, and `/faq` on local preview with HTTP `200`.
 - Direct `opstruth local` detected port `4173` listening and reached the `/` health path with HTTP `200`.
+- The one-command run consumed the same configured route and local inputs: quality passed, local passed, routes warned, and local was not skipped.
+- The final one-command result was `STATUS: Partial pass` with no failures.
 
 ## Warnings
 
@@ -75,15 +81,14 @@ The route and local checks were run against a bounded Vite preview server on `12
 
 ## Failures
 
-- `opstruth quality` reported failure because the Wagging `lint` script exited `1`.
-- Lint improved from 42 errors and 20 warnings to 32 errors and 20 warnings after bounded mechanical fixes.
-- The one-command `opstruth --skip evidence` result remained `STATUS: Fail`.
+- None in the final validation run.
 
 ## Skipped / Not Configured
 
 - `quality.typecheck`, `quality.test`, and `quality.ci` were skipped because matching non-placeholder scripts were not present.
 - Cloudflare checks were skipped because no Wrangler config was detected in Wagging.
-- In the one-command run, `local` still appeared as skipped even though direct `opstruth local` used `opstruth.config.json` successfully. This exposed an OpsTruth orchestration gap: local config is supported by the subcommand but not fully used by the one-command local-gating decision.
+- Production route checks remained outside this local-preview run.
+- The one-command run no longer skipped local runtime when `opstruth.config.json` supplied supported local inputs.
 
 ## Not Verified
 
@@ -98,7 +103,7 @@ The route and local checks were run against a bounded Vite preview server on `12
 
 ## What OpsTruth Helped Surface
 
-OpsTruth separated merged code, local runtime evidence, local quality failure, static source warnings, and production proof gaps. The run showed that Wagging now has stronger local preview evidence, but it still cannot be treated as operationally clean because lint fails and production Supabase application remains deliberately unperformed.
+OpsTruth separated merged code, local runtime evidence, local quality improvement, static source warnings, and production proof gaps. The run showed that Wagging now has stronger local preview and quality evidence, but `Partial pass` remains accurate because route headers warned and production Supabase application remains deliberately unperformed.
 
 ## What OpsTruth Could Not Prove
 
@@ -109,7 +114,7 @@ OpsTruth did not prove that production Supabase is configured correctly, that th
 - Real validation should show incremental improvement without turning remaining failures into passes.
 - Local preview routes and local liveness are useful, but they do not prove production deployment.
 - Route probes should distinguish local-preview header warnings from production header requirements.
-- The one-command orchestrator should call local checks when `opstruth.config.json` contains local runtime inputs.
+- The one-command orchestrator must keep regression coverage for config-driven local and route checks.
 - Secret-reference warnings need clearer grouping between harmless documentation references and actionable source findings.
 - Supabase output should distinguish static source confidence from live project confidence.
 
@@ -117,7 +122,7 @@ OpsTruth did not prove that production Supabase is configured correctly, that th
 
 - Add a case-study/evidence command for real repo validation runs.
 - Add clearer lint/build failure summaries with command exit codes and before/after counts.
-- Make one-command local orchestration honor local runtime inputs in `opstruth.config.json`.
+- Keep regression coverage for one-command local orchestration honoring `opstruth.config.json`.
 - Group secret-reference findings by documentation, fixtures, generated output, and application source.
 - Improve Supabase static versus live proof language.
 - Add first-class "mutation not approved" evidence sections.

@@ -70,6 +70,8 @@ The 2026-06-17 OpsTruth run against Wagging was intentionally pre-application va
 
 The 2026-06-18 follow-up reduced the lint backlog from 42 errors and 20 warnings to 32 errors and 20 warnings without disabling rules or changing Supabase behavior. Wagging also gained local-only OpsTruth runtime inputs for Vite preview at `127.0.0.1:4173`. Direct route probes reached `/`, `/services`, and `/faq` with HTTP `200`, and direct local runtime probes confirmed port `4173` and `/` health. The one-command result still stayed `STATUS: Fail` because lint remained failing, and production Supabase mutation was still not approved.
 
+The 2026-06-19 follow-up reduced lint to zero errors and 20 warnings with bounded type and correctness fixes. OpsTruth then fixed its one-command orchestration so supported route and local inputs from `opstruth.config.json` are used without duplicate CLI flags. Against a bounded local preview, the final run reported `STATUS: Partial pass`: quality and local checks passed, all three configured routes returned HTTP `200`, route checks warned about preview security headers, and no failures were reported. Supabase production mutation was still not approved or performed.
+
 ## Remaining Gates
 
 - Approve Supabase remote secret setup preflight.
@@ -78,5 +80,5 @@ The 2026-06-18 follow-up reduced the lint backlog from 42 errors and 20 warnings
 - Deploy the hardened Edge Function.
 - Verify runtime behavior with admin, non-admin, scheduler, missing-secret, invalid-secret, and rate-limit cases.
 - Confirm deployed RLS/grants and function logs.
-- Finish lint remediation or explicitly triage remaining rule categories.
-- Fix the OpsTruth one-command local orchestration gap so config-provided local inputs are not skipped.
+- Triage the remaining 20 lint warnings without weakening rules or changing behavior broadly.
+- Decide whether local-preview security-header warnings need environment-aware guidance while preserving strict production expectations.
