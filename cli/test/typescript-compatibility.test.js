@@ -15,6 +15,7 @@ import { runRoutes } from '../src/commands/routes.js';
 import { runSupabase } from '../src/commands/supabase.js';
 import { runCloudflare } from '../src/commands/cloudflare.js';
 import { runCli } from '../src/cli.js';
+import { runOrchestrator } from '../src/orchestrator.js';
 import { evidenceMarkdown, statusLabel } from '../src/lib/markdown.js';
 
 const execFileAsync = promisify(execFile);
@@ -379,6 +380,58 @@ test('local command can read ports and health paths from config', async () => {
   const result = JSON.parse(stdout);
   assert.equal(result.status, 'warn');
   assert.ok(result.checks.some((check) => check.name === 'port 9 listening'));
+});
+
+test('one-command run consumes route and local inputs from config', async () => {
+  const root = await fixture({
+    'package.json': JSON.stringify({ scripts: { lint: 'node --version' } }),
+    'opstruth.config.json': JSON.stringify({
+      routes: {
+        baseUrl: 'http://127.0.0.1:9',
+        routes: [{ path: '/', method: 'GET', expectedStatus: 200 }],
+        requiredHeaders: []
+      },
+      local: {
+        ports: [9],
+        healthPaths: ['/']
+      }
+    })
+  });
+  await execFileAsync('git', ['init'], { cwd: root });
+  const result = await runOrchestrator({ cwd: root, skip: ['evidence'] });
+  const routes = result.data.childResults.find((item) => item.command === 'routes');
+  const local = result.data.childResults.find((item) => item.command === 'local');
+  assert.ok(routes);
+  assert.ok(local);
+  assert.notEqual(routes.status, 'skipped');
+  assert.notEqual(local.status, 'skipped');
+  assert.ok(routes.checks.some((check) => check.name === 'GET /'));
+  assert.ok(local.checks.some((check) => check.name === 'health 9'));
+});
+
+test('one-command json output includes config-driven local evidence and stays ANSI-free', async () => {
+  const root = await fixture({
+    'package.json': JSON.stringify({ scripts: { lint: 'node --version' } }),
+    'opstruth.config.json': JSON.stringify({
+      routes: {
+        baseUrl: 'http://127.0.0.1:9',
+        routes: [{ path: '/', method: 'GET', expectedStatus: 200 }],
+        requiredHeaders: []
+      },
+      local: {
+        ports: [9],
+        healthPaths: ['/']
+      }
+    })
+  });
+  await execFileAsync('git', ['init'], { cwd: root });
+  const { stdout } = await captureCli(['--json', '--skip', 'evidence', '--color'], root);
+  assert.doesNotMatch(stdout, ANSI_RE);
+  const result = JSON.parse(stdout);
+  const local = result.data.childResults.find((item) => item.command === 'local');
+  assert.ok(local);
+  assert.notEqual(local.status, 'skipped');
+  assert.ok(local.checks.some((check) => check.name === 'health 9'));
 });
 
 test('invalid config warns clearly for config-driven routes', async () => {

@@ -80,6 +80,8 @@ The 2026-06-17 source CLI run against Wagging Web Wins also showed why this dist
 
 The 2026-06-18 follow-up showed incremental proof improvement without overclaiming. Wagging's lint backlog dropped from 42 errors and 20 warnings to 32 errors and 20 warnings, local Vite preview routes responded with HTTP `200`, and the local runtime probe confirmed port `4173`. The one-command result still remained `STATUS: Fail` because lint still failed, local preview did not prove production headers, and Supabase production application was still unapproved.
 
+The 2026-06-19 follow-up closed two local validation gaps. Wagging's lint backlog was reduced from 32 errors and 20 warnings to 0 errors and 20 warnings, so local quality now passes while Fast Refresh and hook warnings remain tracked. OpsTruth also fixed the one-command orchestration path so configured local runtime inputs in `opstruth.config.json` are honored by `opstruth --skip evidence`; the Wagging validation run reported routes as `warn`, local as `pass`, quality as `pass`, and no local-runtime skip. Supabase mutation remained unapproved and was not performed.
+
 See `docs/case-studies/wagging-web-wins.md`, `evidence/real-world-validation-wagging-web-wins.md`, and `evidence/real-world-validation-wagging-opstruth-run.md`.
 
 ## Maturity Work In This Pass

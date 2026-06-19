@@ -1,4 +1,3 @@
-import path from 'node:path';
 import { runRepo } from './commands/repo.js';
 import { runSecrets } from './commands/secrets.js';
 import { runQuality } from './commands/quality.js';
@@ -9,8 +8,7 @@ import { runLocal } from './commands/local.js';
 import { runEvidence } from './commands/evidence.js';
 import { createResult, finalizeStatus, worstStatus } from './lib/result.js';
 import { detectStack, hasSupabase, hasCloudflare } from './lib/detect.js';
-import { findDefaultRoutesConfig } from './lib/config.js';
-import { pathExists } from './lib/fs.js';
+import { findDefaultRoutesConfig, loadOpstruthConfig } from './lib/config.js';
 import { resolveProjectBoundary } from './lib/boundary.js';
 import { selectProbes } from './lib/probes.js';
 
@@ -48,6 +46,12 @@ function probeJson(probe) {
   };
 }
 
+function hasConfigLocalInputs(loadedConfig) {
+  if (loadedConfig.warning) return true;
+  const configLocal = loadedConfig.config?.local || {};
+  return Array.isArray(configLocal.ports) && configLocal.ports.length > 0;
+}
+
 export async function runOrchestrator(options = {}) {
   const startCwd = options.cwd || process.cwd();
   const boundary = await resolveProjectBoundary(startCwd);
@@ -71,8 +75,8 @@ export async function runOrchestrator(options = {}) {
   const routeConfig = await findDefaultRoutesConfig(cwd);
   if (options.baseUrl || options.routesFile || routeConfig) await maybe('routes', () => runRoutes(options));
   else childResults.push(skippedResult('routes', 'Route checks skipped because no base URL or routes config was provided.', 'Production/public route availability was not checked'));
-  const hasLocalConfig = await pathExists(path.join(cwd, 'opstruth.local.json'));
-  if (options.port?.length || options.healthProvided || options.process || options.service || hasLocalConfig) await maybe('local', () => runLocal(options));
+  const loadedConfig = await loadOpstruthConfig(cwd);
+  if (options.port?.length || options.healthProvided || options.process || options.service || hasConfigLocalInputs(loadedConfig)) await maybe('local', () => runLocal(options));
   else childResults.push(skippedResult('local', 'Local runtime checks skipped because no port, health path, process, or service was provided.', 'Local runtime liveness was not checked'));
   const aggregate = createResult('opstruth', worstStatus(childResults.map((item) => item.status)), {
     summary: 'One-command read-only proof run completed.',

@@ -33,6 +33,7 @@ opstruth is an evidence-first project. A task is not complete just because files
 - git status, branch, and recent commits
 - CLI lint and tests
 - `opstruth repo`, `opstruth secrets`, `opstruth probes`, and JSON output parsing
+- CLI regression tests for route/local config orchestration in the one-command run
 - website build and lint in standard/extended modes
 - root website build/sync in standard/extended modes unless explicitly skipped
 - Cloudflare dry-run in standard/extended modes

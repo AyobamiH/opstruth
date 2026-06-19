@@ -232,7 +232,7 @@ Create a starter config:
 opstruth init --yes
 ```
 
-`opstruth.config.json` can provide route paths, local ports/health paths, and secret-scan allowlists. Runtime checks still require explicit safe inputs such as `--base-url` or local service details before opstruth can prove live behavior.
+`opstruth.config.json` can provide route paths, local ports/health paths, and secret-scan allowlists. The one-command run uses supported route and local config inputs when present; without CLI flags or config, runtime checks stay skipped and are reported as proof gaps.
 
 See `docs/configuration.md`.
 
