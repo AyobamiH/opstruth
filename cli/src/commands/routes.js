@@ -4,6 +4,38 @@ import { loadRoutesConfig, findDefaultRoutesConfig } from '../lib/config.js';
 import { resolveProjectBoundary } from '../lib/boundary.js';
 
 const DEFAULT_HEADERS = ['content-security-policy', 'strict-transport-security', 'x-frame-options', 'referrer-policy'];
+
+export function isLocalRouteUrl(value) {
+  try {
+    const hostname = new URL(value).hostname.replace(/^\[|\]$/g, '').toLowerCase();
+    return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
+  } catch {
+    return false;
+  }
+}
+
+export function buildMissingHeaderFinding({ url, routePath, missingHeaders = [], evidence = [] } = {}) {
+  if (!missingHeaders.length) return null;
+  const localPreview = isLocalRouteUrl(url);
+  const finding = localPreview
+    ? `${routePath} local preview missing headers: ${missingHeaders.join(', ')}`
+    : `${routePath} missing headers: ${missingHeaders.join(', ')}`;
+
+  return createFinding({
+    status: 'warn',
+    area: 'routes',
+    title: localPreview ? 'Local preview security headers missing' : 'Route security headers missing',
+    finding,
+    evidence,
+    whyItMatters: localPreview
+      ? 'The local preview response does not include the expected security headers. Local development and preview servers may differ from the deployed hosting layer. Production headers remain Not Verified until a production URL is checked.'
+      : 'Missing browser security headers can weaken runtime protection even when the checked route is available.',
+    nextSafeStep: localPreview
+      ? 'Check an explicitly supplied production URL before drawing production conclusions, and configure local preview headers only when they are useful for parity.'
+      : 'Add the missing headers in the app or hosting layer and rerun route probes.'
+  });
+}
+
 export async function runRoutes({ cwd = process.cwd(), baseUrl, routesFile, strict = false } = {}) {
   const boundary = await resolveProjectBoundary(cwd);
   cwd = boundary.root;
@@ -19,6 +51,7 @@ export async function runRoutes({ cwd = process.cwd(), baseUrl, routesFile, stri
   const warnings = [];
   const failures = [];
   const findings = [];
+  const localPreview = isLocalRouteUrl(finalBase);
   for (const route of routes) {
     const url = new URL(route.path, finalBase).toString();
     const probe = await probeUrl(url, { method: route.method || 'HEAD' });
@@ -38,12 +71,30 @@ export async function runRoutes({ cwd = process.cwd(), baseUrl, routesFile, stri
       failures.push(message);
       findings.push(createFinding({ status: 'fail', area: 'routes', title: 'Route status did not match expectation', finding: message, evidence, whyItMatters: 'A route that fails a read-only smoke check may block users or downstream health checks.', nextSafeStep: 'Inspect the route and rerun without deploying from opstruth.' }));
     }
-    if (missingHeaders.length) {
-      const message = `${route.path} missing headers: ${missingHeaders.join(', ')}`;
-      warnings.push(message);
-      findings.push(createFinding({ status: 'warn', area: 'routes', title: 'Route security headers missing', finding: message, evidence, whyItMatters: 'Missing browser security headers can weaken runtime protection even when the route is available.', nextSafeStep: 'Add the missing headers in the app or hosting layer and rerun route probes.' }));
+    const headerFinding = buildMissingHeaderFinding({ url, routePath: route.path, missingHeaders, evidence });
+    if (headerFinding) {
+      warnings.push(headerFinding.finding);
+      findings.push(headerFinding);
     }
     checks.push({ name: `${route.method || 'HEAD'} ${route.path}`, status: okStatus ? missingHeaders.length ? 'warn' : 'pass' : 'fail', message: `status=${probe.status || 'error'} latency=${probe.latencyMs}ms`, data: probe });
   }
-  return finalizeStatus(createResult('routes', failures.length ? 'fail' : warnings.length ? 'warn' : 'pass', { summary: 'HEAD/GET public route smoke matrix completed.', verified: ['Project boundary: ' + boundary.root, 'Routes checked with read-only HEAD/GET requests', 'Response status, redirects, headers, and latency captured'], warnings, failures, findings, checks, data: { boundary, baseUrl: finalBase, routes, requiredHeaders }, nextSafeStep: failures.length ? 'Investigate failing routes without deploying from opstruth.' : 'Add missing required headers or attach route evidence.' }), { strict });
+  return finalizeStatus(createResult('routes', failures.length ? 'fail' : warnings.length ? 'warn' : 'pass', {
+    summary: localPreview ? 'HEAD/GET local preview route smoke matrix completed.' : 'HEAD/GET public route smoke matrix completed.',
+    verified: [
+      'Project boundary: ' + boundary.root,
+      localPreview ? 'Local preview routes checked with read-only HEAD/GET requests' : 'Routes checked with read-only HEAD/GET requests',
+      'Response status, redirects, headers, and latency captured'
+    ],
+    warnings,
+    failures,
+    findings,
+    checks,
+    notVerified: localPreview ? ['Production security headers were not checked because only a local preview URL was probed'] : [],
+    data: { boundary, baseUrl: finalBase, routes, requiredHeaders, scope: localPreview ? 'local_preview' : 'remote' },
+    nextSafeStep: failures.length
+      ? 'Investigate failing routes without deploying from opstruth.'
+      : localPreview
+        ? 'Check an explicit production URL to verify deployed security headers.'
+        : 'Add missing required headers or attach route evidence.'
+  }), { strict });
 }

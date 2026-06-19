@@ -82,6 +82,8 @@ The 2026-06-18 follow-up showed incremental proof improvement without overclaimi
 
 The 2026-06-19 follow-up closed two local validation gaps. Wagging's lint backlog was reduced from 32 errors and 20 warnings to 0 errors and 20 warnings, so local quality now passes while Fast Refresh and hook warnings remain tracked. OpsTruth also fixed the one-command orchestration path so configured local runtime inputs in `opstruth.config.json` are honored by `opstruth --skip evidence`; the bounded Wagging preview run finished `STATUS: Partial pass`, with routes at `warn`, local at `pass`, quality at `pass`, no local-runtime skip, and no failures. Supabase mutation remained unapproved and was not performed.
 
+The route guidance now scopes loopback header findings to the local preview response while preserving the warning. Production headers remain `Not Verified` until an explicit production URL is checked, and non-local URLs retain stronger production-relevant guidance.
+
 See `docs/case-studies/wagging-web-wins.md`, `evidence/real-world-validation-wagging-web-wins.md`, and `evidence/real-world-validation-wagging-opstruth-run.md`.
 
 ## Maturity Work In This Pass

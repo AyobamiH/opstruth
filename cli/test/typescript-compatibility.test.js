@@ -11,7 +11,7 @@ import { runQuality } from '../src/commands/quality.js';
 import { resolveProjectBoundary } from '../src/lib/boundary.js';
 import { runSecrets } from '../src/commands/secrets.js';
 import { PROBE_CATALOGUE, selectProbes } from '../src/lib/probes.js';
-import { runRoutes } from '../src/commands/routes.js';
+import { buildMissingHeaderFinding, isLocalRouteUrl, runRoutes } from '../src/commands/routes.js';
 import { runSupabase } from '../src/commands/supabase.js';
 import { runCloudflare } from '../src/commands/cloudflare.js';
 import { runCli } from '../src/cli.js';
@@ -319,6 +319,57 @@ test('route evidence captures URL status latency and missing headers', async () 
   assert.ok(result.findings[0].evidence.some((item) => item.includes('status:')));
   assert.ok(result.findings[0].evidence.some((item) => item.includes('latency:')));
   assert.ok(result.findings[0].evidence.some((item) => item.includes('missing headers:')));
+});
+
+test('local route header guidance preserves warnings without inferring production risk', () => {
+  for (const url of ['http://127.0.0.1:4173/', 'http://localhost:4173/', 'http://[::1]:4173/']) {
+    assert.equal(isLocalRouteUrl(url), true);
+    const finding = buildMissingHeaderFinding({
+      url,
+      routePath: '/',
+      missingHeaders: ['strict-transport-security'],
+      evidence: ['missing headers: strict-transport-security']
+    });
+    assert.equal(finding.status, 'warn');
+    assert.match(finding.finding, /local preview/i);
+    assert.match(finding.whyItMatters, /production headers remain Not Verified/i);
+    assert.match(finding.nextSafeStep, /production URL/i);
+  }
+});
+
+test('remote route header guidance retains production-relevant warning', () => {
+  assert.equal(isLocalRouteUrl('https://example.com/'), false);
+  const finding = buildMissingHeaderFinding({
+    url: 'https://example.com/',
+    routePath: '/',
+    missingHeaders: ['content-security-policy'],
+    evidence: ['missing headers: content-security-policy']
+  });
+  assert.equal(finding.status, 'warn');
+  assert.doesNotMatch(finding.finding, /local preview/i);
+  assert.match(finding.whyItMatters, /weaken runtime protection/i);
+});
+
+test('route header guidance is absent when expected headers are present', () => {
+  const finding = buildMissingHeaderFinding({
+    url: 'http://127.0.0.1:4173/',
+    routePath: '/',
+    missingHeaders: [],
+    evidence: ['missing headers: none']
+  });
+  assert.equal(finding, null);
+});
+
+test('local route header guidance stays parseable and ANSI-free in JSON', () => {
+  const finding = buildMissingHeaderFinding({
+    url: 'http://localhost:4173/',
+    routePath: '/',
+    missingHeaders: ['x-frame-options'],
+    evidence: ['missing headers: x-frame-options']
+  });
+  const output = JSON.stringify(finding);
+  assert.deepEqual(JSON.parse(output), finding);
+  assert.doesNotMatch(output, ANSI_RE);
 });
 
 test('probe orchestration selects and skips catalogue entries', async () => {
