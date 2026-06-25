@@ -70,7 +70,9 @@ The 2026-06-17 OpsTruth run against Wagging was intentionally pre-application va
 
 The 2026-06-18 follow-up reduced the lint backlog from 42 errors and 20 warnings to 32 errors and 20 warnings without disabling rules or changing Supabase behavior. Wagging also gained local-only OpsTruth runtime inputs for Vite preview at `127.0.0.1:4173`. Direct route probes reached `/`, `/services`, and `/faq` with HTTP `200`, and direct local runtime probes confirmed port `4173` and `/` health. The one-command result still stayed `STATUS: Fail` because lint remained failing, and production Supabase mutation was still not approved.
 
-The 2026-06-19 follow-up reduced lint to zero errors and 20 warnings with bounded type and correctness fixes. OpsTruth then fixed its one-command orchestration so supported route and local inputs from `opstruth.config.json` are used without duplicate CLI flags. Against a bounded local preview, the final run reported `STATUS: Partial pass`: quality and local checks passed, all three configured routes returned HTTP `200`, route checks warned about preview security headers, and no failures were reported. Supabase production mutation was still not approved or performed.
+The 2026-06-19 follow-up reduced lint to zero errors and 20 warnings with bounded type and correctness fixes. OpsTruth then fixed its one-command orchestration so supported route and local inputs from `opstruth.config.json` are used without duplicate CLI flags. Against a bounded local preview, the run reported `STATUS: Partial pass`: quality and local checks passed, all three configured routes returned HTTP `200`, route checks warned about preview security headers, and no failures were reported. Supabase production mutation was still not approved or performed.
+
+The 2026-06-25 follow-up cleared the remaining 12 Fast Refresh warnings by moving helpers, variants, and hooks into adjacent non-component modules. Wagging's `npm run lint` now exits `0` with zero warnings, `npm run build` still completes, and OpsTruth's one-command run still reports `STATUS: Partial pass` with no failures. The remaining proof gaps are not local lint quality gaps; they are live Supabase, scheduler, deployment, and production-route verification gates.
 
 ## Remaining Gates
 
@@ -80,5 +82,4 @@ The 2026-06-19 follow-up reduced lint to zero errors and 20 warnings with bounde
 - Deploy the hardened Edge Function.
 - Verify runtime behavior with admin, non-admin, scheduler, missing-secret, invalid-secret, and rate-limit cases.
 - Confirm deployed RLS/grants and function logs.
-- Triage the remaining 20 lint warnings without weakening rules or changing behavior broadly.
 - Decide whether local-preview security-header warnings need environment-aware guidance while preserving strict production expectations.

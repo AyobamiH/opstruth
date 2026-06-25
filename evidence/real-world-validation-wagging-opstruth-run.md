@@ -2,26 +2,29 @@
 
 ## Date
 
-2026-06-19
+2026-06-25
 
 ## Target Repo
 
 - Repo: `AyobamiH/wagging-web-wins`
 - Local path: `/home/johnh/wagging-web-wins`
 - Target branch: `main`
-- Latest commit during validation: `8875ec8 Reduce Wagging lint backlog safely`
+- Latest commit during validation: `a3ae062 Clear Wagging Fast Refresh lint warnings`
 
 ## Validation Timing
 
-This was still pre-application validation. The reviewed Supabase execution packet remained ready, but the exact approval line for mutation was absent.
+This was still pre-Supabase-application validation. The reviewed Supabase execution packet remained ready, but the exact approval line for mutation was absent.
 
-The run followed three safe, bounded updates:
+The latest run followed these safe, bounded updates:
 
 - `ae9840e Triage Wagging lint quality issues`
 - `338f0d6 Add Wagging OpsTruth runtime validation inputs`
 - `8875ec8 Reduce Wagging lint backlog safely`
+- `1bcee9f Reduce Wagging lint warnings safely`
+- `1f456b1 Document GitHub and Supabase execution readiness`
+- `a3ae062 Clear Wagging Fast Refresh lint warnings`
 
-It also followed the OpsTruth orchestration fix in `33054b7 Honor local config in OpsTruth one-command run`.
+It also used the OpsTruth orchestration fix in `33054b7 Honor local config in OpsTruth one-command run` and later local-preview guidance from `1f8e0ff Clarify local preview security header guidance`.
 
 ## Supabase Application Status
 
@@ -43,15 +46,11 @@ cd /home/johnh/wagging-web-wins
 npm run lint
 npm run build
 git diff --check
-node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js repo
-node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js probes
-node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js secrets
-node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js quality
 node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js routes
 node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js local
 node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js --skip evidence
-node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js --json --skip evidence > /tmp/opstruth-wagging-validation-after-orchestration.json
-node -e "JSON.parse(require('fs').readFileSync('/tmp/opstruth-wagging-validation-after-orchestration.json','utf8')); console.log('wagging json parsed after orchestration')"
+node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js --json --skip evidence > /tmp/opstruth-wagging-after-fast-refresh.json
+node -e "JSON.parse(require('fs').readFileSync('/tmp/opstruth-wagging-after-fast-refresh.json','utf8')); console.log('wagging opstruth json parsed after fast refresh cleanup')"
 ```
 
 The route and local checks were run against a bounded Vite preview server on `127.0.0.1:4173`. Raw JSON output was not printed.
@@ -64,9 +63,9 @@ The route and local checks were run against a bounded Vite preview server on `12
 - Probe catalogue inspection completed without mutating the target repo.
 - Secret scanning completed with redaction and did not print raw `.env` contents.
 - JSON output from the source CLI parsed successfully.
+- `npm run lint` completed with zero errors and zero warnings after the Fast Refresh cleanup.
 - `npm run build` completed and pre-rendered public pages.
-- `git diff --check` completed.
-- `npm run lint` completed with zero errors and 20 warnings after the backlog moved from 42 errors to 32 errors and then to zero errors.
+- `git diff --check` completed before commit.
 - Direct `opstruth routes` reached `/`, `/services`, and `/faq` on local preview with HTTP `200`.
 - Direct `opstruth local` detected port `4173` listening and reached the `/` health path with HTTP `200`.
 - The one-command run consumed the same configured route and local inputs: quality passed, local passed, routes warned, and local was not skipped.
@@ -78,6 +77,7 @@ The route and local checks were run against a bounded Vite preview server on `12
 - Local preview route probes warned that the Vite preview responses did not include production-style browser security headers.
 - Supabase checks remained mostly static and could not prove live remote behavior.
 - The build pre-render step read published blog data. This was not a mutation, but it is runtime-adjacent evidence rather than a pure static compile.
+- The one-command JSON summary contained 141 warning entries, dominated by secret/auth reference findings and local-preview route-header warnings.
 
 ## Failures
 
@@ -88,7 +88,7 @@ The route and local checks were run against a bounded Vite preview server on `12
 - `quality.typecheck`, `quality.test`, and `quality.ci` were skipped because matching non-placeholder scripts were not present.
 - Cloudflare checks were skipped because no Wrangler config was detected in Wagging.
 - Production route checks remained outside this local-preview run.
-- The one-command run no longer skipped local runtime when `opstruth.config.json` supplied supported local inputs.
+- The one-command run did not skip local runtime when `opstruth.config.json` supplied supported local inputs.
 
 ## Not Verified
 
@@ -100,10 +100,11 @@ The route and local checks were run against a bounded Vite preview server on `12
 - Runtime responses for admin, non-admin, scheduler, missing-secret, invalid-secret, and rate-limit cases.
 - Production/public route availability.
 - Production security headers for the deployed website.
+- Process ownership beyond the local port/health evidence.
 
 ## What OpsTruth Helped Surface
 
-OpsTruth separated merged code, local runtime evidence, local quality improvement, static source warnings, and production proof gaps. The run showed that Wagging now has stronger local preview and quality evidence, but `Partial pass` remains accurate because route headers warned and production Supabase application remains deliberately unperformed.
+OpsTruth separated merged code, clean local lint/build evidence, local runtime evidence, static source warnings, and production proof gaps. The run showed that Wagging now has strong local quality and preview evidence, but `Partial pass` remains accurate because route headers warned and production Supabase application remains deliberately unperformed.
 
 ## What OpsTruth Could Not Prove
 
@@ -111,17 +112,18 @@ OpsTruth did not prove that production Supabase is configured correctly, that th
 
 ## Product Lessons
 
-- Real validation should show incremental improvement without turning remaining failures into passes.
+- Real validation should show incremental improvement without turning remaining proof gaps into passes.
 - Local preview routes and local liveness are useful, but they do not prove production deployment.
 - Route probes should distinguish local-preview header warnings from production header requirements.
 - The one-command orchestrator must keep regression coverage for config-driven local and route checks.
 - Secret-reference warnings need clearer grouping between harmless documentation references and actionable source findings.
 - Supabase output should distinguish static source confidence from live project confidence.
+- Clean lint is useful evidence, but it does not resolve live scheduler, database, or deployment proof gaps.
 
 ## v0.2 Backlog Items
 
 - Add a case-study/evidence command for real repo validation runs.
-- Add clearer lint/build failure summaries with command exit codes and before/after counts.
+- Add clearer lint/build summaries with before/after counts and whether warnings remain.
 - Keep regression coverage for one-command local orchestration honoring `opstruth.config.json`.
 - Group secret-reference findings by documentation, fixtures, generated output, and application source.
 - Improve Supabase static versus live proof language.
