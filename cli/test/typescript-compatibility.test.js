@@ -7,7 +7,7 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import { detectPackageManager, detectStack } from '../src/lib/detect.js';
-import { runQuality } from '../src/commands/quality.js';
+import { qualityRunnerFor, runQuality } from '../src/commands/quality.js';
 import { resolveProjectBoundary } from '../src/lib/boundary.js';
 import { runSecrets } from '../src/commands/secrets.js';
 import { classifySecretReference, scanRiskyReferencesDetailed } from '../src/lib/scan.js';
@@ -143,6 +143,109 @@ test('quality runs an existing valid test script', async () => {
   assert.equal(result.status, 'pass');
   assert.deepEqual(result.data.selectedScripts, ['test']);
   assert.ok(result.checks.some((check) => check.name === 'package script test' && check.status === 'pass'));
+});
+
+test('quality reports all proof signals through a passing ci script', async () => {
+  const root = await fixture({
+    'package.json': JSON.stringify({
+      scripts: {
+        lint: 'node --version',
+        typecheck: 'node --version',
+        test: 'node --version',
+        build: 'node --version',
+        ci: 'npm run lint && npm run typecheck && npm test && npm run build'
+      }
+    })
+  });
+  const result = await runQuality({ cwd: root });
+  assert.equal(result.status, 'pass');
+  assert.equal(result.data.quality.executionStrategy, 'ci');
+  assert.deepEqual(result.data.selectedScripts, ['ci']);
+  assert.equal(result.data.quality.signals.lint.status, 'passed');
+  assert.equal(result.data.quality.signals.typecheck.status, 'passed');
+  assert.equal(result.data.quality.signals.tests.status, 'passed');
+  assert.equal(result.data.quality.signals.build.status, 'passed');
+  assert.equal(result.data.quality.signals.ci.status, 'passed');
+  assert.equal(result.data.quality.signals.lint.proofRoute, 'ci');
+  assert.ok(result.checks.some((check) => check.name === 'quality signal lint' && check.status === 'pass'));
+});
+
+test('quality keeps missing test script not configured instead of passed', async () => {
+  const root = await fixture({
+    'package.json': JSON.stringify({ scripts: { lint: 'node --version' } })
+  });
+  const result = await runQuality({ cwd: root });
+  assert.equal(result.data.quality.signals.tests.status, 'not_configured');
+  assert.ok(result.skipped.some((item) => item.includes('test')));
+  assert.notEqual(result.data.quality.signals.tests.status, 'passed');
+});
+
+test('quality records failing lint as a distinct failed signal', async () => {
+  const root = await fixture({
+    'package.json': JSON.stringify({ scripts: { lint: 'node -e "process.exit(1)"' } })
+  });
+  const result = await runQuality({ cwd: root, scripts: ['lint'] });
+  assert.equal(result.status, 'fail');
+  assert.equal(result.data.quality.signals.lint.status, 'failed');
+  assert.ok(result.failures.includes('lint failed'));
+});
+
+test('quality records build timeouts as timed out', async () => {
+  const root = await fixture({
+    'package.json': JSON.stringify({ scripts: { build: 'node -e "setTimeout(() => {}, 5000)"' } })
+  });
+  const result = await runQuality({ cwd: root, scripts: ['build'], timeoutMs: 100 });
+  assert.equal(result.status, 'fail');
+  assert.equal(result.data.quality.signals.build.status, 'timed_out');
+  assert.ok(result.failures.includes('build timed out'));
+});
+
+test('quality skips mutation-like ci script and uses safe individual scripts', async () => {
+  const root = await fixture({
+    'package.json': JSON.stringify({
+      scripts: {
+        lint: 'node --version',
+        ci: 'supabase db push'
+      }
+    })
+  });
+  const result = await runQuality({ cwd: root });
+  assert.equal(result.status, 'warn');
+  assert.deepEqual(result.data.selectedScripts, ['lint']);
+  assert.equal(result.data.quality.signals.ci.status, 'skipped');
+  assert.match(result.data.quality.signals.ci.reason, /requires human review/);
+  assert.ok(result.warnings.some((item) => item.includes('requires review')));
+});
+
+test('quality command runner selection stays package-manager aware', () => {
+  assert.deepEqual(qualityRunnerFor('npm'), ['npm', ['run']]);
+  assert.deepEqual(qualityRunnerFor('pnpm'), ['pnpm', ['run']]);
+  assert.deepEqual(qualityRunnerFor('yarn'), ['yarn', []]);
+  assert.deepEqual(qualityRunnerFor('bun'), ['bun', ['run']]);
+});
+
+test('quality json exposes distinct signals and stays ANSI-free', async () => {
+  const root = await fixture({
+    'package.json': JSON.stringify({ scripts: { lint: 'node --version', test: 'node --version' } })
+  });
+  const { stdout, exitCode } = await captureCli(['quality', '--json'], root);
+  const parsed = JSON.parse(stdout);
+  assert.equal(exitCode, 0);
+  assert.doesNotMatch(stdout, ANSI_RE);
+  assert.equal(parsed.data.quality.signals.lint.status, 'passed');
+  assert.equal(parsed.data.quality.signals.tests.status, 'passed');
+  assert.equal(parsed.data.quality.signals.typecheck.status, 'not_configured');
+});
+
+test('quality evidence includes each proof signal in checks', async () => {
+  const root = await fixture({
+    'package.json': JSON.stringify({ scripts: { lint: 'node --version', build: 'node --version' } })
+  });
+  const result = await runQuality({ cwd: root });
+  const checkNames = result.checks.map((check) => check.name);
+  for (const signal of ['lint', 'typecheck', 'tests', 'build', 'ci']) {
+    assert.ok(checkNames.includes('quality signal ' + signal));
+  }
 });
 
 

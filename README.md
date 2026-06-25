@@ -128,6 +128,8 @@ Skipped is not failed. Unverified is not safe. opstruth reports proof gaps inste
 
 Secret scans group findings into actionable source findings, documentation references, placeholders/examples, local-only files, generated/dependency paths, ignored binaries, and unknown review items. See `docs/secret-reference-classification.md`.
 
+Quality checks report lint, typecheck, tests, build, and CI as distinct proof signals. See `docs/quality-proof-signals.md`.
+
 ## Completion Gate
 
 Codex work in this repo is not complete until the completion gate has run and the final report includes proof:
