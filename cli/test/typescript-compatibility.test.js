@@ -10,6 +10,7 @@ import { detectPackageManager, detectStack } from '../src/lib/detect.js';
 import { runQuality } from '../src/commands/quality.js';
 import { resolveProjectBoundary } from '../src/lib/boundary.js';
 import { runSecrets } from '../src/commands/secrets.js';
+import { classifySecretReference, scanRiskyReferencesDetailed } from '../src/lib/scan.js';
 import { PROBE_CATALOGUE, selectProbes } from '../src/lib/probes.js';
 import { buildMissingHeaderFinding, isLocalRouteUrl, runRoutes } from '../src/commands/routes.js';
 import { runSupabase } from '../src/commands/supabase.js';
@@ -263,20 +264,24 @@ test('project boundary uses git root and non-git current directory only', async 
 });
 
 test('secret findings include redacted evidence', async () => {
+  const secretName = ['OPENAI', 'API', 'KEY'].join('_');
+  const fakeValue = 's' + 'k-test-secret-value';
   const root = await fixture({
     'package.json': '{}',
-    'src/app.js': 'const OPENAI_API_KEY = "sk-test-secret-value";\n'
+    'src/app.js': `const ${secretName} = "${fakeValue}";\n`
   });
   const result = await runSecrets({ cwd: root });
   assert.equal(result.status, 'warn');
   assert.equal(result.findings.length, 1);
   assert.match(result.findings[0].evidence.join('\n'), /redacted preview/);
-  assert.doesNotMatch(result.findings[0].evidence.join('\n'), /sk-test-secret-value/);
+  assert.doesNotMatch(result.findings[0].evidence.join('\n'), new RegExp(fakeValue));
 });
 
 test('secret scan skips env and cache files while preserving redacted source findings', async () => {
+  const secretName = ['OPENAI', 'API', 'KEY'].join('_');
+  const envValue = 's' + 'k-env-value-should-not-print';
   const root = await fixture({
-    '.env': 'OPENAI_API_KEY=sk-env-value-should-not-print\n',
+    '.env': `${secretName}=${envValue}\n`,
     'node_modules/pkg/index.js': 'const token = "node-module-token";\n',
     'dist/bundle.js': 'const api_key = "dist-token";\n',
     'src/app.js': 'const refresh_token = "source-token";\n'
@@ -286,13 +291,97 @@ test('secret scan skips env and cache files while preserving redacted source fin
   assert.equal(result.findings.length, 1);
   assert.match(findings, /src\/app.js/);
   assert.match(findings, /REDACTED/);
-  assert.doesNotMatch(findings, /sk-env-value-should-not-print|node-module-token|dist-token|source-token/);
+  assert.doesNotMatch(findings, new RegExp([envValue, 'node-module-token', 'dist-token', 'source-token'].join('|')));
+});
+
+test('secret reference classifier separates actionable, docs, placeholder, local, and skipped path classes', () => {
+  const jwtLike = `eyJ${'a'.repeat(12)}.${'b'.repeat(12)}.${'c'.repeat(12)}`;
+  const unknownToken = `tok_${'d'.repeat(44)}`;
+  const openAiKeyName = ['OPENAI', 'API', 'KEY'].join('_');
+  const supabaseAccessTokenName = ['SUPABASE', 'ACCESS', 'TOKEN'].join('_');
+
+  assert.equal(classifySecretReference({ file: 'src/app.ts', line: `const token = "${jwtLike}"`, pattern: 'jwt_like' }).category, 'actionable_source_finding');
+  assert.equal(classifySecretReference({ file: 'docs/security.md', line: 'Use SUPABASE_ACCESS_TOKEN in CI.', pattern: 'SUPABASE_ACCESS_TOKEN' }).category, 'documentation_reference');
+  assert.equal(classifySecretReference({ file: 'docs/case-study.md', line: 'Repo: authorization hardening and scheduler proof gaps.', pattern: 'authorization' }).category, 'documentation_reference');
+  assert.equal(classifySecretReference({ file: 'docs/security.md', line: `${supabaseAccessTokenName}=abc123`, pattern: 'SUPABASE_ACCESS_TOKEN' }).category, 'actionable_source_finding');
+  assert.equal(classifySecretReference({ file: 'src/config.ts', line: `${openAiKeyName}=YOUR_TOKEN_HERE`, pattern: 'OPENAI_API_KEY' }).category, 'placeholder_or_example');
+  assert.equal(classifySecretReference({ file: '.env', line: `${openAiKeyName}=abc123`, pattern: 'OPENAI_API_KEY', tracked: false }).category, 'local_only_file');
+  assert.equal(classifySecretReference({ file: '.env', line: `${openAiKeyName}=abc123`, pattern: 'OPENAI_API_KEY', tracked: true }).category, 'actionable_source_finding');
+  assert.equal(classifySecretReference({ file: 'package-lock.json', line: unknownToken, pattern: 'unknown_token_like' }).category, 'dependency_or_lockfile');
+  assert.equal(classifySecretReference({ file: 'node_modules/pkg/index.js', line: unknownToken, pattern: 'unknown_token_like' }).category, 'dependency_or_lockfile');
+  assert.equal(classifySecretReference({ file: 'dist/app.js', line: unknownToken, pattern: 'unknown_token_like' }).category, 'generated_artifact');
+  assert.equal(classifySecretReference({ file: 'public/logo.png', line: unknownToken, pattern: 'unknown_token_like' }).category, 'ignored_binary');
+  assert.equal(classifySecretReference({ file: 'src/config.ts', line: `const opaque = "${unknownToken}"`, pattern: 'unknown_token_like' }).category, 'unknown_requires_review');
+});
+
+test('detailed secret scan groups references without leaking values', async () => {
+  const sourceValue = `source-${'e'.repeat(44)}`;
+  const envValue = `env-${'f'.repeat(44)}`;
+  const lockValue = `lock-${'g'.repeat(44)}`;
+  const unknownToken = `opaque_${'h'.repeat(44)}`;
+  const openAiKeyName = ['OPENAI', 'API', 'KEY'].join('_');
+  const supabaseAccessTokenName = ['SUPABASE', 'ACCESS', 'TOKEN'].join('_');
+  const root = await fixture({
+    'package.json': '{}',
+    'docs/security.md': `Use SUPABASE_ACCESS_TOKEN in CI.\n${supabaseAccessTokenName}=YOUR_TOKEN_HERE\n`,
+    'src/app.js': `const access_token = "${sourceValue}";\nconst opaque = "${unknownToken}";\n`,
+    '.env': `${openAiKeyName}=${envValue}\n`,
+    'package-lock.json': JSON.stringify({ token: lockValue })
+  });
+
+  const scan = await scanRiskyReferencesDetailed(root);
+  const serialized = JSON.stringify(scan);
+  assert.ok(scan.summary.actionable_source_finding >= 1);
+  assert.ok(scan.summary.documentation_reference >= 1);
+  assert.ok(scan.summary.placeholder_or_example >= 1);
+  assert.ok(scan.summary.local_only_file >= 1);
+  assert.ok(scan.summary.dependency_or_lockfile >= 1);
+  assert.ok(scan.summary.unknown_requires_review >= 1);
+  assert.match(scan.summaryText, /Actionable findings:/);
+  assert.doesNotMatch(serialized, new RegExp([sourceValue, envValue, lockValue, unknownToken].join('|')));
+});
+
+test('secret command exposes grouped summary consistently', async () => {
+  const sourceValue = `source-${'i'.repeat(44)}`;
+  const root = await fixture({
+    'package.json': '{}',
+    'docs/security.md': 'Use SUPABASE_ACCESS_TOKEN in CI.\n',
+    'src/app.js': `const refresh_token = "${sourceValue}";\n`
+  });
+  const result = await runSecrets({ cwd: root });
+
+  assert.equal(result.status, 'warn');
+  assert.ok(result.data.secretSummary);
+  assert.ok(Array.isArray(result.data.classifiedFindings));
+  assert.match(result.checks[0].message, /Actionable findings:/);
+  assert.ok(result.findings[0].evidence.some((item) => item.includes('category:')));
+  assert.ok(result.findings[0].evidence.some((item) => item.includes('severity:')));
+  assert.doesNotMatch(JSON.stringify(result), new RegExp(sourceValue));
+});
+
+test('CLI secrets JSON keeps grouped output redacted', async () => {
+  const sourceValue = `source-${'j'.repeat(44)}`;
+  const root = await fixture({
+    'package.json': '{}',
+    'docs/security.md': 'Use SUPABASE_ACCESS_TOKEN in CI.\n',
+    'src/app.js': `const webhook_secret = "${sourceValue}";\n`
+  });
+  const { stdout, exitCode } = await captureCli(['secrets', '--json'], root);
+  const parsed = JSON.parse(stdout);
+
+  assert.equal(exitCode, 0);
+  assert.ok(parsed.data.secretSummary);
+  assert.ok(parsed.data.classifiedFindings.some((item) => item.category === 'documentation_reference'));
+  assert.ok(parsed.data.classifiedFindings.some((item) => item.category === 'actionable_source_finding'));
+  assert.doesNotMatch(stdout, ANSI_RE);
+  assert.doesNotMatch(stdout, new RegExp(sourceValue));
 });
 
 test('secret allowlist paths suppress configured fixture warnings only', async () => {
+  const secretName = ['OPENAI', 'API', 'KEY'].join('_');
   const root = await fixture({
     'opstruth.config.json': JSON.stringify({ secrets: { allowlistPaths: ['fixtures/demo.js'] } }),
-    'fixtures/demo.js': 'const OPENAI_API_KEY = "fake_fixture_value";\n',
+    'fixtures/demo.js': `const ${secretName} = "fake_fixture_value";\n`,
     'src/app.js': 'const api_key = "real-looking-fixture-value";\n'
   });
   const result = await runSecrets({ cwd: root });

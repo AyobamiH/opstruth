@@ -84,6 +84,8 @@ The 2026-06-19 follow-up closed two local validation gaps. Wagging's lint backlo
 
 The 2026-06-25 follow-up cleared Wagging's remaining 12 Fast Refresh warnings without disabling lint rules. `npm run lint` now exits `0` with zero warnings, `npm run build` completes, and the bounded OpsTruth run remains `STATUS: Partial pass` because local-preview routes warn on missing production-style headers and Supabase/live production gates remain unverified.
 
+The same 2026-06-25 maturity pass improved secret evidence quality. `opstruth secrets` now groups actionable source findings, documentation references, placeholders/examples, local-only files, generated/dependency paths, ignored binaries, and unknown review items. This reduces noisy evidence without treating documentation references or skipped local files as proof that production secrets are safe.
+
 The route guidance now scopes loopback header findings to the local preview response while preserving the warning. Production headers remain `Not Verified` until an explicit production URL is checked, and non-local URLs retain stronger production-relevant guidance.
 
 See `docs/case-studies/wagging-web-wins.md`, `evidence/real-world-validation-wagging-web-wins.md`, and `evidence/real-world-validation-wagging-opstruth-run.md`.

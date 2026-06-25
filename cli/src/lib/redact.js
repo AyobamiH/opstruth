@@ -16,6 +16,7 @@ export function redact(value = '') {
   let output = String(value);
   for (const pattern of VALUE_PATTERNS) output = output.replace(pattern, '$1[REDACTED]');
   output = output.replace(/([A-Za-z0-9_]{12,}\.[A-Za-z0-9_\-]{12,}\.[A-Za-z0-9_\-]{12,})/g, '[REDACTED_TOKEN]');
+  output = output.replace(/\b[A-Za-z0-9_-]{40,}\b/g, '[REDACTED_TOKEN]');
   return output;
 }
 

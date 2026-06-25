@@ -51,6 +51,9 @@ node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js local
 node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js --skip evidence
 node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js --json --skip evidence > /tmp/opstruth-wagging-after-fast-refresh.json
 node -e "JSON.parse(require('fs').readFileSync('/tmp/opstruth-wagging-after-fast-refresh.json','utf8')); console.log('wagging opstruth json parsed after fast refresh cleanup')"
+
+node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js secrets
+node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js --json --skip evidence > /tmp/opstruth-wagging-secret-grouping-preview.json
 ```
 
 The route and local checks were run against a bounded Vite preview server on `127.0.0.1:4173`. Raw JSON output was not printed.
@@ -66,18 +69,21 @@ The route and local checks were run against a bounded Vite preview server on `12
 - `npm run lint` completed with zero errors and zero warnings after the Fast Refresh cleanup.
 - `npm run build` completed and pre-rendered public pages.
 - `git diff --check` completed before commit.
+- Secret/reference scanning produced grouped evidence categories instead of only a flat warning count.
 - Direct `opstruth routes` reached `/`, `/services`, and `/faq` on local preview with HTTP `200`.
 - Direct `opstruth local` detected port `4173` listening and reached the `/` health path with HTTP `200`.
 - The one-command run consumed the same configured route and local inputs: quality passed, local passed, routes warned, and local was not skipped.
 - The final one-command result was `STATUS: Partial pass` with no failures.
+- After secret-reference grouping, the preview-backed JSON run parsed successfully with `status=warn`, zero failures, and grouped secret/reference counts.
 
 ## Warnings
 
-- Secret and authorization references were detected in documentation and source surfaces, with redaction.
+- Secret and authorization references were detected with redaction. The latest scanner groups these as actionable findings, documentation references, placeholders/examples, local-only files, generated/dependency paths, ignored binaries, and unknown review items.
 - Local preview route probes warned that the Vite preview responses did not include production-style browser security headers.
 - Supabase checks remained mostly static and could not prove live remote behavior.
 - The build pre-render step read published blog data. This was not a mutation, but it is runtime-adjacent evidence rather than a pure static compile.
-- The one-command JSON summary contained 141 warning entries, dominated by secret/auth reference findings and local-preview route-header warnings.
+- Earlier one-command JSON output contained a large flat warning list dominated by secret/auth reference findings and local-preview route-header warnings. Secret-reference grouping now reduces the interpretation burden by separating context from actionable review items.
+- The grouped Wagging secret scan still produced high warning volume: 63 actionable findings, 84 documentation references, 1 local-only file, 45 generated artifacts, 1 dependency/lockfile path, 8 ignored binaries, and 88 unknown review items.
 
 ## Failures
 
@@ -116,7 +122,7 @@ OpsTruth did not prove that production Supabase is configured correctly, that th
 - Local preview routes and local liveness are useful, but they do not prove production deployment.
 - Route probes should distinguish local-preview header warnings from production header requirements.
 - The one-command orchestrator must keep regression coverage for config-driven local and route checks.
-- Secret-reference warnings need clearer grouping between harmless documentation references and actionable source findings.
+- Secret-reference warnings now need continued evidence-pack polish around the grouped categories, especially for large real repos.
 - Supabase output should distinguish static source confidence from live project confidence.
 - Clean lint is useful evidence, but it does not resolve live scheduler, database, or deployment proof gaps.
 
@@ -125,7 +131,7 @@ OpsTruth did not prove that production Supabase is configured correctly, that th
 - Add a case-study/evidence command for real repo validation runs.
 - Add clearer lint/build summaries with before/after counts and whether warnings remain.
 - Keep regression coverage for one-command local orchestration honoring `opstruth.config.json`.
-- Group secret-reference findings by documentation, fixtures, generated output, and application source.
+- Extend grouped secret-reference findings into evidence packs and case-study summaries.
 - Improve Supabase static versus live proof language.
 - Add first-class "mutation not approved" evidence sections.
 - Add local-preview versus production-route language for route header warnings.

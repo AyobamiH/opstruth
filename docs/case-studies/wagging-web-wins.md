@@ -74,6 +74,8 @@ The 2026-06-19 follow-up reduced lint to zero errors and 20 warnings with bounde
 
 The 2026-06-25 follow-up cleared the remaining 12 Fast Refresh warnings by moving helpers, variants, and hooks into adjacent non-component modules. Wagging's `npm run lint` now exits `0` with zero warnings, `npm run build` still completes, and OpsTruth's one-command run still reports `STATUS: Partial pass` with no failures. The remaining proof gaps are not local lint quality gaps; they are live Supabase, scheduler, deployment, and production-route verification gates.
 
+The same pass improved OpsTruth's secret-reference evidence. The Wagging run still surfaced secret/auth language, but the scanner now separates actionable source findings from documentation references, placeholders, local-only files, generated/dependency paths, ignored binaries, and unknown token-like review items. This made the evidence easier to review without claiming Supabase production secrets were configured or safe.
+
 ## Remaining Gates
 
 - Approve Supabase remote secret setup preflight.
