@@ -88,6 +88,8 @@ The same 2026-06-25 maturity pass improved secret evidence quality. `opstruth se
 
 Quality evidence also became more precise. `opstruth quality` now reports lint, typecheck, tests, build, and CI as distinct proof signals, including missing scripts, timeouts, unsafe CI scripts, and whether CI was the aggregate proof route.
 
+Wagging's GitHub Actions `CI` workflow now provides external corroboration for the same local quality gate. The successful run for `0786f13` proved that GitHub could run `npm ci` and `npm run ci` in a clean hosted environment, but it did not prove Supabase production configuration, scheduler state, deployed function behavior, or production security headers. OpsTruth does not yet ingest GitHub Actions metadata automatically; this remains manually attached evidence and a v0.2 product opportunity.
+
 The route guidance now scopes loopback header findings to the local preview response while preserving the warning. Production headers remain `Not Verified` until an explicit production URL is checked, and non-local URLs retain stronger production-relevant guidance.
 
 See `docs/case-studies/wagging-web-wins.md`, `evidence/real-world-validation-wagging-web-wins.md`, and `evidence/real-world-validation-wagging-opstruth-run.md`.

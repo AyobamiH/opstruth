@@ -76,6 +76,34 @@ The 2026-06-25 follow-up cleared the remaining 12 Fast Refresh warnings by movin
 
 The same pass improved OpsTruth's secret-reference evidence. The Wagging run still surfaced secret/auth language, but the scanner now separates actionable source findings from documentation references, placeholders, local-only files, generated/dependency paths, ignored binaries, and unknown token-like review items. This made the evidence easier to review without claiming Supabase production secrets were configured or safe.
 
+## Local Quality Proof
+
+Wagging now has local quality proof through `npm run ci`, which runs lint, typecheck, tests, and build in order. The CI-aware validation confirmed lint passed with zero warnings, typecheck passed, Vitest passed 4 files and 40 tests, and the production build plus prerender completed.
+
+OpsTruth quality reporting now exposes lint, typecheck, tests, build, and CI as separate proof signals. For Wagging, the configured `ci` script was the aggregate proof route, and the individual signals were reported as passed through that route rather than being collapsed into one generic quality result.
+
+## GitHub CI Corroboration
+
+Wagging also gained a GitHub Actions workflow named `CI`. The successful run inspected during validation was `28165808838` on commit `0786f1336b98c64f11bf3e34bb48845d1d9d8a54`, triggered by a push to `main`. Its `quality` job completed successfully from `2026-06-25T11:07:53Z` to `2026-06-25T11:08:54Z`.
+
+This is external corroborating evidence. OpsTruth did not automatically ingest GitHub Actions metadata; the run was inspected separately and recorded in the case-study evidence.
+
+## What CI Proves
+
+CI proves that a fresh GitHub-hosted checkout can install with `npm ci` and run Wagging's committed quality gate for the pushed commit. It supports confidence in lint, typecheck, tests, build, and prerender behavior.
+
+## What CI Does Not Prove
+
+CI does not prove Supabase production configuration, scheduler activation, remote secret presence, deployed Edge Function behavior, live database permissions, production function authorization, or production security headers. The workflow intentionally uses inert build-time placeholders rather than production Supabase credentials.
+
+## Production State Still Not Verified
+
+Supabase mutation remains unapproved. No remote secret setup, Edge Function deploy, `db push`, migration application, SQL execution, pg_cron mutation, production endpoint call, or hardened function invocation was performed.
+
+## Quality Signal Product Lessons
+
+The case study now shows why quality proof must be granular. "CI passed" is useful, but it still needs to be separated from production runtime truth. OpsTruth should continue making those proof surfaces distinct and should treat GitHub Actions ingestion as a future product capability rather than pretending manual CI inspection is automatic.
+
 ## Remaining Gates
 
 - Approve Supabase remote secret setup preflight.

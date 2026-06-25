@@ -9,7 +9,7 @@
 - Repo: `AyobamiH/wagging-web-wins`
 - Local path: `/home/johnh/wagging-web-wins`
 - Target branch: `main`
-- Latest commit during validation: `a3ae062 Clear Wagging Fast Refresh lint warnings`
+- Latest commit during validation: `0786f13 Make Wagging CI independent of production Supabase config`
 
 ## Validation Timing
 
@@ -25,6 +25,8 @@ The latest run followed these safe, bounded updates:
 - `a3ae062 Clear Wagging Fast Refresh lint warnings`
 
 It also used the OpsTruth orchestration fix in `33054b7 Honor local config in OpsTruth one-command run` and later local-preview guidance from `1f8e0ff Clarify local preview security header guidance`.
+
+The CI-aware follow-up added Wagging's GitHub Actions quality gate in `3141792 Add Wagging CI quality gate`, then made it independent of production Supabase configuration in `0786f13 Make Wagging CI independent of production Supabase config`.
 
 ## Supabase Application Status
 
@@ -54,9 +56,61 @@ node -e "JSON.parse(require('fs').readFileSync('/tmp/opstruth-wagging-after-fast
 
 node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js secrets
 node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js --json --skip evidence > /tmp/opstruth-wagging-secret-grouping-preview.json
+
+npm run ci
+gh run view 28165808838 --repo AyobamiH/wagging-web-wins --json databaseId,conclusion,status,event,headSha,workflowName,jobs,url,createdAt,updatedAt
+
+node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js repo
+node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js quality
+node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js secrets
+node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js routes
+node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js local
+node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js --skip evidence
+node /home/johnh/opstruth/tempo/opstruth/cli/bin/opstruth.js --json --skip evidence > /tmp/opstruth-wagging-ci-aware.json
+node -e "JSON.parse(require('fs').readFileSync('/tmp/opstruth-wagging-ci-aware.json','utf8')); console.log('CI-aware Wagging JSON parsed')"
 ```
 
 The route and local checks were run against a bounded Vite preview server on `127.0.0.1:4173`. Raw JSON output was not printed.
+
+## Local Quality Proof
+
+Wagging's local quality gate passed through `npm run ci`. That script runs lint, typecheck, tests, and build in order. The observed local proof was:
+
+- `npm run lint` passed with zero warnings.
+- `npm run typecheck` passed.
+- Vitest passed 4 test files and 40 tests.
+- `npm run build` passed, including client build, server build, and prerender.
+- OpsTruth quality reported lint, typecheck, tests, build, and CI as distinct passed proof signals through the configured aggregate `ci` script.
+
+## GitHub CI Corroboration
+
+GitHub Actions was inspected as external corroborating evidence, not as an OpsTruth-ingested proof field.
+
+- Workflow: `CI`
+- Run: `28165808838`
+- Trigger: `push`
+- Commit: `0786f1336b98c64f11bf3e34bb48845d1d9d8a54`
+- Conclusion: `success`
+- Job: `quality`
+- Job conclusion: `success`
+- Started: `2026-06-25T11:07:53Z`
+- Completed: `2026-06-25T11:08:54Z`
+
+## What CI Proves
+
+The GitHub CI run proves that a clean GitHub-hosted checkout could install dependencies with `npm ci` and run Wagging's committed `npm run ci` quality gate successfully for commit `0786f13`. It corroborates local proof for lint, typecheck, tests, build, and prerender behavior in a fresh CI environment.
+
+## What CI Does Not Prove
+
+The CI workflow uses inert public build-time placeholders for Supabase URL and anon key so that build-time imports do not require production credentials. It does not prove live Supabase production configuration, scheduler state, remote secret presence, deployed Edge Function behavior, RLS/grant behavior, or production-route security headers.
+
+## Production State Still Not Verified
+
+Supabase mutation remained unapproved. No remote secret setup, Edge Function deploy, `db push`, migration application, SQL execution, pg_cron mutation, production endpoint call, or hardened function invocation was performed.
+
+## Quality Signal Product Lessons
+
+Distinct quality proof signals make the case study easier to interpret. A single "quality passed" label would hide whether lint, typecheck, tests, build, or CI actually ran. The new signal model shows the aggregate route used while preserving proof gaps for scripts that are missing, unsafe, timed out, or not verified.
 
 ## What Was Verified
 
@@ -67,6 +121,7 @@ The route and local checks were run against a bounded Vite preview server on `12
 - Secret scanning completed with redaction and did not print raw `.env` contents.
 - JSON output from the source CLI parsed successfully.
 - `npm run lint` completed with zero errors and zero warnings after the Fast Refresh cleanup.
+- `npm run ci` completed successfully after the GitHub CI quality gate was added.
 - `npm run build` completed and pre-rendered public pages.
 - `git diff --check` completed before commit.
 - Secret/reference scanning produced grouped evidence categories instead of only a flat warning count.
@@ -74,6 +129,7 @@ The route and local checks were run against a bounded Vite preview server on `12
 - Direct `opstruth local` detected port `4173` listening and reached the `/` health path with HTTP `200`.
 - The one-command run consumed the same configured route and local inputs: quality passed, local passed, routes warned, and local was not skipped.
 - The final one-command result was `STATUS: Partial pass` with no failures.
+- The CI-aware JSON run parsed successfully with `status=warn`, 16 checks, 162 warnings, and zero failures.
 - After secret-reference grouping, the preview-backed JSON run parsed successfully with `status=warn`, zero failures, and grouped secret/reference counts.
 
 ## Warnings
