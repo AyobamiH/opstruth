@@ -1,22 +1,22 @@
 export function ExampleOutput() {
   return (
     <section id="output" className="border-b border-border/60 bg-surface/30">
-      <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
-        <div className="grid gap-12 md:grid-cols-[1fr_1.5fr] md:gap-16 md:items-start">
-          <div className="md:sticky md:top-24">
-            <div className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
+        <div className="grid min-w-0 gap-10 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)] md:gap-14 md:items-start">
+          <div className="min-w-0 md:sticky md:top-24">
+            <div className="font-mono text-xs uppercase tracking-wide text-muted-foreground">
               Example output
             </div>
             <h2 className="mt-3 text-2xl font-medium tracking-tight text-foreground md:text-3xl">
               Calm. Structured. Honest about gaps.
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-4 text-base leading-7 text-muted-foreground">
               This excerpt is from the local checkout with evidence writing skipped for display. The
-              normal run writes a markdown evidence pack to <code>evidence/opstruth-report.md</code>
+              normal run writes a Markdown evidence pack to <code>evidence/opstruth-report.md</code>
               .
             </p>
 
-            <ul className="mt-6 space-y-2 font-mono text-[12px] text-muted-foreground">
+            <ul className="mt-6 space-y-2 font-mono text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-status-pass" /> verified
               </li>
@@ -29,20 +29,20 @@ export function ExampleOutput() {
             </ul>
           </div>
 
-          <div className="rounded-lg border border-border-strong bg-[oklch(0.13_0.005_250)] shadow-2xl shadow-black/40">
-            <div className="flex items-center justify-between border-b border-border/80 px-4 py-2.5">
+          <div className="min-w-0 rounded-lg border border-border-strong bg-[oklch(0.13_0.005_250)] shadow-2xl shadow-black/40">
+            <div className="flex min-w-0 items-center justify-between gap-3 border-b border-border/80 px-4 py-2.5">
               <div className="flex items-center gap-1.5">
                 <span className="h-2.5 w-2.5 rounded-full bg-[oklch(0.32_0.01_250)]" />
                 <span className="h-2.5 w-2.5 rounded-full bg-[oklch(0.32_0.01_250)]" />
                 <span className="h-2.5 w-2.5 rounded-full bg-[oklch(0.32_0.01_250)]" />
               </div>
-              <span className="font-mono text-[11px] text-muted-foreground">
+              <span className="min-w-0 truncate font-mono text-xs text-muted-foreground">
                 advanced_pudding9228@web — opstruth
               </span>
-              <span className="w-10" />
+              <span className="hidden w-10 sm:block" />
             </div>
 
-            <pre className="max-w-full overflow-x-auto px-5 py-5 font-mono text-[12.5px] leading-[1.7] text-foreground/90">
+            <pre className="max-w-full overflow-x-auto px-4 py-5 font-mono text-[12px] leading-[1.75] text-foreground/90 sm:px-5 sm:text-[12.5px]">
               <Line prompt>node bin/opstruth.js --skip evidence</Line>
               <Line muted>Operational truth checks for AI-assisted engineering.</Line>
               <Line> </Line>

@@ -63,29 +63,32 @@ const checks = [
 export function WhatItChecks() {
   return (
     <section id="checks" className="border-b border-border/60">
-      <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
-        <div className="flex items-end justify-between gap-8 flex-wrap">
-          <div>
-            <div className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
+        <div className="flex min-w-0 flex-wrap items-end justify-between gap-8">
+          <div className="min-w-0">
+            <div className="font-mono text-xs uppercase tracking-wide text-muted-foreground">
               Probe catalogue
             </div>
             <h2 className="mt-3 text-2xl font-medium tracking-tight text-foreground md:text-3xl">
               Stack-aware checks, evidence per finding.
             </h2>
           </div>
-          <p className="max-w-md text-sm text-muted-foreground">
+          <p className="max-w-md text-base leading-7 text-muted-foreground">
             Each probe declares what it checks, what it proves, what it does <em>not</em> prove, and
             the next safe step.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-px overflow-hidden rounded-lg border border-border bg-border md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid min-w-0 gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
           {checks.map(({ icon: Icon, title, desc, proof }) => (
-            <div key={title} className="bg-surface p-6 transition-colors hover:bg-surface-elevated">
+            <div
+              key={title}
+              className="min-w-0 bg-surface p-5 transition-colors hover:bg-surface-elevated sm:p-6"
+            >
               <Icon className="h-4 w-4 text-status-pass" strokeWidth={2} />
-              <h3 className="mt-4 font-mono text-[13px] text-foreground">{title}</h3>
-              <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{desc}</p>
-              <p className="mt-4 border-t border-border pt-3 font-mono text-[11px] leading-relaxed text-muted-foreground">
+              <h3 className="mt-4 font-mono text-sm text-foreground">{title}</h3>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{desc}</p>
+              <p className="mt-4 border-t border-border pt-3 font-mono text-xs leading-6 text-muted-foreground">
                 {proof}
               </p>
             </div>

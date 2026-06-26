@@ -1,26 +1,26 @@
 export function Problem() {
   return (
     <section className="border-b border-border/60">
-      <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
-        <div className="grid gap-12 md:grid-cols-[1fr_1.4fr] md:gap-16">
-          <div>
-            <div className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
+        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)] md:gap-14">
+          <div className="min-w-0">
+            <div className="font-mono text-xs uppercase tracking-wide text-muted-foreground">
               The gap
             </div>
-            <h2 className="mt-3 text-lg font-medium tracking-tight text-foreground sm:text-2xl md:text-3xl">
+            <h2 className="mt-3 text-2xl font-medium tracking-tight text-foreground md:text-3xl">
               Generation is fast. Certainty isn&apos;t.
             </h2>
           </div>
 
-          <div className="space-y-6 text-[15px] leading-relaxed text-muted-foreground">
+          <div className="min-w-0 space-y-6 text-base leading-7 text-muted-foreground">
             <p>
               AI tools edit dozens of files in seconds. What they don&apos;t do is tell you, calmly
               and concretely, what the resulting state of your project actually is.
             </p>
             <p className="text-foreground">
-              opstruth answers six questions, every run, in the same order:
+              OpsTruth answers six questions, every run, in the same order:
             </p>
-            <ol className="grid gap-px overflow-hidden rounded-md border border-border bg-border font-mono text-[13px] md:grid-cols-2">
+            <ol className="grid min-w-0 gap-px overflow-hidden rounded-md border border-border bg-border font-mono text-sm sm:grid-cols-2">
               {[
                 "what changed?",
                 "what is configured?",
@@ -31,7 +31,7 @@ export function Problem() {
               ].map((q, i) => (
                 <li
                   key={q}
-                  className="flex items-baseline gap-3 bg-surface px-4 py-3 text-muted-foreground"
+                  className="flex min-w-0 items-baseline gap-3 bg-surface px-4 py-3 text-muted-foreground"
                 >
                   <span className="text-status-skip">0{i + 1}</span>
                   <span className="text-foreground">{q}</span>

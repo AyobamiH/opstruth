@@ -6,11 +6,11 @@ type LogoProps = {
 };
 
 /**
- * opstruth logo — chevron (>) paired with an overlapping checkmark.
+ * OpsTruth logo — chevron (>) paired with an overlapping checkmark.
  * Mirrors the brand sign: muted steel chevron + sage-green check,
  * optional wordmark with "ops" in foreground and "truth" in the brand green.
  */
-export function Logo({ className, showWordmark = true, size = 28, title = "opstruth" }: LogoProps) {
+export function Logo({ className, showWordmark = true, size = 28, title = "OpsTruth" }: LogoProps) {
   const h = size;
   return (
     <span className={"inline-flex items-center gap-2 " + (className ?? "")} aria-label={title}>

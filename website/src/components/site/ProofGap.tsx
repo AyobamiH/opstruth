@@ -31,25 +31,25 @@ const lanes = [
 export function ProofGap() {
   return (
     <section className="border-b border-border/60">
-      <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
         <div className="max-w-2xl">
-          <div className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+          <div className="font-mono text-xs uppercase tracking-wide text-muted-foreground">
             Operational proof gap
           </div>
           <h2 className="mt-3 text-2xl font-medium tracking-tight text-foreground md:text-3xl">
             The useful answer is not just pass or fail.
           </h2>
-          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            opstruth separates facts from assumptions so a human reviewer can see what became more
+          <p className="mt-4 text-base leading-7 text-muted-foreground">
+            OpsTruth separates facts from assumptions so a human reviewer can see what became more
             certain, what remains a proof gap, and which actions were intentionally outside scope.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-px overflow-hidden rounded-lg border border-border bg-border md:grid-cols-3">
+        <div className="mt-10 grid min-w-0 gap-px overflow-hidden rounded-lg border border-border bg-border md:grid-cols-3">
           {lanes.map((lane) => (
-            <section key={lane.label} className="bg-surface p-6">
-              <h3 className="font-mono text-[13px] text-foreground">{lane.label}</h3>
-              <ul className="mt-5 space-y-3 text-[13px] leading-relaxed text-muted-foreground">
+            <section key={lane.label} className="min-w-0 bg-surface p-5 sm:p-6">
+              <h3 className="font-mono text-sm text-foreground">{lane.label}</h3>
+              <ul className="mt-5 space-y-3 text-sm leading-6 text-muted-foreground">
                 {lane.lines.map((line) => (
                   <li key={line} className="flex gap-3">
                     <span className="font-mono text-status-skip">/</span>
