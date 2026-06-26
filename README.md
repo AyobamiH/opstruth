@@ -87,6 +87,7 @@ opstruth welcome
 opstruth init
 opstruth repo
 opstruth quality
+opstruth github-ci --workflow CI
 opstruth routes --base-url https://example.com
 opstruth secrets
 opstruth supabase
@@ -129,6 +130,8 @@ Skipped is not failed. Unverified is not safe. opstruth reports proof gaps inste
 Secret scans group findings into actionable source findings, documentation references, placeholders/examples, local-only files, generated/dependency paths, ignored binaries, and unknown review items. See `docs/secret-reference-classification.md`.
 
 Quality checks report lint, typecheck, tests, build, and CI as distinct proof signals. See `docs/quality-proof-signals.md`.
+
+GitHub Actions proof is explicit and exact-commit matched. Use `opstruth github-ci` or `opstruth --github-ci` when hosted CI metadata should be attached to the proof record. CI remains separate from production proof. See `docs/github-actions-proof.md`.
 
 ## Completion Gate
 
@@ -236,7 +239,7 @@ Create a starter config:
 opstruth init --yes
 ```
 
-`opstruth.config.json` can provide route paths, local ports/health paths, and secret-scan allowlists. The one-command run uses supported route and local config inputs when present; without CLI flags or config, runtime checks stay skipped and are reported as proof gaps.
+`opstruth.config.json` can provide route paths, local ports/health paths, secret-scan allowlists, and explicit GitHub CI proof settings. The one-command run uses supported route and local config inputs when present; without CLI flags or config, runtime checks stay skipped and are reported as proof gaps. GitHub CI metadata is opt-in through `--github-ci` or `github.ci.enabled`.
 
 See `docs/configuration.md`.
 
@@ -245,6 +248,7 @@ See `docs/configuration.md`.
 - Some probes are static-only.
 - Route checks need `--base-url` or route config.
 - Local runtime checks need `--port`, `--health`, process, or service inputs.
+- GitHub Actions checks need `opstruth github-ci`, `--github-ci`, or explicit config opt-in.
 - `opstruth@0.1.3` is a v0.1 public testing release.
 - opstruth is not a replacement for a security audit.
 - opstruth does not prove production state unless you provide production/staging route or runtime inputs.

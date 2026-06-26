@@ -5,6 +5,7 @@ import { runSupabase } from './commands/supabase.js';
 import { runCloudflare } from './commands/cloudflare.js';
 import { runRoutes } from './commands/routes.js';
 import { runLocal } from './commands/local.js';
+import { runGitHubCi } from './commands/github-ci.js';
 import { runEvidence } from './commands/evidence.js';
 import { createResult, finalizeStatus, worstStatus } from './lib/result.js';
 import { detectStack, hasSupabase, hasCloudflare } from './lib/detect.js';
@@ -58,6 +59,7 @@ export async function runOrchestrator(options = {}) {
   const cwd = boundary.root;
   const stack = await detectStack(cwd);
   const probeSelection = await selectProbes({ root: cwd, stack, boundary, options });
+  const loadedConfig = await loadOpstruthConfig(cwd);
   options = { ...options, cwd };
   const skip = new Set(options.skip || []);
   const childResults = [];
@@ -72,10 +74,13 @@ export async function runOrchestrator(options = {}) {
   else childResults.push(skippedResult('supabase', 'Supabase checks skipped because no supabase directory was detected.', 'Supabase database exposure was not checked'));
   if (await hasCloudflare(cwd)) await maybe('cloudflare', () => runCloudflare(options));
   else childResults.push(skippedResult('cloudflare', 'Cloudflare checks skipped because no Wrangler config was detected.', 'Cloudflare deployment configuration was not checked'));
+  const githubCiConfig = loadedConfig.config?.github?.ci || {};
+  if (options.githubCi || githubCiConfig.enabled === true) {
+    await maybe('github-ci', () => runGitHubCi({ ...options, workflow: options.workflow || githubCiConfig.workflow }));
+  }
   const routeConfig = await findDefaultRoutesConfig(cwd);
   if (options.baseUrl || options.routesFile || routeConfig) await maybe('routes', () => runRoutes(options));
   else childResults.push(skippedResult('routes', 'Route checks skipped because no base URL or routes config was provided.', 'Production/public route availability was not checked'));
-  const loadedConfig = await loadOpstruthConfig(cwd);
   if (options.port?.length || options.healthProvided || options.process || options.service || hasConfigLocalInputs(loadedConfig)) await maybe('local', () => runLocal(options));
   else childResults.push(skippedResult('local', 'Local runtime checks skipped because no port, health path, process, or service was provided.', 'Local runtime liveness was not checked'));
   const aggregate = createResult('opstruth', worstStatus(childResults.map((item) => item.status)), {

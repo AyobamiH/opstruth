@@ -15,6 +15,7 @@ import { PROBE_CATALOGUE, selectProbes } from '../src/lib/probes.js';
 import { buildMissingHeaderFinding, isLocalRouteUrl, runRoutes } from '../src/commands/routes.js';
 import { runSupabase } from '../src/commands/supabase.js';
 import { runCloudflare } from '../src/commands/cloudflare.js';
+import { parseGitHubRemote, runGitHubCi, selectGitHubRun } from '../src/commands/github-ci.js';
 import { runCli } from '../src/cli.js';
 import { runOrchestrator } from '../src/orchestrator.js';
 import { evidenceMarkdown, statusLabel } from '../src/lib/markdown.js';
@@ -261,9 +262,155 @@ test('suppresses opstruth internal scanner pattern definitions', async () => {
   assert.deepEqual(findings, []);
 });
 
+function mockGhRunner({ runs = [], views = {}, failList = null, failView = null } = {}) {
+  const calls = [];
+  const runner = async (args) => {
+    calls.push(args);
+    if (args[0] === 'run' && args[1] === 'list') {
+      if (failList) return { exitCode: failList.exitCode ?? 1, stdout: failList.stdout || '', stderr: failList.stderr || '', durationMs: 1 };
+      return { exitCode: 0, stdout: JSON.stringify(runs), stderr: '', durationMs: 1 };
+    }
+    if (args[0] === 'run' && args[1] === 'view') {
+      if (failView) return { exitCode: failView.exitCode ?? 1, stdout: failView.stdout || '', stderr: failView.stderr || '', durationMs: 1 };
+      const id = args[2];
+      return { exitCode: 0, stdout: JSON.stringify(views[id] || runs.find((run) => String(run.databaseId) === String(id)) || {}), stderr: '', durationMs: 1 };
+    }
+    return { exitCode: 1, stdout: '', stderr: 'unexpected gh call', durationMs: 1 };
+  };
+  runner.calls = calls;
+  return runner;
+}
+
+function githubRun(overrides = {}) {
+  return {
+    databaseId: 123,
+    headSha: 'abc123',
+    conclusion: 'success',
+    status: 'completed',
+    event: 'push',
+    createdAt: '2026-06-26T01:00:00Z',
+    updatedAt: '2026-06-26T01:01:00Z',
+    workflowName: 'CI',
+    url: 'https://github.com/owner/repo/actions/runs/123',
+    jobs: [{ name: 'quality', status: 'completed', conclusion: 'success', startedAt: '2026-06-26T01:00:00Z', completedAt: '2026-06-26T01:01:00Z' }],
+    ...overrides
+  };
+}
+
+test('github remote parsing supports SSH and HTTPS origins', () => {
+  assert.equal(parseGitHubRemote('git@github.com:AyobamiH/wagging-web-wins.git'), 'AyobamiH/wagging-web-wins');
+  assert.equal(parseGitHubRemote('https://github.com/AyobamiH/opstruth.git'), 'AyobamiH/opstruth');
+  assert.equal(parseGitHubRemote('ssh://git@github.com/AyobamiH/coding-workflow-library.git'), 'AyobamiH/coding-workflow-library');
+  assert.equal(parseGitHubRemote('https://example.com/AyobamiH/opstruth.git'), null);
+});
+
+test('github ci verifies successful exact-commit run', async () => {
+  const runner = mockGhRunner({ runs: [githubRun()], views: { 123: githubRun() } });
+  const result = await runGitHubCi({ cwd: await fixture({}), commitSha: 'abc123', remoteUrl: 'https://github.com/owner/repo.git', ghRunner: runner, workflow: 'CI' });
+  assert.equal(result.status, 'pass');
+  assert.equal(result.data.githubCi.state, 'verified_success');
+  assert.equal(result.data.githubCi.exactCommitMatch, true);
+  assert.equal(result.data.githubCi.jobs[0].name, 'quality');
+});
+
+test('github ci fails failed or cancelled exact-commit runs', async () => {
+  for (const conclusion of ['failure', 'cancelled']) {
+    const run = githubRun({ databaseId: conclusion, conclusion });
+    const runner = mockGhRunner({ runs: [run], views: { [conclusion]: run } });
+    const result = await runGitHubCi({ cwd: await fixture({}), commitSha: 'abc123', remoteUrl: 'git@github.com:owner/repo.git', ghRunner: runner });
+    assert.equal(result.status, 'fail');
+    assert.equal(result.data.githubCi.state, 'verified_failure');
+    assert.match(result.failures[0], /did not succeed/);
+  }
+});
+
+test('github ci reports queued or in-progress run without passing it', async () => {
+  const run = githubRun({ databaseId: 124, status: 'in_progress', conclusion: '' });
+  const runner = mockGhRunner({ runs: [run], views: { 124: run } });
+  const result = await runGitHubCi({ cwd: await fixture({}), commitSha: 'abc123', remoteUrl: 'https://github.com/owner/repo.git', ghRunner: runner });
+  assert.equal(result.status, 'warn');
+  assert.equal(result.data.githubCi.state, 'in_progress');
+});
+
+test('github ci rejects successful run for a different commit', async () => {
+  const runner = mockGhRunner({ runs: [githubRun({ headSha: 'other' })] });
+  const result = await runGitHubCi({ cwd: await fixture({}), commitSha: 'abc123', remoteUrl: 'https://github.com/owner/repo.git', ghRunner: runner });
+  assert.equal(result.status, 'not_verified');
+  assert.equal(result.data.githubCi.state, 'commit_mismatch');
+});
+
+test('github ci reports no run for current commit', async () => {
+  const runner = mockGhRunner({ runs: [] });
+  const result = await runGitHubCi({ cwd: await fixture({}), commitSha: 'abc123', remoteUrl: 'https://github.com/owner/repo.git', ghRunner: runner });
+  assert.equal(result.status, 'skipped');
+  assert.equal(result.data.githubCi.state, 'no_run_for_commit');
+});
+
+test('github ci chooses latest completed matching run deterministically', async () => {
+  const older = githubRun({ databaseId: 1, updatedAt: '2026-06-26T01:00:00Z' });
+  const newer = githubRun({ databaseId: 2, updatedAt: '2026-06-26T02:00:00Z' });
+  const selected = selectGitHubRun([older, newer], { commitSha: 'abc123' });
+  assert.equal(selected.run.databaseId, 2);
+  assert.equal(selected.state, 'verified_success');
+});
+
+test('github ci supports workflow-name filtering', async () => {
+  const runner = mockGhRunner({ runs: [githubRun({ workflowName: 'Other' })] });
+  const result = await runGitHubCi({ cwd: await fixture({}), commitSha: 'abc123', remoteUrl: 'https://github.com/owner/repo.git', ghRunner: runner, workflow: 'CI' });
+  assert.equal(result.status, 'skipped');
+  assert.equal(result.data.githubCi.state, 'workflow_not_found');
+});
+
+test('github ci handles missing origin and missing gh auth', async () => {
+  const unresolved = await runGitHubCi({ cwd: await fixture({}), commitSha: 'abc123', remoteUrl: '', ghRunner: mockGhRunner() });
+  assert.equal(unresolved.status, 'not_verified');
+  assert.equal(unresolved.data.githubCi.state, 'repository_unresolved');
+
+  const authFail = await runGitHubCi({
+    cwd: await fixture({}),
+    commitSha: 'abc123',
+    remoteUrl: 'https://github.com/owner/repo.git',
+    ghRunner: mockGhRunner({ failList: { exitCode: 127, stderr: 'gh: not found' } })
+  });
+  assert.equal(authFail.status, 'not_verified');
+  assert.equal(authFail.data.githubCi.state, 'authentication_unavailable');
+});
+
+test('github ci handles malformed GitHub response', async () => {
+  const runner = async () => ({ exitCode: 0, stdout: '{not-json', stderr: '', durationMs: 1 });
+  const result = await runGitHubCi({ cwd: await fixture({}), commitSha: 'abc123', remoteUrl: 'https://github.com/owner/repo.git', ghRunner: runner });
+  assert.equal(result.status, 'not_verified');
+  assert.equal(result.data.githubCi.state, 'not_verified');
+});
+
+test('github ci human and JSON output stay redacted and parseable', async () => {
+  const root = await fixture({});
+  const runner = mockGhRunner({ runs: [githubRun()], views: { 123: githubRun() } });
+  const result = await runGitHubCi({ cwd: root, commitSha: 'abc123', remoteUrl: 'https://github.com/owner/repo.git', ghRunner: runner });
+  const serialized = JSON.stringify(result);
+  assert.doesNotMatch(serialized, ANSI_RE);
+  assert.doesNotMatch(serialized, /GH_TOKEN|GITHUB_TOKEN|SUPABASE_ACCESS_TOKEN|NPM_TOKEN/);
+  assert.equal(JSON.parse(serialized).data.githubCi.state, 'verified_success');
+});
+
+test('one-command github ci is opt-in through config and default run makes no gh call', async () => {
+  const root = await fixture({ 'package.json': JSON.stringify({ scripts: { lint: 'node --version' } }) });
+  await execFileAsync('git', ['init'], { cwd: root });
+  const defaultRunner = mockGhRunner();
+  const defaultResult = await runOrchestrator({ cwd: root, skip: ['evidence'], ghRunner: defaultRunner, commitSha: 'abc123', remoteUrl: 'https://github.com/owner/repo.git' });
+  assert.equal(defaultRunner.calls.length, 0);
+  assert.equal(defaultResult.data.childResults.some((item) => item.command === 'github-ci'), false);
+
+  await fs.writeFile(path.join(root, 'opstruth.config.json'), JSON.stringify({ github: { ci: { enabled: true, workflow: 'CI' } } }));
+  const enabledRunner = mockGhRunner({ runs: [githubRun()], views: { 123: githubRun() } });
+  const enabledResult = await runOrchestrator({ cwd: root, skip: ['evidence'], ghRunner: enabledRunner, commitSha: 'abc123', remoteUrl: 'https://github.com/owner/repo.git' });
+  assert.ok(enabledRunner.calls.length > 0);
+  assert.equal(enabledResult.data.childResults.some((item) => item.command === 'github-ci'), true);
+});
+
 test('help modes print help without running checks', async () => {
   const root = await fixture({});
-  for (const args of [['--help'], ['-h'], ['repo', '--help'], ['quality', '--help'], ['routes', '--help'], ['secrets', '--help'], ['supabase', '--help'], ['cloudflare', '--help'], ['local', '--help'], ['probes', '--help'], ['evidence', '--help'], ['init', '--help']]) {
+  for (const args of [['--help'], ['-h'], ['repo', '--help'], ['quality', '--help'], ['routes', '--help'], ['secrets', '--help'], ['supabase', '--help'], ['cloudflare', '--help'], ['local', '--help'], ['github-ci', '--help'], ['probes', '--help'], ['evidence', '--help'], ['init', '--help']]) {
     const { stdout, exitCode } = await captureCli(args, root);
     assert.match(stdout, /Usage:/);
     assert.match(stdout, /Operational truth checks/);

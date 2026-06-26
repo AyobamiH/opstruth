@@ -11,13 +11,14 @@ import { runCloudflare } from './commands/cloudflare.js';
 import { runLocal } from './commands/local.js';
 import { runEvidence } from './commands/evidence.js';
 import { runProbes } from './commands/probes.js';
+import { runGitHubCi } from './commands/github-ci.js';
 import { resultToMarkdown } from './lib/markdown.js';
 import { formatTerminalOutput } from './lib/terminal.js';
 import { writeFileSafe } from './lib/fs.js';
 import { redactObject } from './lib/redact.js';
 import { exitCodeFor } from './lib/result.js';
 
-const COMMANDS = new Set(['repo', 'quality', 'routes', 'secrets', 'supabase', 'cloudflare', 'local', 'evidence', 'probes', 'welcome', 'init']);
+const COMMANDS = new Set(['repo', 'quality', 'routes', 'secrets', 'supabase', 'cloudflare', 'local', 'github-ci', 'evidence', 'probes', 'welcome', 'init']);
 function take(args, index) { return args[index + 1]; }
 export function parseArgs(argv) {
   const options = { skip: [], only: [], port: [], protectedTable: [], include: [] };
@@ -49,6 +50,8 @@ export function parseArgs(argv) {
     else if (arg === '--process') options.process = take(argv, i++);
     else if (arg === '--service') options.service = take(argv, i++);
     else if (arg === '--script') { options.scripts ||= []; options.scripts.push(take(argv, i++)); }
+    else if (arg === '--github-ci') options.githubCi = true;
+    else if (arg === '--workflow') options.workflow = take(argv, i++);
   }
   if (!options.protectedTable.length) delete options.protectedTable;
   return { command, options };
@@ -64,6 +67,7 @@ async function dispatch(command, options) {
   if (command === 'supabase') return runSupabase(options);
   if (command === 'cloudflare') return runCloudflare(options);
   if (command === 'local') return runLocal(options);
+  if (command === 'github-ci') return runGitHubCi(options);
   if (command === 'evidence') return runEvidence(options);
   if (command === 'probes') return runProbes(options);
   throw new Error('Unknown command: ' + command);
@@ -102,6 +106,7 @@ function helpText(command) {
     '  supabase     Static Supabase safety checks',
     '  cloudflare   Static Cloudflare/Wrangler checks',
     '  local        Check explicit local ports/processes/services',
+    '  github-ci    Read GitHub Actions metadata for the exact local commit',
     '  evidence     Write a markdown evidence pack',
     '  probes       Inspect the stack-aware probe catalogue',
     '',
@@ -123,6 +128,7 @@ function helpText(command) {
     supabase: ['Usage: opstruth supabase [--protected-table name] [--frontend-dir dir] [--migrations-dir dir]', 'Run a static Supabase migration/frontend exposure audit without credentials or database calls.'],
     cloudflare: ['Usage: opstruth cloudflare [--url https://example.com] [--json]', 'Inspect Wrangler config, deploy scripts, and optional read-only route status; no deploy is run.'],
     local: ['Usage: opstruth local --port 3000 [--health /health] [--process name] [--service name]', 'Check explicit local runtime inputs without starting, stopping, or killing services.'],
+    'github-ci': ['Usage: opstruth github-ci [--workflow CI] [--json]', 'Read GitHub Actions run metadata for the exact local commit. No logs, deploys, or production calls are made.'],
     probes: ['Usage: opstruth probes [--json] [--only area|id] [--skip area|id]', 'Inspect probe catalogue metadata, eligible probes, skipped probes, required inputs, and proof gaps.'],
     evidence: ['Usage: opstruth evidence [--title text] [--out evidence/opstruth.md] [--include file]', 'Write a markdown evidence pack with verified facts, proof gaps, boundaries, and next safe step.'],
     init: ['Usage: opstruth init [--yes]', 'Create a safe starter opstruth.config.json after confirmation.']
