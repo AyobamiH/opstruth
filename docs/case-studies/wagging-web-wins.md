@@ -82,6 +82,10 @@ OpsTruth's new `github-ci` command then verified exact-commit GitHub Actions met
 
 With a bounded local preview on `127.0.0.1:4173`, direct route checks reached `/`, `/services`, and `/faq` with HTTP `200`, and direct local checks confirmed port `4173` plus `/` health. The one-command run with `--github-ci --workflow CI --skip evidence` included GitHub CI as `Pass`, quality as `Pass`, local as `Pass`, routes as warning-only local-preview header evidence, and no failures.
 
+The final 2026-06-26 readiness pass stayed in the no-approval Supabase path. Wagging added `docs/import-reddit-tips-production-verification.md` at `48e23bb` to define the denial, invalid-secret, authorised, telemetry, database-effect, function metadata, and scheduler verification plan without invoking production. Local CI passed, the tracked-source safety gate reported zero findings, Supabase CLI/project access preflight succeeded, and OpsTruth verified exact-commit GitHub Actions run `28230876112` for the current commit. The reviewed execution packet remained unexecuted because the actual prompt did not include the required approval line.
+
+The combined OpsTruth JSON proof parsed successfully, but the no-preview invocation reported `STATUS: Fail` because configured local route and health checks require an active local preview server. That result was preserved as an operational precondition, not rewritten into a pass.
+
 ## Local Quality Proof
 
 Wagging now has local quality proof through `npm run ci`, which runs lint, typecheck, tests, and build in order. The CI-aware validation confirmed lint passed with zero warnings, typecheck passed, Vitest passed 4 files and 40 tests, and the production build plus prerender completed.
@@ -118,6 +122,8 @@ Local quality, local preview, and exact-commit CI are strong evidence for the co
 ## Production State Still Not Verified
 
 Supabase mutation remains unapproved. No remote secret setup, Edge Function deploy, `db push`, migration application, SQL execution, pg_cron mutation, production endpoint call, or hardened function invocation was performed.
+
+The live function and scheduler verification plan now exists, but it is readiness documentation only until John supplies the exact approval line and the reviewed packet is executed.
 
 ## Quality Signal Product Lessons
 

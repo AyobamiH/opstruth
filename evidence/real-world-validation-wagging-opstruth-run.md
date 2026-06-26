@@ -227,6 +227,40 @@ Local preview route success does not prove production route availability or prod
 
 Supabase mutation was not approved. No remote secret setup, Edge Function deploy, `db push`, migration application, SQL execution, pg_cron mutation, production endpoint call, or hardened function invocation was performed. Scheduler state, live database permissions, remote secret presence, and production Edge Function behavior remain proof gaps.
 
+## Supabase Final Readiness
+
+The 2026-06-26 final readiness pass stayed in the no-approval path. Wagging `main` was aligned with `origin/main` after `48e23bb Document import Reddit tips production verification plan`. The source safety gate reported `tracked_source_findings=0`, local `npm run ci` passed, Supabase CLI `2.108.0` was available, required runtime variables were present by yes/no check, and Supabase project access returned success.
+
+OpsTruth verified exact-commit GitHub Actions proof for the current Wagging commit after the documentation-only readiness commit. The `CI` workflow run `28230876112` completed successfully with the `quality` job marked `success`.
+
+The reviewed execution packet remained unexecuted. The scheduler migration remains a guarded, non-executable draft until the secret-storage path is explicitly approved and reviewed.
+
+## Approval Boundary
+
+The actual prompt did not begin with the required Supabase mutation approval line. That made the approved production path unavailable for this run. The readiness evidence is therefore a pre-application result, not a production application result.
+
+## Mutation Not Run
+
+No Supabase secret was set, no Edge Function was deployed, no migration was applied, no SQL was executed, no pg_cron job was changed, and no production endpoint or hardened function was invoked.
+
+## Live Function State Not Verified
+
+No missing-credential, invalid-secret, admin, non-admin, scheduler, rate-limit, or authorised production request was sent. The expected response paths are documented in Wagging's `docs/import-reddit-tips-production-verification.md`, but they were not exercised against production.
+
+## Scheduler State Not Verified
+
+No production scheduler metadata was inspected through SQL, no scheduler job was changed, and no scheduler execution was observed. The scheduler remains a planned verification target after explicit approval.
+
+## Planned Verification
+
+The next approved run should execute only the reviewed packet, then verify function deployment metadata, missing-credential denial, incorrect-secret denial, authorised behavior only if safely bounded, count-only database effects, telemetry, and scheduler state without printing secrets or project identifiers.
+
+## Current OpsTruth Result
+
+`opstruth repo`, `opstruth quality`, `opstruth secrets`, and `opstruth github-ci --workflow CI` were run against Wagging. Repo and quality passed, exact-commit GitHub CI passed, and the secret scan remained warning-class evidence with redacted references requiring review.
+
+The combined JSON proof parsed successfully. Its top-level status was `fail` in this no-preview invocation because the configured local route and health checks require a bounded preview server and none was running for that specific command. This does not change the earlier local-preview proof; it records that local runtime checks are only verified when their runtime precondition is active.
+
 ## v0.2 Backlog Items
 
 - Add a case-study/evidence command for real repo validation runs.

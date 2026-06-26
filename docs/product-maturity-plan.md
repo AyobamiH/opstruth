@@ -94,6 +94,10 @@ The 2026-06-26 merged-main validation completed the first real exact-commit proo
 
 The route guidance now scopes loopback header findings to the local preview response while preserving the warning. Production headers remain `Not Verified` until an explicit production URL is checked, and non-local URLs retain stronger production-relevant guidance.
 
+The final 2026-06-26 readiness pass added a production verification plan for Wagging without crossing the Supabase approval boundary. Wagging `main` advanced to `48e23bb`, local CI passed, exact-commit GitHub Actions run `28230876112` passed, source safety remained clean, and Supabase CLI/project access preflight succeeded. The reviewed execution packet stayed unexecuted because the prompt did not include the exact approval line. This is the intended maturity behavior: readiness is evidence, but it is not production truth.
+
+The same pass also showed a product nuance for configured local runtime inputs. A combined JSON proof can fail route/local checks when no bounded preview server is running, even though earlier local-preview evidence passed. OpsTruth should make that precondition clearer so users can tell the difference between a broken route and a missing local runtime.
+
 See `docs/case-studies/wagging-web-wins.md`, `evidence/real-world-validation-wagging-web-wins.md`, and `evidence/real-world-validation-wagging-opstruth-run.md`.
 
 ## Maturity Work In This Pass
