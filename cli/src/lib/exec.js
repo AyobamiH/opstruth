@@ -1,7 +1,12 @@
 import { spawn } from 'node:child_process';
 import { redact } from './redact.js';
 
-export function runCommand(command, args = [], { cwd = process.cwd(), timeoutMs = 120000 } = {}) {
+export function runCommand(command, args = [], {
+  cwd = process.cwd(),
+  timeoutMs = 120000,
+  redactStdout = true,
+  redactStderr = true
+} = {}) {
   const started = Date.now();
   return new Promise((resolve) => {
     const child = spawn(command, args, { cwd, shell: false, windowsHide: true });
@@ -12,11 +17,24 @@ export function runCommand(command, args = [], { cwd = process.cwd(), timeoutMs 
     child.stderr?.on('data', (chunk) => { stderr += chunk.toString(); });
     child.on('error', (error) => {
       clearTimeout(timer);
-      resolve({ command: [command, ...args].join(' '), exitCode: 127, durationMs: Date.now() - started, stdout: '', stderr: redact(error.message) });
+      resolve({
+        command: [command, ...args].join(' '),
+        exitCode: 127,
+        durationMs: Date.now() - started,
+        stdout: '',
+        stderr: redactStderr ? redact(error.message) : error.message
+      });
     });
     child.on('close', (code, signal) => {
       clearTimeout(timer);
-      resolve({ command: [command, ...args].join(' '), exitCode: code ?? (signal ? 124 : 1), signal, durationMs: Date.now() - started, stdout: redact(stdout), stderr: redact(stderr) });
+      resolve({
+        command: [command, ...args].join(' '),
+        exitCode: code ?? (signal ? 124 : 1),
+        signal,
+        durationMs: Date.now() - started,
+        stdout: redactStdout ? redact(stdout) : stdout,
+        stderr: redactStderr ? redact(stderr) : stderr
+      });
     });
   });
 }

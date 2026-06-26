@@ -1,8 +1,10 @@
 import { runCommand } from './exec.js';
 
-export async function git(args, cwd) { return runCommand('git', args, { cwd, timeoutMs: 30000 }); }
-export async function gitText(args, cwd) {
-  const result = await git(args, cwd);
+export async function git(args, cwd, options = {}) {
+  return runCommand('git', args, { cwd, timeoutMs: options.timeoutMs ?? 30000, redactStdout: options.redactStdout ?? true });
+}
+export async function gitText(args, cwd, options = {}) {
+  const result = await git(args, cwd, options);
   return result.exitCode === 0 ? result.stdout.trim() : '';
 }
 export async function getGitInfo(cwd) {

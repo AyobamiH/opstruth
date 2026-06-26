@@ -24,6 +24,8 @@ The integration does not deploy, publish, mutate databases, set secrets, read wo
 ## Tests Added
 
 - successful exact-commit run
+- raw command stdout parsing for GitHub metadata without commit SHA redaction
+- resolved local Git SHA matching against GitHub metadata without manual commit injection
 - failed and cancelled exact-commit runs
 - queued or in-progress run
 - successful run for a different commit
@@ -51,3 +53,7 @@ This helps evidence packs avoid the common mistake of treating "CI passed" as "p
 ## Remaining Limitations
 
 GitHub Actions metadata still does not prove production deployment, Supabase state, scheduler state, production route headers, deployed Edge Function behavior, or live database permissions.
+
+## Resume Fix
+
+During merged-main validation against Wagging Web Wins, the GitHub CLI could see the exact `CI` run, but `opstruth github-ci` initially reported `no_run_for_commit`. The root cause was internal redaction of long SHA-like strings before comparison. The fix keeps redaction enabled by default while allowing the GitHub metadata path to preserve raw stdout only for local Git and `gh` JSON parsing. Human and JSON output still pass through the normal output redaction layer.

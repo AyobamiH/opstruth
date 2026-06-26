@@ -19,6 +19,7 @@ import { parseGitHubRemote, runGitHubCi, selectGitHubRun } from '../src/commands
 import { runCli } from '../src/cli.js';
 import { runOrchestrator } from '../src/orchestrator.js';
 import { evidenceMarkdown, statusLabel } from '../src/lib/markdown.js';
+import { runCommand } from '../src/lib/exec.js';
 
 const execFileAsync = promisify(execFile);
 const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -311,6 +312,37 @@ test('github ci verifies successful exact-commit run', async () => {
   assert.equal(result.data.githubCi.state, 'verified_success');
   assert.equal(result.data.githubCi.exactCommitMatch, true);
   assert.equal(result.data.githubCi.jobs[0].name, 'quality');
+});
+
+test('github ci can parse raw command stdout without commit SHA redaction', async () => {
+  const sha = '70d78459150df8a9753503323d28dd3d7b93b3dd';
+  const stdout = JSON.stringify([{ headSha: sha }]);
+  const script = `process.stdout.write(${JSON.stringify(stdout)})`;
+
+  const redacted = await runCommand(process.execPath, ['-e', script], { timeoutMs: 30000 });
+  assert.notEqual(redacted.stdout, stdout);
+
+  const raw = await runCommand(process.execPath, ['-e', script], { timeoutMs: 30000, redactStdout: false });
+  assert.equal(raw.stdout, stdout);
+});
+
+test('github ci preserves resolved git commit SHA for exact-run matching', async () => {
+  const root = await fixture({ 'README.md': 'hello\n' });
+  await execFileAsync('git', ['init'], { cwd: root });
+  await execFileAsync('git', ['config', 'user.email', 'opstruth@example.test'], { cwd: root });
+  await execFileAsync('git', ['config', 'user.name', 'OpsTruth Test'], { cwd: root });
+  await execFileAsync('git', ['add', 'README.md'], { cwd: root });
+  await execFileAsync('git', ['commit', '-m', 'initial'], { cwd: root });
+  await execFileAsync('git', ['remote', 'add', 'origin', 'https://github.com/owner/repo.git'], { cwd: root });
+
+  const sha = (await execFileAsync('git', ['rev-parse', 'HEAD'], { cwd: root })).stdout.trim();
+  const run = githubRun({ headSha: sha });
+  const runner = mockGhRunner({ runs: [run], views: { 123: run } });
+  const result = await runGitHubCi({ cwd: root, ghRunner: runner, workflow: 'CI' });
+
+  assert.equal(result.status, 'pass');
+  assert.equal(result.data.githubCi.localCommitSha, sha);
+  assert.equal(result.data.githubCi.exactCommitMatch, true);
 });
 
 test('github ci fails failed or cancelled exact-commit runs', async () => {

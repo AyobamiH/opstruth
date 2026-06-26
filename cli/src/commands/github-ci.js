@@ -127,14 +127,14 @@ function jobSummary(jobs = []) {
 }
 
 async function defaultGhRunner(args, cwd) {
-  return runCommand('gh', args, { cwd, timeoutMs: 30000 });
+  return runCommand('gh', args, { cwd, timeoutMs: 30000, redactStdout: false, redactStderr: true });
 }
 
 export async function resolveGitHubContext({ cwd, commitSha, remoteUrl } = {}) {
   const boundary = await resolveProjectBoundary(cwd || process.cwd());
   const root = boundary.root;
-  const sha = commitSha || await gitText(['rev-parse', 'HEAD'], root);
-  const remote = remoteUrl || await gitText(['remote', 'get-url', 'origin'], root);
+  const sha = commitSha || await gitText(['rev-parse', 'HEAD'], root, { redactStdout: false });
+  const remote = remoteUrl || await gitText(['remote', 'get-url', 'origin'], root, { redactStdout: false });
   const repository = parseGitHubRemote(remote || '');
   return { boundary, root, commitSha: sha || null, remoteUrl: remote || null, repository };
 }
