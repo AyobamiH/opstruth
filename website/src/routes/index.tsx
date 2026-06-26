@@ -15,17 +15,17 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "opstruth — Operational proof for AI-assisted engineering" },
+      { title: "OpsTruth — Operational proof for AI-assisted engineering" },
       {
         name: "description",
         content:
-          "opstruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes. Evidence-backed findings, honest proof gaps, zero deploys.",
+          "OpsTruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes. Evidence-backed findings, honest proof gaps, zero deploys.",
       },
-      { property: "og:title", content: "opstruth — Operational proof for AI-assisted engineering" },
+      { property: "og:title", content: "OpsTruth — Operational proof for AI-assisted engineering" },
       {
         property: "og:description",
         content:
-          "Read-only operational truth checks for AI-assisted engineering. One command. Evidence, not vibes.",
+          "Read-only operational truth checks for AI-assisted engineering. One command. Evidence, not guesses.",
       },
       { property: "og:type", content: "website" },
       { property: "og:image", content: "/og-card.png" },
@@ -38,7 +38,7 @@ export const Route = createFileRoute("/")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
-          name: "opstruth",
+          name: "OpsTruth",
           applicationCategory: "DeveloperApplication",
           operatingSystem: "Windows, macOS, Linux",
           description:
@@ -58,7 +58,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
       <main>
         <Hero />

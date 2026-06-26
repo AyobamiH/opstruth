@@ -72,19 +72,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "opstruth — Operational proof for AI-assisted engineering" },
+      { title: "OpsTruth — Operational proof for AI-assisted engineering" },
       {
         name: "description",
         content:
-          "opstruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes. Evidence-backed findings, honest proof gaps, zero deploys.",
+          "OpsTruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes. Evidence-backed findings, honest proof gaps, zero deploys.",
       },
-      { name: "author", content: "opstruth" },
+      { name: "author", content: "OpsTruth" },
       { name: "theme-color", content: "#0a0a0f" },
-      { property: "og:title", content: "opstruth — Operational proof for AI-assisted engineering" },
+      { property: "og:title", content: "OpsTruth — Operational proof for AI-assisted engineering" },
       {
         property: "og:description",
         content:
-          "opstruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes. Evidence-backed findings, honest proof gaps, zero deploys.",
+          "OpsTruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes. Evidence-backed findings, honest proof gaps, zero deploys.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://github.com/ayobamih/opstruth" },
@@ -94,12 +94,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       {
         name: "twitter:title",
-        content: "opstruth — Operational proof for AI-assisted engineering",
+        content: "OpsTruth — Operational proof for AI-assisted engineering",
       },
       {
         name: "twitter:description",
         content:
-          "opstruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes.",
+          "OpsTruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes.",
       },
       { name: "twitter:image", content: "/og-card.png" },
     ],
@@ -116,13 +116,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@graph": [
             {
               "@type": "Organization",
-              name: "opstruth",
+              name: "OpsTruth",
               url: "https://github.com/ayobamih/opstruth",
               logo: "/logo-mark.png",
             },
             {
               "@type": "WebSite",
-              name: "opstruth",
+              name: "OpsTruth",
               url: "https://github.com/ayobamih/opstruth",
             },
           ],

@@ -1,34 +1,34 @@
 export function EvidencePack() {
   return (
     <section id="evidence" className="border-b border-border/60 bg-surface/30">
-      <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
         <div className="max-w-2xl">
-          <div className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+          <div className="font-mono text-xs uppercase tracking-wide text-muted-foreground">
             Evidence pack
           </div>
           <h2 className="mt-3 text-2xl font-medium tracking-tight text-foreground md:text-3xl">
-            One markdown file. Reviewable. Attachable. Boring on purpose.
+            One Markdown report. Easy to review, share, and attach.
           </h2>
-          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-4 text-base leading-7 text-muted-foreground">
             Every default run writes a report you can paste into a PR, attach to a CI artifact, or
-            hand to a reviewer. No dashboard required.
+            hand to a reviewer. It is intentionally plain: evidence first, no dashboard required.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-[1.2fr_1fr]">
-          <article className="rounded-lg border border-border-strong bg-background">
-            <header className="flex items-center justify-between border-b border-border px-4 py-2.5">
-              <span className="font-mono text-[11px] text-muted-foreground">
-                evidence/fixture-runs/risky-secret-app.md
+        <div className="mt-10 grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+          <article className="min-w-0 rounded-lg border border-border-strong bg-background">
+            <header className="flex items-center justify-between gap-3 border-b border-border px-4 py-2.5">
+              <span className="min-w-0 font-mono text-xs text-muted-foreground">
+                Example evidence report
               </span>
-              <span className="font-mono text-[11px] text-status-pass">read-only</span>
+              <span className="shrink-0 font-mono text-xs text-status-pass">read-only</span>
             </header>
-            <div className="px-5 py-5 font-mono text-[12.5px] leading-[1.75] text-foreground/90">
-              <p className="text-foreground"># opstruth Evidence Pack</p>
+            <div className="px-4 py-5 font-mono text-[12px] leading-[1.8] text-foreground/90 sm:px-5 sm:text-[12.5px]">
+              <p className="text-foreground"># OpsTruth Evidence Pack</p>
               <p className="text-muted-foreground">
                 Status: Partial pass
                 <br />
-                Working directory: /tmp/opstruth-fixture-runs/risky-secret-app
+                Working directory: redacted fixture checkout
                 <br />
                 Commands run: git diff --check, npm run test
               </p>
@@ -57,9 +57,9 @@ export function EvidencePack() {
             </div>
           </article>
 
-          <aside className="rounded-lg border border-border bg-surface p-6">
-            <h3 className="font-mono text-[13px] text-foreground">Use it in</h3>
-            <ul className="mt-4 space-y-3 text-[13px] text-muted-foreground">
+          <aside className="min-w-0 rounded-lg border border-border bg-surface p-5 sm:p-6">
+            <h3 className="font-mono text-sm text-foreground">Use it in</h3>
+            <ul className="mt-4 space-y-3 text-sm leading-6 text-muted-foreground">
               <li className="flex items-baseline gap-3">
                 <span className="font-mono text-status-skip">→</span>
                 Pull request descriptions, as the &ldquo;what was verified&rdquo; section.

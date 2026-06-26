@@ -110,7 +110,7 @@
 
   html {
     color-scheme: dark;
-    overflow-x: hidden;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -120,12 +120,33 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     font-feature-settings: "ss01", "cv11";
-    overflow-x: hidden;
     width: 100%;
   }
 
   pre,
   code {
+    max-width: 100%;
+  }
+
+  a,
+  button {
+    outline-color: var(--color-ring);
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  video:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 3px;
+  }
+
+  p,
+  li,
+  dd {
+    overflow-wrap: break-word;
+  }
+
+  video {
     max-width: 100%;
   }
 
