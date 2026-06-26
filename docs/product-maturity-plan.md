@@ -90,6 +90,8 @@ Quality evidence also became more precise. `opstruth quality` now reports lint, 
 
 Wagging's GitHub Actions `CI` workflow now provides hosted proof for the same local quality gate. The successful run for `0786f13` proved that GitHub could run `npm ci` and `npm run ci` in a clean hosted environment, but it did not prove Supabase production configuration, scheduler state, deployed function behavior, or production security headers. OpsTruth now has an explicit `github-ci` command and `--github-ci` one-command opt-in so GitHub Actions metadata can be attached as exact-commit proof without treating CI as production truth.
 
+The 2026-06-26 merged-main validation completed the first real exact-commit proof loop. Wagging PR #13 merged into `main` at `70d7845`; local `npm run ci` passed after merge; GitHub Actions workflow `CI` run `28217133767` matched that exact commit and completed `quality:success`; local preview route and health checks passed for `127.0.0.1:4173`. The same run exposed and fixed an OpsTruth implementation gap where conservative redaction of long SHA-like strings happened before internal GitHub comparison. The proof path now preserves raw Git/GitHub metadata internally for parsing while keeping output redacted.
+
 The route guidance now scopes loopback header findings to the local preview response while preserving the warning. Production headers remain `Not Verified` until an explicit production URL is checked, and non-local URLs retain stronger production-relevant guidance.
 
 See `docs/case-studies/wagging-web-wins.md`, `evidence/real-world-validation-wagging-web-wins.md`, and `evidence/real-world-validation-wagging-opstruth-run.md`.

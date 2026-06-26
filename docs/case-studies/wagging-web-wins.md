@@ -76,6 +76,12 @@ The 2026-06-25 follow-up cleared the remaining 12 Fast Refresh warnings by movin
 
 The same pass improved OpsTruth's secret-reference evidence. The Wagging run still surfaced secret/auth language, but the scanner now separates actionable source findings from documentation references, placeholders, local-only files, generated/dependency paths, ignored binaries, and unknown token-like review items. This made the evidence easier to review without claiming Supabase production secrets were configured or safe.
 
+The 2026-06-26 follow-up reviewed and merged PR #13, `add-import-reddit-tips-observability`, then fast-forwarded Wagging `main` to merge commit `70d7845`. The branch added count-only pipeline telemetry for `import-reddit-tips` after authorization/rate limiting, plus focused tests and docs. Local `npm run ci` passed before and after merge, and the changed-file scan did not find secret values. A Cloudflare Pages preview check was still failed, but the branch did not change site deployment files and was merged without admin bypass.
+
+OpsTruth's new `github-ci` command then verified exact-commit GitHub Actions metadata for merged `main`. It resolved `AyobamiH/wagging-web-wins`, matched the local merge commit to workflow `CI` run `28217133767`, and recorded the `quality` job as `success`. The first live validation exposed a useful product bug: the generic redaction layer was replacing long SHA-like strings before internal comparison. OpsTruth fixed that by preserving raw stdout only for Git and `gh` JSON parsing in the GitHub proof path while keeping human/JSON output redacted.
+
+With a bounded local preview on `127.0.0.1:4173`, direct route checks reached `/`, `/services`, and `/faq` with HTTP `200`, and direct local checks confirmed port `4173` plus `/` health. The one-command run with `--github-ci --workflow CI --skip evidence` included GitHub CI as `Pass`, quality as `Pass`, local as `Pass`, routes as warning-only local-preview header evidence, and no failures.
+
 ## Local Quality Proof
 
 Wagging now has local quality proof through `npm run ci`, which runs lint, typecheck, tests, and build in order. The CI-aware validation confirmed lint passed with zero warnings, typecheck passed, Vitest passed 4 files and 40 tests, and the production build plus prerender completed.
@@ -86,7 +92,7 @@ OpsTruth quality reporting now exposes lint, typecheck, tests, build, and CI as 
 
 Wagging also gained a GitHub Actions workflow named `CI`. The successful run inspected during validation was `28165808838` on commit `0786f1336b98c64f11bf3e34bb48845d1d9d8a54`, triggered by a push to `main`. Its `quality` job completed successfully from `2026-06-25T11:07:53Z` to `2026-06-25T11:08:54Z`.
 
-This is external corroborating evidence. OpsTruth did not automatically ingest GitHub Actions metadata; the run was inspected separately and recorded in the case-study evidence.
+This began as external corroborating evidence. OpsTruth now has first-class GitHub Actions metadata ingestion through `opstruth github-ci`, with opt-in one-command support through `--github-ci` or config.
 
 ## What CI Proves
 
@@ -95,6 +101,19 @@ CI proves that a fresh GitHub-hosted checkout can install with `npm ci` and run 
 ## What CI Does Not Prove
 
 CI does not prove Supabase production configuration, scheduler activation, remote secret presence, deployed Edge Function behavior, live database permissions, production function authorization, or production security headers. The workflow intentionally uses inert build-time placeholders rather than production Supabase credentials.
+
+## Exact-Commit GitHub Actions Proof
+
+- Merged main commit: `70d7845`
+- Repository resolution: `AyobamiH/wagging-web-wins`
+- Workflow and job result: `CI` run `28217133767`, `quality:success`
+- Local quality proof: merged-main `npm run ci` passed lint, typecheck, 47 tests across 5 files, build, and prerender
+- Local runtime proof: local preview routes `/`, `/services`, `/faq` returned HTTP `200`; local port `4173` and `/` health passed
+- CI proof: exact commit match was verified by OpsTruth
+
+## Local Evidence Versus Production Proof
+
+Local quality, local preview, and exact-commit CI are strong evidence for the code and hosted quality gate. They are not production proof. Production deployment, Supabase remote secret setup, scheduler state, live Edge Function authorization, live database permissions, and production route headers remain separate gates.
 
 ## Production State Still Not Verified
 

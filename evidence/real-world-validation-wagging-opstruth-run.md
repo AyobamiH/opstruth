@@ -182,6 +182,51 @@ OpsTruth did not prove that production Supabase is configured correctly, that th
 - Supabase output should distinguish static source confidence from live project confidence.
 - Clean lint is useful evidence, but it does not resolve live scheduler, database, or deployment proof gaps.
 
+## Exact-Commit GitHub Actions Proof
+
+2026-06-26 merged-main validation used the source CLI after adding the `github-ci` command and after fixing internal SHA redaction in the proof path.
+
+## Merged Main Commit
+
+- Branch: `main`
+- Merge commit: `70d7845`
+- Source PR: `https://github.com/AyobamiH/wagging-web-wins/pull/13`
+- PR #13 result: merged normally; no admin bypass was used.
+
+## Repository Resolution
+
+`opstruth github-ci --workflow CI` resolved the repository as `AyobamiH/wagging-web-wins` from the local `origin` remote.
+
+## Workflow And Job Result
+
+- Workflow: `CI`
+- Run ID: `28217133767`
+- Trigger: `push`
+- Conclusion: `success`
+- Job inspected: `quality`
+- Job conclusion: `success`
+- Exact commit match: yes
+
+## Local Quality Proof
+
+Merged `main` passed `npm run ci`. The current run proved lint, typecheck, 47 Vitest tests across 5 files, client/server build, and prerender. OpsTruth quality also reported the aggregate `ci` script as the proof route for lint, typecheck, tests, build, and CI.
+
+## Local Runtime Proof
+
+A bounded local Vite preview server ran on `127.0.0.1:4173`. Direct OpsTruth route checks reached `/`, `/services`, and `/faq` with HTTP `200`. Direct local runtime checks confirmed port `4173` listening and `/` health returning HTTP `200`.
+
+## CI Proof
+
+The one-command run with `--github-ci --workflow CI --skip evidence` included GitHub CI as `Pass`, quality as `Pass`, local runtime as `Pass`, and routes as `Partial pass` due to local-preview header warnings. JSON output parsed successfully.
+
+## Production State Still Not Verified
+
+Local preview route success does not prove production route availability or production security headers. GitHub CI success does not prove deployment. No deploy was performed.
+
+## Supabase State Still Not Verified
+
+Supabase mutation was not approved. No remote secret setup, Edge Function deploy, `db push`, migration application, SQL execution, pg_cron mutation, production endpoint call, or hardened function invocation was performed. Scheduler state, live database permissions, remote secret presence, and production Edge Function behavior remain proof gaps.
+
 ## v0.2 Backlog Items
 
 - Add a case-study/evidence command for real repo validation runs.
@@ -191,3 +236,4 @@ OpsTruth did not prove that production Supabase is configured correctly, that th
 - Improve Supabase static versus live proof language.
 - Add first-class "mutation not approved" evidence sections.
 - Add local-preview versus production-route language for route header warnings.
+- Keep exact-commit GitHub Actions proof visible in case-study evidence without implying production deployment.
