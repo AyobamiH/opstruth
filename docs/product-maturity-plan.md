@@ -98,6 +98,8 @@ The final 2026-06-26 readiness pass added a production verification plan for Wag
 
 The same pass also showed a product nuance for configured local runtime inputs. A combined JSON proof can fail route/local checks when no bounded preview server is running, even though earlier local-preview evidence passed. OpsTruth should make that precondition clearer so users can tell the difference between a broken route and a missing local runtime.
 
+The approved 2026-06-26 Supabase application pass added the first live production evidence for Wagging. The run set the approved remote secret name, deployed only `import-reddit-tips`, verified missing-credential denial (`401`), incorrect scheduler-secret denial (`403`), and one authorised scheduled-path smoke request (`200`). The smoke request returned zero candidates and zero inserts, and read-only counts showed `pet_tips` remained at zero. Scheduler metadata showed one intended job with the private header shape, but autonomous cron execution and function log telemetry were still not verified. This is exactly the distinction OpsTruth needs to model: production evidence can improve materially while important production claims remain open.
+
 See `docs/case-studies/wagging-web-wins.md`, `evidence/real-world-validation-wagging-web-wins.md`, and `evidence/real-world-validation-wagging-opstruth-run.md`.
 
 ## Maturity Work In This Pass

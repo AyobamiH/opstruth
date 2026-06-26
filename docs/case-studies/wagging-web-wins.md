@@ -121,9 +121,25 @@ Local quality, local preview, and exact-commit CI are strong evidence for the co
 
 ## Production State Still Not Verified
 
-Supabase mutation remains unapproved. No remote secret setup, Edge Function deploy, `db push`, migration application, SQL execution, pg_cron mutation, production endpoint call, or hardened function invocation was performed.
+Supabase mutation was later approved with the exact required approval line. The approved run set the remote `IMPORT_REDDIT_TIPS_SECRET` name from private runtime, deployed only `import-reddit-tips`, and ran bounded live verification requests.
 
-The live function and scheduler verification plan now exists, but it is readiness documentation only until John supplies the exact approval line and the reviewed packet is executed.
+Verified production behavior from the approved run:
+
+- missing credentials returned `401`
+- incorrect scheduler credentials returned `403`
+- authorised scheduled-path smoke request returned `200`
+- the authorised response reported zero candidates and zero inserts
+- `pet_tips` count stayed `0`
+- read-only scheduler metadata showed one `import-reddit-tips-daily` job at `0 8 * * *`
+- scheduler metadata classified the private scheduler header as present and the legacy `apikey` header as absent
+
+Still not verified:
+
+- autonomous pg_cron execution
+- function log telemetry
+- complete admin/non-admin production matrix
+- ongoing reliability beyond one smoke request
+- complete database permission or tenant-isolation proof
 
 ## Quality Signal Product Lessons
 
@@ -131,10 +147,9 @@ The case study now shows why quality proof must be granular. "CI passed" is usef
 
 ## Remaining Gates
 
-- Approve Supabase remote secret setup preflight.
-- Review a safe scheduler secret storage path.
-- Apply the scheduler update only after review.
-- Deploy the hardened Edge Function.
-- Verify runtime behavior with admin, non-admin, scheduler, missing-secret, invalid-secret, and rate-limit cases.
-- Confirm deployed RLS/grants and function logs.
+- Observe an autonomous scheduled execution.
+- Verify function log telemetry contains only count-only safe fields.
+- Verify admin and non-admin production authorization branches.
+- Verify rate-limit behavior in production.
+- Confirm deployed RLS/grants and broader database effects.
 - Decide whether local-preview security-header warnings need environment-aware guidance while preserving strict production expectations.

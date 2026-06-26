@@ -259,6 +259,102 @@ The next approved run should execute only the reviewed packet, then verify funct
 
 `opstruth repo`, `opstruth quality`, `opstruth secrets`, and `opstruth github-ci --workflow CI` were run against Wagging. Repo and quality passed, exact-commit GitHub CI passed, and the secret scan remained warning-class evidence with redacted references requiring review.
 
+## Approved Supabase Application
+
+2026-06-26 approved production application began with the exact approval line for `IMPORT_REDDIT_TIPS_SECRET` and scheduler work.
+
+Externally supplied production evidence from the Wagging run:
+
+- remote `IMPORT_REDDIT_TIPS_SECRET` name was set from private local runtime
+- only `import-reddit-tips` was deployed
+- no unrelated secret, function, migration, SQL, or cron mutation was performed
+- the guarded scheduler migration remained unapplied because it is intentionally non-executable
+
+## Function Deployment Evidence
+
+Supabase function listing after deployment confirmed `import-reddit-tips` was present. OpsTruth did not independently inspect the deployed bundle; this is external production evidence recorded from the approved run.
+
+## Missing-Credential Denial Evidence
+
+The production function was invoked with `POST` and no bearer token or scheduler secret header.
+
+- Expected status: `401`
+- Observed status: `401`
+- Safe classification: `Unauthorized`
+- `pet_tips` count after denial checks: `0`
+
+## Incorrect-Credential Denial Evidence
+
+The production function was invoked with a temporary incorrect scheduler-secret header.
+
+- Expected status: `403`
+- Observed status: `403`
+- Safe classification: `Forbidden`
+- `pet_tips` count after denial checks: `0`
+
+## Authorised-Path Evidence
+
+The production function was invoked once through the scheduled-caller path using the approved runtime secret from process environment.
+
+- Expected healthy status: `200`
+- Observed status: `200`
+- Trigger classification: `scheduled`
+- Candidates: `0`
+- Fresh: `0`
+- Inserted: `0`
+- Skipped: `0`
+
+This proves only the bounded smoke request, not general reliability.
+
+## Scheduler Configuration Evidence
+
+Read-only scheduler metadata showed:
+
+- one `import-reddit-tips-daily` job
+- schedule `0 8 * * *`
+- target classified as `import-reddit-tips`
+- private scheduler header classified as present
+- legacy `apikey` header classified as absent
+
+The raw scheduler payload was not printed or copied.
+
+## Scheduler Execution Evidence
+
+Manual authorised scheduled-path invocation was verified. Autonomous pg_cron execution was not observed in the bounded run.
+
+## Database-Effect Evidence
+
+Read-only `pet_tips` counts showed:
+
+- before verification: `0`
+- after denial checks: `0`
+- after authorised check: `0`
+
+The authorised request returned zero candidates and zero inserts, so no row write occurred.
+
+## OpsTruth-Native Proof
+
+After the Wagging documentation commit, OpsTruth was run against Wagging:
+
+- `opstruth repo`: pass
+- `opstruth quality`: pass
+- `opstruth secrets`: warning-class redacted reference scan
+- `opstruth github-ci --workflow CI`: pass for exact commit
+- combined JSON with `--github-ci --workflow CI --json --skip evidence`: parsed successfully
+
+## External Production Evidence
+
+The Supabase application and live function checks are external production evidence supplied by the approved run, not yet native OpsTruth Supabase live probes.
+
+## Remaining Not Verified
+
+- autonomous cron execution
+- function log telemetry contents
+- all admin and non-admin production authorization branches
+- all database permission and tenant-isolation properties
+- ongoing reliability beyond one successful scheduled-path smoke request
+- complete production security audit
+
 The combined JSON proof parsed successfully. Its top-level status was `fail` in this no-preview invocation because the configured local route and health checks require a bounded preview server and none was running for that specific command. This does not change the earlier local-preview proof; it records that local runtime checks are only verified when their runtime precondition is active.
 
 ## v0.2 Backlog Items
