@@ -1,17 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { execFile } from 'node:child_process';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { promisify } from 'node:util';
 import { runCli } from '../src/cli.js';
 import { resultToMarkdown } from '../src/lib/markdown.js';
 import {
   SUPABASE_LIVE_SCHEMA_VERSION,
   runSupabaseLive,
+  summarizeSupabaseTelemetryOutput,
   validateSupabaseLiveEvidence
 } from '../src/commands/supabase-live.js';
 
 const ANSI_RE = /\x1B\[[0-?]*[ -/]*[@-~]/;
+const TEST_ROOT = path.dirname(fileURLToPath(import.meta.url));
+const FIXTURE_ROOT = path.join(TEST_ROOT, 'fixtures');
+const execFileAsync = promisify(execFile);
 
 async function fixtureDir() {
   return fs.mkdtemp(path.join(os.tmpdir(), 'opstruth-supabase-live-'));
@@ -182,4 +189,55 @@ test('supabase-live human and JSON rendering are parseable and ANSI-free', async
   assert.equal(parsed.command, 'supabase-live');
   assert.equal(parsed.data.networkRequests, 0);
   assert.equal(parsed.data.signals.database_effects.state, 'verified');
+});
+
+test('supabase-live telemetry parser emits count-only allowlisted events', async () => {
+  const raw = JSON.parse(await fs.readFile(path.join(FIXTURE_ROOT, 'supabase-telemetry-count-only.json'), 'utf8'));
+  const summary = summarizeSupabaseTelemetryOutput(raw);
+  assert.equal(summary.ok, true);
+  assert.equal(summary.signal.state, 'verified');
+  assert.equal(summary.telemetry.eventCount, 1);
+  assert.equal(summary.telemetry.aggregateCounts.inserted, 0);
+  assert.equal(summary.telemetry.events[0].eventName, 'import_reddit_tips_pipeline_telemetry');
+  assert.equal(summary.telemetry.events[0].ignored_provider_field, undefined);
+  assert.equal(summary.telemetry.rawOutputPrinted, false);
+});
+
+test('supabase-live telemetry parser rejects headers and sensitive raw provider output', async () => {
+  const raw = JSON.parse(await fs.readFile(path.join(FIXTURE_ROOT, 'supabase-telemetry-unsafe.json'), 'utf8'));
+  const summary = summarizeSupabaseTelemetryOutput(raw);
+  assert.equal(summary.ok, false);
+  assert.ok(summary.errors.some((item) => item.includes('risky field name')));
+});
+
+test('supabase-live can render telemetry-only proof without network requests', async () => {
+  const telemetryFile = path.join(FIXTURE_ROOT, 'supabase-telemetry-count-only.json');
+  const result = await runSupabaseLive({ telemetryFile });
+  assert.equal(result.data.networkRequests, 0);
+  assert.equal(result.data.mutations, 0);
+  assert.equal(result.data.signals.telemetry_count_only.state, 'verified');
+  assert.equal(result.data.telemetry.eventCount, 1);
+  assert.ok(result.notVerified.some((item) => item.includes('function deployed')));
+});
+
+test('supabase-live merges telemetry summary into a redacted evidence file', async () => {
+  const root = await fixtureDir();
+  const evidenceFile = await writeJson(root, 'evidence.json', validEvidence());
+  const telemetryFile = path.join(FIXTURE_ROOT, 'supabase-telemetry-count-only.json');
+  const result = await runSupabaseLive({ cwd: root, evidenceFile, telemetryFile });
+  assert.equal(result.data.signals.telemetry_count_only.state, 'verified');
+  assert.equal(result.data.telemetry.eventCount, 1);
+  assert.ok(result.data.redactionsApplied.includes('raw telemetry provider output omitted'));
+});
+
+test('supabase-live CLI accepts telemetry file and keeps JSON ANSI-free', async () => {
+  const telemetryFile = path.join(FIXTURE_ROOT, 'supabase-telemetry-count-only.json');
+  const binPath = path.join(TEST_ROOT, '..', 'bin', 'opstruth.js');
+  const { stdout } = await execFileAsync(process.execPath, [binPath, 'supabase-live', '--telemetry-file', telemetryFile, '--json'], {
+    cwd: path.join(TEST_ROOT, '..')
+  });
+  assert.doesNotMatch(stdout, ANSI_RE);
+  const parsed = JSON.parse(stdout);
+  assert.equal(parsed.data.networkRequests, 0);
+  assert.equal(parsed.data.signals.telemetry_count_only.state, 'verified');
 });

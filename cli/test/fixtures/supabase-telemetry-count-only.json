@@ -1,0 +1,22 @@
+{
+  "events": [
+    {
+      "timestamp": "2026-06-28T10:00:00.000Z",
+      "event": "IMPORT_REDDIT_TIPS_PIPELINE_TELEMETRY",
+      "trigger": "scheduled",
+      "status": "ok",
+      "request_id": "req-safe-001",
+      "counts": {
+        "candidates": 0,
+        "fresh": 0,
+        "inserted": 0,
+        "skipped": 0,
+        "accepted": 0,
+        "rejected": 0
+      },
+      "ignored_provider_field": {
+        "nested": "discarded"
+      }
+    }
+  ]
+}
