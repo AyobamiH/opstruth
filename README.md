@@ -91,6 +91,7 @@ opstruth github-ci --workflow CI
 opstruth routes --base-url https://example.com
 opstruth secrets
 opstruth supabase
+opstruth supabase-live --evidence-file <redacted.json>
 opstruth cloudflare
 opstruth local --port 3000 --health /health
 opstruth evidence
@@ -132,6 +133,8 @@ Secret scans group findings into actionable source findings, documentation refer
 Quality checks report lint, typecheck, tests, build, and CI as distinct proof signals. See `docs/quality-proof-signals.md`.
 
 GitHub Actions proof is explicit and exact-commit matched. Use `opstruth github-ci` or `opstruth --github-ci` when hosted CI metadata should be attached to the proof record. CI remains separate from production proof. See `docs/github-actions-proof.md`.
+
+Supabase live proof is explicit and evidence-file driven. Use `opstruth supabase-live --evidence-file <redacted.json>` to validate already collected production evidence without making Supabase calls, inspecting secret values, or mutating anything. See `docs/supabase-live-proof.md`.
 
 ## Completion Gate
 

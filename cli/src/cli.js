@@ -12,13 +12,14 @@ import { runLocal } from './commands/local.js';
 import { runEvidence } from './commands/evidence.js';
 import { runProbes } from './commands/probes.js';
 import { runGitHubCi } from './commands/github-ci.js';
+import { runSupabaseLive } from './commands/supabase-live.js';
 import { resultToMarkdown } from './lib/markdown.js';
 import { formatTerminalOutput } from './lib/terminal.js';
 import { writeFileSafe } from './lib/fs.js';
 import { redactObject } from './lib/redact.js';
 import { exitCodeFor } from './lib/result.js';
 
-const COMMANDS = new Set(['repo', 'quality', 'routes', 'secrets', 'supabase', 'cloudflare', 'local', 'github-ci', 'evidence', 'probes', 'welcome', 'init']);
+const COMMANDS = new Set(['repo', 'quality', 'routes', 'secrets', 'supabase', 'supabase-live', 'cloudflare', 'local', 'github-ci', 'evidence', 'probes', 'welcome', 'init']);
 function take(args, index) { return args[index + 1]; }
 export function parseArgs(argv) {
   const options = { skip: [], only: [], port: [], protectedTable: [], include: [] };
@@ -52,6 +53,7 @@ export function parseArgs(argv) {
     else if (arg === '--script') { options.scripts ||= []; options.scripts.push(take(argv, i++)); }
     else if (arg === '--github-ci') options.githubCi = true;
     else if (arg === '--workflow') options.workflow = take(argv, i++);
+    else if (arg === '--evidence-file') options.evidenceFile = take(argv, i++);
   }
   if (!options.protectedTable.length) delete options.protectedTable;
   return { command, options };
@@ -65,6 +67,7 @@ async function dispatch(command, options) {
   if (command === 'routes') return runRoutes(options);
   if (command === 'secrets') return runSecrets(options);
   if (command === 'supabase') return runSupabase(options);
+  if (command === 'supabase-live') return runSupabaseLive(options);
   if (command === 'cloudflare') return runCloudflare(options);
   if (command === 'local') return runLocal(options);
   if (command === 'github-ci') return runGitHubCi(options);
@@ -104,6 +107,7 @@ function helpText(command) {
     '  routes       Probe configured HTTP routes with HEAD/GET',
     '  secrets      Scan source for risky references with redaction',
     '  supabase     Static Supabase safety checks',
+    '  supabase-live Validate redacted Supabase production evidence',
     '  cloudflare   Static Cloudflare/Wrangler checks',
     '  local        Check explicit local ports/processes/services',
     '  github-ci    Read GitHub Actions metadata for the exact local commit',
@@ -126,6 +130,7 @@ function helpText(command) {
     routes: ['Usage: opstruth routes --base-url <url> [--routes file] [--json]', 'Collect read-only URL, method, status, latency, redirect, and header evidence.'],
     secrets: ['Usage: opstruth secrets [--json]', 'Scan source text for risky secret/auth references with redacted previews; .env contents are skipped.'],
     supabase: ['Usage: opstruth supabase [--protected-table name] [--frontend-dir dir] [--migrations-dir dir]', 'Run a static Supabase migration/frontend exposure audit without credentials or database calls.'],
+    'supabase-live': ['Usage: opstruth supabase-live --evidence-file <redacted.json> [--json]', 'Validate explicit redacted Supabase production evidence without credentials, mutation, or network calls.'],
     cloudflare: ['Usage: opstruth cloudflare [--url https://example.com] [--json]', 'Inspect Wrangler config, deploy scripts, and optional read-only route status; no deploy is run.'],
     local: ['Usage: opstruth local --port 3000 [--health /health] [--process name] [--service name]', 'Check explicit local runtime inputs without starting, stopping, or killing services.'],
     'github-ci': ['Usage: opstruth github-ci [--workflow CI] [--json]', 'Read GitHub Actions run metadata for the exact local commit. No logs, deploys, or production calls are made.'],

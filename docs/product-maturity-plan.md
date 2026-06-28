@@ -100,6 +100,8 @@ The same pass also showed a product nuance for configured local runtime inputs. 
 
 The approved 2026-06-26 Supabase application pass added the first live production evidence for Wagging. The run set the approved remote secret name, deployed only `import-reddit-tips`, verified missing-credential denial (`401`), incorrect scheduler-secret denial (`403`), and one authorised scheduled-path smoke request (`200`). The smoke request returned zero candidates and zero inserts, and read-only counts showed `pet_tips` remained at zero. Scheduler metadata showed one intended job with the private header shape, but autonomous cron execution and function log telemetry were still not verified. This is exactly the distinction OpsTruth needs to model: production evidence can improve materially while important production claims remain open.
 
+The 2026-06-28 bounded production observation verified recent autonomous pg_cron run history for Wagging's intended scheduler job while preserving function-log telemetry, admin/non-admin bearer branches, and rate-limit behaviour as proof gaps. OpsTruth now has a planned `supabase-live` evidence-file command to represent these production facts without making silent production calls or committing real production evidence.
+
 See `docs/case-studies/wagging-web-wins.md`, `evidence/real-world-validation-wagging-web-wins.md`, and `evidence/real-world-validation-wagging-opstruth-run.md`.
 
 ## Maturity Work In This Pass
