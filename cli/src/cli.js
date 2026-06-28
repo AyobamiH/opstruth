@@ -54,6 +54,7 @@ export function parseArgs(argv) {
     else if (arg === '--github-ci') options.githubCi = true;
     else if (arg === '--workflow') options.workflow = take(argv, i++);
     else if (arg === '--evidence-file') options.evidenceFile = take(argv, i++);
+    else if (arg === '--telemetry-file') options.telemetryFile = take(argv, i++);
   }
   if (!options.protectedTable.length) delete options.protectedTable;
   return { command, options };
@@ -130,7 +131,7 @@ function helpText(command) {
     routes: ['Usage: opstruth routes --base-url <url> [--routes file] [--json]', 'Collect read-only URL, method, status, latency, redirect, and header evidence.'],
     secrets: ['Usage: opstruth secrets [--json]', 'Scan source text for risky secret/auth references with redacted previews; .env contents are skipped.'],
     supabase: ['Usage: opstruth supabase [--protected-table name] [--frontend-dir dir] [--migrations-dir dir]', 'Run a static Supabase migration/frontend exposure audit without credentials or database calls.'],
-    'supabase-live': ['Usage: opstruth supabase-live --evidence-file <redacted.json> [--json]', 'Validate explicit redacted Supabase production evidence without credentials, mutation, or network calls.'],
+    'supabase-live': ['Usage: opstruth supabase-live --evidence-file <redacted.json> [--telemetry-file /tmp/redacted-provider-output.json] [--json]', 'Validate explicit redacted Supabase production evidence without credentials, mutation, or network calls.'],
     cloudflare: ['Usage: opstruth cloudflare [--url https://example.com] [--json]', 'Inspect Wrangler config, deploy scripts, and optional read-only route status; no deploy is run.'],
     local: ['Usage: opstruth local --port 3000 [--health /health] [--process name] [--service name]', 'Check explicit local runtime inputs without starting, stopping, or killing services.'],
     'github-ci': ['Usage: opstruth github-ci [--workflow CI] [--json]', 'Read GitHub Actions run metadata for the exact local commit. No logs, deploys, or production calls are made.'],

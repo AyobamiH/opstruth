@@ -12,6 +12,7 @@ The command is explicit only:
 
 ```bash
 opstruth supabase-live --evidence-file cli/examples/supabase-live-redacted-evidence.json
+opstruth supabase-live --telemetry-file /tmp/opstruth-supabase-telemetry.json
 ```
 
 The default one-command `opstruth` run does not execute Supabase live checks or make Supabase network requests.
@@ -39,6 +40,39 @@ The file should contain redacted fields such as:
 - `notVerified`
 
 Real production evidence files should remain local-only unless explicitly reviewed for publication.
+
+## Telemetry Collector
+
+OpsTruth can also ingest a local telemetry provider-output file:
+
+```bash
+opstruth supabase-live --telemetry-file /tmp/opstruth-supabase-telemetry.json
+opstruth supabase-live --evidence-file <redacted.json> --telemetry-file /tmp/opstruth-supabase-telemetry.json
+```
+
+This is still offline and explicit. OpsTruth does not call Supabase, query logs, authenticate to production, or mutate anything.
+
+The raw provider output should be written under `/tmp` or another local-only path. The parser scans the input before rendering, rejects risky field names and token-like values, discards unknown fields, and emits only allowlisted count/status telemetry:
+
+- timestamp
+- event name
+- trigger classification
+- status classification
+- non-sensitive correlation identifier
+- candidates
+- fresh
+- inserted
+- skipped
+- accepted
+- rejected
+
+If the file contains headers, raw payloads, raw logs, project references, Supabase URLs, JWT-like strings, bearer tokens, service-role values, or long token-like values, OpsTruth fails closed before output.
+
+## Supported Provider Path
+
+Supabase exposes Edge Function invocation/log views in the Dashboard and exposes Logs Explorer tables such as `function_edge_logs` and `function_logs`. The safe collection pattern is to query only the specific time window, function, and count-only fields needed, then save the raw provider output locally and feed it to `--telemetry-file`.
+
+The current OpsTruth command intentionally does not perform this live provider query itself. A future live adapter can wrap the same allowlist parser after it has a supported, credential-safe way to run a provider-side filtered query without printing raw logs.
 
 ## Signal Definitions
 
@@ -89,6 +123,8 @@ Denial-path signals prove only the tested denial cases. Admin and non-admin sign
 
 `telemetry_count_only` should be `verified` only when filtered production telemetry was inspected and confirmed to contain count-only, non-sensitive fields. Raw logs must not be copied into the evidence file.
 
+When `--telemetry-file` is supplied, OpsTruth can set `telemetry_count_only` from the parsed local file. A telemetry-only run does not prove deployment, scheduler configuration, authorization branches, or database effects; those remain separate signals.
+
 ## Rate Limit
 
 Rate-limit evidence must not be manufactured by unsafe loops or production row mutation. Use `unsafe_to_test` when the only way to hit the branch would create or update production rows.
@@ -111,6 +147,7 @@ JSON output is produced with:
 
 ```bash
 opstruth supabase-live --evidence-file <redacted.json> --json
+opstruth supabase-live --telemetry-file /tmp/opstruth-supabase-telemetry.json --json
 ```
 
 The JSON result includes the normal command status plus structured signal data. It is still redacted before printing.
@@ -123,12 +160,14 @@ This command proves that a supplied local evidence file:
 - avoids known sensitive material
 - separates verified, failed, skipped, and not-verified Supabase signals
 - preserves manual versus autonomous scheduler classification
+- converts local provider telemetry into count-only output when the telemetry file passes redaction and allowlist checks
 
 ## What This Does Not Prove
 
 This command does not:
 
 - call Supabase
+- query the Supabase Logs Explorer
 - inspect remote secrets
 - deploy functions
 - apply migrations

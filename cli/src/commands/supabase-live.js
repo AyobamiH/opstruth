@@ -68,6 +68,52 @@ const RISKY_VALUE_PATTERNS = [
   { label: 'long token-like value', pattern: /\b[A-Za-z0-9_-]{40,}\b/ }
 ];
 
+const TELEMETRY_COUNT_FIELDS = [
+  'candidates',
+  'candidateCount',
+  'candidate_count',
+  'fresh',
+  'freshCount',
+  'fresh_count',
+  'inserted',
+  'insertedCount',
+  'inserted_count',
+  'skipped',
+  'skippedCount',
+  'skipped_count',
+  'accepted',
+  'acceptedCount',
+  'accepted_count',
+  'rejected',
+  'rejectedCount',
+  'rejected_count'
+];
+
+const TELEMETRY_ALLOWED_STATUSES = new Set([
+  'ok',
+  'success',
+  'failed',
+  'error',
+  'denied',
+  'unauthorized',
+  'forbidden',
+  'rate_limited',
+  'noop',
+  'scheduled_success',
+  'scheduled_failure'
+]);
+
+const TELEMETRY_ALLOWED_TRIGGERS = new Set([
+  'scheduled',
+  'manual',
+  'missing_credential',
+  'incorrect_secret',
+  'admin',
+  'non_admin',
+  'rate_limit',
+  'unknown'
+]);
+
 function normalizeKey(key = '') {
   return String(key).replace(/[^a-z0-9_]/gi, '').toLowerCase();
 }
@@ -93,6 +139,173 @@ function scanForSensitiveMaterial(value, pathParts = []) {
     }
   }
   return findings;
+}
+
+function cloneJson(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function coerceArrayFromProviderOutput(raw) {
+  if (Array.isArray(raw)) return raw;
+  if (!raw || typeof raw !== 'object') return [];
+  for (const key of ['events', 'logs', 'result', 'results', 'data', 'rows']) {
+    if (Array.isArray(raw[key])) return raw[key];
+  }
+  return [];
+}
+
+function lookupValue(record, keys) {
+  if (!record || typeof record !== 'object') return undefined;
+  for (const key of keys) {
+    if (Object.hasOwn(record, key)) return record[key];
+  }
+  return undefined;
+}
+
+function normalizeTelemetryStatus(value) {
+  const status = String(value || '').trim().toLowerCase().replace(/[\s-]+/g, '_');
+  return TELEMETRY_ALLOWED_STATUSES.has(status) ? status : null;
+}
+
+function normalizeTelemetryTrigger(value) {
+  const trigger = String(value || '').trim().toLowerCase().replace(/[\s-]+/g, '_');
+  return TELEMETRY_ALLOWED_TRIGGERS.has(trigger) ? trigger : null;
+}
+
+function normalizeTelemetryEventName(record) {
+  const raw = lookupValue(record, ['eventName', 'event_name', 'event', 'message']);
+  const text = String(raw || '').trim();
+  if (!text) return null;
+  if (/IMPORT_REDDIT_TIPS_PIPELINE_TELEMETRY/i.test(text)) return 'import_reddit_tips_pipeline_telemetry';
+  if (/authorization.*den/i.test(text)) return 'authorization_denial';
+  if (/scheduled.*trigger/i.test(text)) return 'scheduled_trigger';
+  if (/rate.*limit/i.test(text)) return 'rate_limit';
+  return null;
+}
+
+function normalizeSafeCorrelationId(value) {
+  const id = String(value || '').trim();
+  if (!id) return null;
+  if (/^[A-Za-z0-9_-]{1,36}$/.test(id)) return id;
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return id;
+  return null;
+}
+
+function normalizeCount(value) {
+  if (value === null || value === undefined || value === '') return null;
+  if (typeof value === 'number' && Number.isInteger(value) && value >= 0) return value;
+  if (typeof value === 'string' && /^\d+$/.test(value)) return Number(value);
+  return null;
+}
+
+function collectTelemetryCounts(record) {
+  const counts = {};
+  const nested = record && typeof record.counts === 'object' && !Array.isArray(record.counts)
+    ? record.counts
+    : {};
+  for (const key of TELEMETRY_COUNT_FIELDS) {
+    const value = normalizeCount(record?.[key] ?? nested[key]);
+    if (value === null) continue;
+    const normalizedKey = key
+      .replace(/Count$/, '')
+      .replace(/_count$/, '')
+      .toLowerCase();
+    counts[normalizedKey] = value;
+  }
+  return counts;
+}
+
+function normalizeTelemetryEvent(record) {
+  if (!record || typeof record !== 'object' || Array.isArray(record)) return null;
+  const counts = collectTelemetryCounts(record);
+  const eventName = normalizeTelemetryEventName(record);
+  const trigger = normalizeTelemetryTrigger(lookupValue(record, ['trigger', 'caller', 'source']));
+  const status = normalizeTelemetryStatus(lookupValue(record, ['status', 'statusClassification', 'status_classification', 'result']));
+  const timestamp = lookupValue(record, ['timestamp', 'time', 'created_at']);
+  const correlationId = normalizeSafeCorrelationId(lookupValue(record, ['requestId', 'request_id', 'correlationId', 'correlation_id']));
+  if (!Object.keys(counts).length && !eventName && !trigger && !status) return null;
+  const event = {};
+  if (typeof timestamp === 'string' && timestamp.length <= 40) event.timestamp = timestamp;
+  if (eventName) event.eventName = eventName;
+  if (trigger) event.trigger = trigger;
+  if (status) event.status = status;
+  if (correlationId) event.correlationId = correlationId;
+  if (Object.keys(counts).length) event.counts = counts;
+  return Object.keys(event).length ? event : null;
+}
+
+export function summarizeSupabaseTelemetryOutput(raw) {
+  const errors = [];
+  const sensitive = scanForSensitiveMaterial(raw);
+  for (const item of sensitive) errors.push(`Sensitive material rejected at ${item.path}: ${item.reason}`);
+  if (errors.length) return { ok: false, errors };
+
+  const records = coerceArrayFromProviderOutput(raw);
+  if (!records.length) {
+    return {
+      ok: true,
+      signal: {
+        state: 'not_observed',
+        summary: 'No allowlisted telemetry records were present in the local provider output.'
+      },
+      telemetry: {
+        source: 'local telemetry file',
+        eventCount: 0,
+        events: [],
+        discardedUnknownFields: true,
+        rawOutputPrinted: false
+      }
+    };
+  }
+
+  const events = records
+    .map((record) => normalizeTelemetryEvent(record))
+    .filter(Boolean);
+  if (!events.length) {
+    return {
+      ok: true,
+      signal: {
+        state: 'not_observed',
+        summary: 'Provider output was readable, but no count-only allowlisted telemetry event was found.'
+      },
+      telemetry: {
+        source: 'local telemetry file',
+        eventCount: 0,
+        events: [],
+        discardedUnknownFields: true,
+        rawOutputPrinted: false
+      }
+    };
+  }
+
+  const aggregateCounts = {};
+  for (const event of events) {
+    for (const [key, value] of Object.entries(event.counts || {})) {
+      aggregateCounts[key] = (aggregateCounts[key] || 0) + value;
+    }
+  }
+
+  return {
+    ok: true,
+    signal: {
+      state: 'verified',
+      summary: `${events.length} count-only telemetry event${events.length === 1 ? '' : 's'} parsed from local provider output.`,
+      evidence: [
+        'raw provider output was read locally',
+        'unknown fields were discarded',
+        'only allowlisted count/status fields were emitted'
+      ],
+      source: 'telemetry-file'
+    },
+    telemetry: {
+      source: 'local telemetry file',
+      eventCount: events.length,
+      aggregateCounts,
+      events,
+      discardedUnknownFields: true,
+      rawOutputPrinted: false
+    }
+  };
 }
 
 function normalizeSignal(raw, key) {
@@ -129,6 +342,34 @@ export function validateSupabaseLiveEvidence(evidence) {
     }
   }
   return { ok: errors.length === 0, errors };
+}
+
+function applyTelemetrySummary(evidence, telemetrySummary) {
+  const next = cloneJson(evidence);
+  next.signals = { ...(next.signals || {}) };
+  next.signals.telemetry_count_only = telemetrySummary.signal;
+  next.telemetry = telemetrySummary.telemetry;
+  const redactions = new Set(next.redactionsApplied || []);
+  redactions.add('raw telemetry provider output omitted');
+  redactions.add('unknown telemetry fields discarded');
+  next.redactionsApplied = Array.from(redactions);
+  return next;
+}
+
+function telemetryOnlyEvidence(telemetrySummary) {
+  return applyTelemetrySummary({
+    schemaVersion: SUPABASE_LIVE_SCHEMA_VERSION,
+    collectedAt: null,
+    repositoryCommit: null,
+    functionName: null,
+    schedulerJob: null,
+    evidenceSource: 'local telemetry provider output',
+    manualOrAutonomous: 'not_specified',
+    databaseScope: null,
+    signals: Object.fromEntries(SUPABASE_LIVE_SIGNALS.map((key) => [key, { state: 'not_verified', summary: `${key} not supplied` }])),
+    redactionsApplied: [],
+    notVerified: SUPABASE_LIVE_SIGNALS.filter((key) => key !== 'telemetry_count_only')
+  }, telemetrySummary);
 }
 
 export function summarizeSupabaseLiveEvidence(evidence) {
@@ -206,21 +447,75 @@ export function summarizeSupabaseLiveEvidence(evidence) {
       databaseScope: evidence.databaseScope || null,
       redactionsApplied: evidence.redactionsApplied || [],
       notVerified: evidence.notVerified || [],
+      telemetry: evidence.telemetry || null,
       signals
     }
   };
 }
 
-export async function runSupabaseLive({ cwd = process.cwd(), evidenceFile, strict = false } = {}) {
-  if (!evidenceFile) {
+async function loadTelemetrySummary({ cwd, telemetryFile }) {
+  if (!telemetryFile) return null;
+  const filePath = path.isAbsolute(telemetryFile) ? telemetryFile : path.join(cwd, telemetryFile);
+  let parsed;
+  try {
+    parsed = JSON.parse(await readFile(filePath, 'utf8'));
+  } catch (error) {
+    return {
+      ok: false,
+      errors: [`Telemetry file error: ${error.code === 'ENOENT' ? 'missing file' : 'malformed JSON or unreadable file'}`]
+    };
+  }
+  return summarizeSupabaseTelemetryOutput(parsed);
+}
+
+export async function runSupabaseLive({ cwd = process.cwd(), evidenceFile, telemetryFile, strict = false } = {}) {
+  if (!evidenceFile && !telemetryFile) {
     return createResult('supabase-live', 'skipped', {
-      summary: 'Supabase live proof is explicit opt-in and requires a local redacted evidence file. No Supabase network request was made.',
-      skipped: ['No --evidence-file was provided'],
+      summary: 'Supabase live proof is explicit opt-in and requires a local redacted evidence or telemetry file. No Supabase network request was made.',
+      skipped: ['No --evidence-file or --telemetry-file was provided'],
       notVerified: SUPABASE_LIVE_SIGNALS.map((signal) => signal.replaceAll('_', ' ')),
-      checks: [{ name: 'evidence file provided', status: 'skipped', message: 'missing --evidence-file' }],
+      checks: [{ name: 'local evidence input provided', status: 'skipped', message: 'missing --evidence-file or --telemetry-file' }],
       data: { boundary: 'local evidence file only', networkRequests: 0, mutations: 0 },
-      nextSafeStep: 'Collect redacted production evidence separately, then run opstruth supabase-live --evidence-file <file>.'
+      nextSafeStep: 'Collect redacted production evidence separately, then run opstruth supabase-live --evidence-file <file> or --telemetry-file <file>.'
     });
+  }
+
+  const telemetrySummary = await loadTelemetrySummary({ cwd, telemetryFile });
+  if (telemetrySummary && !telemetrySummary.ok) {
+    return finalizeStatus(createResult('supabase-live', 'fail', {
+      summary: 'Supabase telemetry provider output was rejected before rendering. No Supabase network request was made.',
+      failures: telemetrySummary.errors,
+      checks: [{ name: 'telemetry schema and redaction validation', status: 'fail', message: telemetrySummary.errors[0] }],
+      data: { boundary: 'local evidence file only', networkRequests: 0, mutations: 0, rejected: true },
+      nextSafeStep: 'Store raw provider output under /tmp, remove sensitive material, and rerun with an allowlisted telemetry file.'
+    }), { strict });
+  }
+
+  if (!evidenceFile && telemetrySummary) {
+    const evidence = telemetryOnlyEvidence(telemetrySummary);
+    const validation = validateSupabaseLiveEvidence(evidence);
+    if (!validation.ok) {
+      return finalizeStatus(createResult('supabase-live', 'fail', {
+        summary: 'Supabase telemetry evidence was rejected before rendering. No Supabase network request was made.',
+        failures: validation.errors,
+        checks: [{ name: 'telemetry evidence validation', status: 'fail', message: validation.errors[0] }],
+        data: { boundary: 'local evidence file only', networkRequests: 0, mutations: 0, rejected: true },
+        nextSafeStep: 'Review the telemetry allowlist and remove unsupported fields.'
+      }), { strict });
+    }
+    const summary = summarizeSupabaseLiveEvidence(evidence);
+    return finalizeStatus(createResult('supabase-live', summary.failures.length ? 'fail' : summary.warnings.length ? 'warn' : 'pass', {
+      summary: 'Supabase telemetry proof loaded from a local provider-output file. No Supabase network request was made.',
+      verified: summary.verified,
+      failures: summary.failures,
+      warnings: summary.warnings,
+      skipped: summary.skipped,
+      notVerified: summary.notVerified,
+      checks: summary.checks,
+      findings: summary.findings,
+      data: { ...summary.data, boundary: 'local evidence file only', networkRequests: 0, mutations: 0 },
+      nextSafeStep: 'Merge the telemetry signal into a full redacted evidence file when production context is ready.'
+    }), { strict });
   }
 
   const filePath = path.isAbsolute(evidenceFile) ? evidenceFile : path.join(cwd, evidenceFile);
@@ -237,7 +532,8 @@ export async function runSupabaseLive({ cwd = process.cwd(), evidenceFile, stric
     }), { strict });
   }
 
-  const validation = validateSupabaseLiveEvidence(parsed);
+  const evidence = telemetrySummary ? applyTelemetrySummary(parsed, telemetrySummary) : parsed;
+  const validation = validateSupabaseLiveEvidence(evidence);
   if (!validation.ok) {
     return finalizeStatus(createResult('supabase-live', 'fail', {
       summary: 'Supabase live proof evidence was rejected before rendering. No Supabase network request was made.',
@@ -248,7 +544,7 @@ export async function runSupabaseLive({ cwd = process.cwd(), evidenceFile, stric
     }), { strict });
   }
 
-  const summary = summarizeSupabaseLiveEvidence(parsed);
+  const summary = summarizeSupabaseLiveEvidence(evidence);
   return finalizeStatus(createResult('supabase-live', summary.failures.length ? 'fail' : summary.warnings.length ? 'warn' : 'pass', {
     summary: 'Supabase live proof loaded from a local redacted evidence file. No Supabase network request was made.',
     verified: summary.verified,

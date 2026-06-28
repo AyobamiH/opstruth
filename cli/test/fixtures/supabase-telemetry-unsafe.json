@@ -1,0 +1,14 @@
+{
+  "events": [
+    {
+      "timestamp": "2026-06-28T10:00:00.000Z",
+      "event": "IMPORT_REDDIT_TIPS_PIPELINE_TELEMETRY",
+      "headers": {
+        "x-example": "must be rejected"
+      },
+      "counts": {
+        "candidates": 0
+      }
+    }
+  ]
+}
