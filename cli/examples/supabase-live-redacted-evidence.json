@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "opstruth.supabase-live.v1",
+  "collectedAt": "2026-06-28T10:00:00.000Z",
+  "repositoryCommit": "example-short-sha",
+  "functionName": "import-reddit-tips",
+  "schedulerJob": "import-reddit-tips-daily",
+  "evidenceSource": "redacted local operator evidence",
+  "manualOrAutonomous": "autonomous",
+  "signals": {
+    "function_deployed": {
+      "state": "verified",
+      "summary": "Function deployment metadata was observed."
+    },
+    "secret_name_configured": {
+      "state": "verified",
+      "summary": "Secret name presence was observed; secret value was not inspected."
+    },
+    "missing_credential_denial": {
+      "state": "verified",
+      "summary": "Missing credential denial was observed."
+    },
+    "incorrect_credential_denial": {
+      "state": "verified",
+      "summary": "Incorrect credential denial was observed."
+    },
+    "authorised_noop": {
+      "state": "verified",
+      "summary": "Authorised no-op response was observed with zero inserts."
+    },
+    "scheduler_configured": {
+      "state": "verified",
+      "summary": "One intended scheduler job was observed."
+    },
+    "scheduler_autonomous_execution": {
+      "state": "verified",
+      "summary": "Autonomous scheduler run history was observed."
+    },
+    "telemetry_count_only": {
+      "state": "not_verified",
+      "summary": "Filtered production function logs were not available."
+    },
+    "non_admin_authorization": {
+      "state": "authentication_unavailable",
+      "summary": "No safe existing non-admin identity was available."
+    },
+    "admin_authorization": {
+      "state": "authentication_unavailable",
+      "summary": "No safe existing admin identity was available."
+    },
+    "rate_limit": {
+      "state": "unsafe_to_test",
+      "summary": "Testing would update production rate-limit state."
+    },
+    "database_effects": {
+      "state": "verified",
+      "summary": "Scoped count-only database effects were observed."
+    }
+  },
+  "databaseScope": {
+    "tables": [
+      "pet_tips"
+    ],
+    "rowCountsOnly": true,
+    "rowsDumped": false
+  },
+  "redactionsApplied": [
+    "project reference omitted",
+    "credential headers omitted",
+    "raw logs omitted",
+    "scheduler payload omitted"
+  ],
+  "notVerified": [
+    "function log telemetry",
+    "non-admin credential branch",
+    "admin credential branch",
+    "rate-limit recovery"
+  ]
+}
