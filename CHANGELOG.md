@@ -3,8 +3,10 @@
 opstruth uses GitHub releases for package release artifacts and this file for a compact human
 history of public changes.
 
-## v0.2.0
+## v0.2.0 (prepared, not yet published)
 
+- Prepared as the next minor release after local validation, exact-commit CI, tarball inspection,
+  and tarball smoke testing. npm publish is pending npm authentication.
 - Adds `opstruth github-ci` and `--github-ci` exact-commit GitHub Actions proof so hosted
   quality evidence can be attached without treating CI as production truth.
 - Adds `opstruth supabase-live` for explicit local evidence files describing already collected

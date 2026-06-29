@@ -12,7 +12,8 @@ https://opstruth.woeinvests.workers.dev
 
 Lovable is not the production deployment source. GitHub Actions deploys from the canonical monorepo using GitHub repository secrets; Cloudflare credentials must never be committed to the repository.
 
-The CLI is published to npm independently as `opstruth@0.2.0`:
+The CLI is published to npm independently. The latest published package is `opstruth@0.1.3`;
+source is prepared for `opstruth@0.2.0` pending an authenticated npm publish:
 
 ```bash
 npm install -g opstruth
@@ -28,7 +29,7 @@ npx opstruth
 GitHub release:
 
 ```text
-https://github.com/AyobamiH/opstruth/releases/tag/v0.2.0
+https://github.com/AyobamiH/opstruth/releases/tag/v0.1.3
 ```
 
 ## Build Output
