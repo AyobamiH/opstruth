@@ -13,7 +13,7 @@ npm install -g opstruth
 opstruth
 ```
 
-The public npm package is `opstruth@0.1.3`.
+The public npm package is `opstruth@0.2.0`.
 
 One-off usage:
 
@@ -27,10 +27,18 @@ npx opstruth
 opstruth
 opstruth welcome
 opstruth init --yes
+opstruth repo
+opstruth quality
+opstruth github-ci --workflow CI
 opstruth probes
 opstruth secrets
 opstruth routes --base-url https://example.com
 opstruth local --port 3000 --health /health
+opstruth supabase
+opstruth supabase-live --evidence-file <redacted.json>
+opstruth supabase-live --telemetry-file /tmp/opstruth-supabase-telemetry.json
+opstruth cloudflare
+opstruth evidence
 opstruth --json
 opstruth --no-color
 ```

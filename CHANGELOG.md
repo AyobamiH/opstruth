@@ -3,6 +3,24 @@
 opstruth uses GitHub releases for package release artifacts and this file for a compact human
 history of public changes.
 
+## v0.2.0
+
+- Adds `opstruth github-ci` and `--github-ci` exact-commit GitHub Actions proof so hosted
+  quality evidence can be attached without treating CI as production truth.
+- Adds `opstruth supabase-live` for explicit local evidence files describing already collected
+  Supabase production facts.
+- Adds `--telemetry-file` parsing for count-only, redacted Supabase telemetry summaries.
+- Fails closed on secret-like values, authorization headers, JWT-like strings, project references,
+  raw logs, raw scheduler payloads, and other sensitive production material in Supabase proof
+  inputs.
+- Keeps default `opstruth` runs offline and read-only; Supabase live proof does not make provider
+  calls, inspect secret values, mutate production, or infer autonomous scheduler execution without
+  evidence.
+- Separates lint, typecheck, tests, build, local runtime, route probes, GitHub CI, and production
+  evidence as distinct proof surfaces.
+- Improves local route/runtime config orchestration, secret-reference grouping, website copy and
+  responsive layout, and real-repo evidence documentation.
+
 ## v0.1.3
 
 - Published `opstruth@0.1.3` as the current v0.1 public testing package.

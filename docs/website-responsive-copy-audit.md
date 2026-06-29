@@ -89,7 +89,7 @@ Technical command names, package names, URLs, and evidence file paths remain whe
 ## Deliberately Preserved Technical Language
 
 - `opstruth`, `npx opstruth`, and `npm install -g opstruth` remain lowercase because they are package and command names.
-- `opstruth@0.1.3` remains lowercase because it is the npm package version.
+- Historical package-version strings such as `opstruth@0.1.3` remain lowercase because they are npm package identifiers.
 - `evidence/opstruth-report.md` and `evidence/opstruth.md` remain in code/instruction contexts because they are actual output paths.
 - `src/config.js` remains inside the evidence example because file-and-line evidence is part of the product truth.
 - `verified`, `warning`, `not verified`, `skipped`, `quality gate`, `exact-commit CI`, and `read-only` remain because they describe product behaviour.
