@@ -2,16 +2,15 @@
 
 Original date: 2026-06-06.
 Truth alignment updated: 2026-06-17.
-Package release note: source package metadata is prepared for `opstruth@0.2.0`, but the latest
-published npm package remains `opstruth@0.1.3` until authenticated publish succeeds.
+Package release note: source and npm package truth advanced to `opstruth@0.2.0` after these videos
+were produced.
 
 This brief is the source of truth for the refreshed opstruth website videos.
 
 ## Current Product State
 
 - npm package at video production time: `opstruth@0.1.3`
-- prepared source package: `opstruth@0.2.0`
-- current published npm package: `opstruth@0.1.3`
+- current npm package: `opstruth@0.2.0`
 - npm package description: `Read-only operational truth checks for AI-assisted engineering workflows.`
 - npm package homepage: `https://opstruth.woeinvests.workers.dev`
 - npm package binary: `opstruth -> bin/opstruth.js`
@@ -19,7 +18,7 @@ This brief is the source of truth for the refreshed opstruth website videos.
 - production runtime: Cloudflare Workers
 - production response inspected: `HTTP/2 200`
 - GitHub release at video production time: `v0.1.3`
-- current GitHub release: `v0.1.3`
+- current GitHub release: `v0.2.0`
 - CLI source: `cli/`
 - website source: `website/`
 - read-only model: no deploys, no database mutations, no queue/job triggers, no OpenAI calls, no service restarts, no raw secret printing

@@ -13,8 +13,7 @@ npm install -g opstruth
 opstruth
 ```
 
-The latest published npm package is `opstruth@0.1.3`. This source package is prepared for
-`opstruth@0.2.0`, pending an authenticated npm publish.
+The latest published npm package is `opstruth@0.2.0`.
 
 One-off usage:
 
