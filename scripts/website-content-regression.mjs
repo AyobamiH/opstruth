@@ -28,17 +28,34 @@ for (const relativePath of files) {
   const text = textFor(relativePath);
   const publicText = text
     .split("\n")
-    .filter((line) => !/const .*Src = "\/demo\/.*\.(mp4|webm)";/.test(line))
+    .filter(
+      (line) =>
+        !/^\s*(const .*Src\s*=\s*|src:\s*)["']\/demo\/.*\.(mp4|webm)["'],?;?\s*$/.test(
+          line,
+        ),
+    )
     .join("\n");
 
   const checks = [
     [/\/demo\/.*\.(mp4|webm)/, "visible demo asset path"],
-    [/One markdown file\. Reviewable\. Attachable\./i, "old evidence-pack headline"],
-    [/Bring messy repos\. File false positives\. Request probes\./i, "old terse community CTA"],
+    [
+      /One markdown file\. Reviewable\. Attachable\./i,
+      "old evidence-pack headline",
+    ],
+    [
+      /Bring messy repos\. File false positives\. Request probes\./i,
+      "old terse community CTA",
+    ],
     [/The repo is part of the product\./i, "old abstract repo headline"],
     [/What opstruth will never do\./, "lowercase brand boundary heading"],
-    [/opstruth checks what is true afterward\./, "lowercase hero brand sentence"],
-    [/opstruth (is|answers|separates|was|will|checks) /, "lowercase brand in prose"],
+    [
+      /opstruth checks what is true afterward\./,
+      "lowercase hero brand sentence",
+    ],
+    [
+      /opstruth (is|answers|separates|was|will|checks) /,
+      "lowercase brand in prose",
+    ],
     [/overflow-x-hidden/, "global horizontal overflow hiding"],
   ];
 
@@ -56,8 +73,37 @@ if (!hero.includes("OpsTruth checks what is actually true afterwards.")) {
   failures.push("Hero headline does not use the revised OpsTruth copy.");
 }
 
-if (!film.includes("Runtime truth walkthrough") || !film.includes("56-second product demo")) {
-  failures.push("Runtime demo frame does not use visitor-facing video labels.");
+const expectedCurrentVideoLabels = [
+  "Current product video set",
+  "Product proof demo",
+  "Product tour",
+  "Mobile proof short",
+];
+
+for (const label of expectedCurrentVideoLabels) {
+  if (!film.includes(label)) {
+    failures.push(`Current product video section is missing "${label}".`);
+  }
+}
+
+if (
+  !hero.includes("Current product demo") ||
+  !hero.includes("Mobile proof short")
+) {
+  failures.push("Hero does not expose the desktop and mobile video labels.");
+}
+
+const staleVideoPaths = [
+  "opstruth-current-runtime-truth.mp4",
+  "opstruth-hero-runtime-truth.mp4",
+  "opstruth-runtime-truth-extended.mp4",
+  "opstruth-runtime-truth.mp4",
+];
+
+for (const stalePath of staleVideoPaths) {
+  if (hero.includes(stalePath) || film.includes(stalePath)) {
+    failures.push(`Active website components still reference ${stalePath}.`);
+  }
 }
 
 if (failures.length) {

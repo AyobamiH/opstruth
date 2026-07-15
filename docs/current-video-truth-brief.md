@@ -67,19 +67,23 @@ production truth,
 and proof gaps.
 ```
 
-## Created Assets
+## Current Public Video Assets
 
-- `website/public/demo/opstruth-hero-runtime-truth.mp4`
-  - 16 seconds
-  - silent
-  - loopable
-  - 1920x1080
-  - homepage hero surface
-- `website/public/demo/opstruth-current-runtime-truth.mp4`
+- `website/public/demo/opstruth-main-product-video.mp4`
   - 56 seconds
-  - silent
   - 1920x1080
-  - controlled flagship product film
+  - sound
+  - homepage desktop and product proof surface
+- `website/public/demo/opstruth-product-tour.mp4`
+  - 96 seconds
+  - 1920x1080
+  - sound
+  - practical product tour and how-to surface
+- `website/public/demo/opstruth-proof-short-vertical.mp4`
+  - 26 seconds
+  - 1080x1920
+  - sound
+  - mobile and portrait social surface
 
 The videos use opstruth's own report language as the visual identity:
 
@@ -104,3 +108,46 @@ The videos use opstruth's own report language as the visual identity:
 - no claim that production state is proven without explicit route/runtime input
 - no raw secrets
 - no deploy, npm publish, release, or Lovable setting changes during video work
+
+
+## 2026-07-06 Product Video Refresh
+
+The in-repo HyperFrames video system has been refreshed against current OpsTruth product truth. The refresh keeps the existing dark terminal-native visual language and updates the message from the earlier `0.1.3` package/release cycle to the current `opstruth@0.2.0` state.
+
+New source compositions live in:
+
+```text
+assets/video/opstruth-product-videos/
+```
+
+The refreshed variants are:
+
+- main product video: `website/public/demo/opstruth-main-product-video.mp4`
+- product tour / how-to: `website/public/demo/opstruth-product-tour.mp4`
+- vertical promo short: `website/public/demo/opstruth-proof-short-vertical.mp4`
+
+The scripts and captions preserve these current product truths:
+
+- latest package and release: `opstruth@0.2.0` / `v0.2.0`
+- 30 probe catalogue entries, all safe read-only
+- exact-commit GitHub CI proof is explicit and separate from production proof
+- Supabase live proof is local-file driven and does not call production
+- telemetry proof is count-only and redaction-gated
+- route and local runtime proof require explicit inputs
+- skipped is not passed, and not verified is not safe
+
+The older runtime-truth MP4s and Lovable-origin asset manifests were removed from the active website asset tree after the current pack was rendered. Future product-video work should start from `assets/video/opstruth-product-videos/` and re-run product truth inspection before rendering.
+
+## 2026-07-15 Audio Pass
+
+The refreshed in-repo HyperFrames videos now include framework-owned audio elements rather than silent-only renders.
+
+Audio remains product-truth neutral:
+
+- no voiceover was added
+- no new product claims were introduced
+- no production proof was implied through sound
+- cues are limited to restrained terminal/proof accents
+- background beds and SFX are local in-repo assets
+
+HyperFrames auth reported no HeyGen sign-in for this run, so the SFX were resolved from the bundled local HyperFrames media library and the ambient beds were generated locally as deterministic procedural assets.

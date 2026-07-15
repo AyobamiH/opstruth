@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>OpsTruth Main Product Video</title>
+    <link rel="stylesheet" href="assets/opstruth-video.css" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  </head>
+  <body>
+    <div id="root" class="" data-composition-id="ops-main-product" data-start="0" data-duration="56" data-width="1920" data-height="1080">
+      <audio id="main-audio-bed" src="assets/audio/ops-main-bed.mp3" data-start="0" data-duration="56" data-track-index="20" data-volume="0.24"></audio>
+      <audio id="main-sfx-open" src="assets/sfx/impact-bass-1.mp3" data-start="0.18" data-duration="1.8" data-track-index="21" data-volume="0.28"></audio>
+      <audio id="main-sfx-proof-run" src="assets/sfx/click-soft.mp3" data-start="7.18" data-duration="0.37" data-track-index="22" data-volume="0.22"></audio>
+      <audio id="main-sfx-states" src="assets/sfx/chime.mp3" data-start="15.2" data-duration="1.4" data-track-index="23" data-volume="0.22"></audio>
+      <audio id="main-sfx-evidence" src="assets/sfx/key-press.mp3" data-start="24.24" data-duration="0.4" data-track-index="24" data-volume="0.2"></audio>
+      <audio id="main-sfx-live-proof" src="assets/sfx/ping.mp3" data-start="33.22" data-duration="1.0" data-track-index="25" data-volume="0.2"></audio>
+      <audio id="main-sfx-boundary" src="assets/sfx/whoosh-short.mp3" data-start="43.16" data-duration="0.57" data-track-index="26" data-volume="0.2"></audio>
+      <audio id="main-sfx-close" src="assets/sfx/notification.mp3" data-start="51.18" data-duration="1.4" data-track-index="27" data-volume="0.2"></audio>
+      <div class="backdrop" data-layout-ignore></div>
+      <div class="grain" data-layout-ignore></div>
+      <div class="vignette" data-layout-ignore></div>
+      <section id="main-1" class="clip scene split" data-start="0" data-duration="7" data-track-index="1">
+        <div class="stack">
+          <div class="kicker">OpsTruth product video</div>
+          <h1 class="headline">AI agents say done. <span class="muted">OpsTruth asks what is proved.</span></h1>
+          <p class="copy">A local, read-only CLI for separating verified facts from warnings, failures, skipped checks, and not verified claims.</p>
+        </div>
+        <div class="panel terminal">
+          <div class="term-header"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="term-title">advanced_pudding9228@web — terminal</span></div>
+          <div class="term-body"><span class="prompt">$</span> agent: “fixed, safe, deployed”
+<span class="dim">OpsTruth:</span> show the evidence first.</div>
+        </div>
+        <div class="caption-bar">AI coding tools move quickly. OpsTruth checks what is actually true afterwards.</div>
+      </section>
+
+      <section id="main-2" class="clip scene" data-start="7" data-duration="8" data-track-index="1">
+        <div class="kicker">read-only proof run</div>
+        <div class="panel terminal">
+          <div class="term-header"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="term-title">opstruth — node cli/bin/opstruth.js</span></div>
+          <div class="term-body"><span class="prompt">advanced_pudding9228@web:~/project$</span> <span class="command">opstruth --skip evidence</span>
+
+<span class="amber">STATUS: Partial pass</span>
+<span class="green">✓</span> Project boundary resolved
+<span class="green">✓</span> Probe catalogue entries: 30
+<span class="green">✓</span> Automatic safe probes selected: 15
+<span class="dim">○</span> Runtime inputs still required for route and local proof</div>
+        </div>
+        <div class="caption-bar">It runs local checks first and keeps missing runtime inputs visible instead of pretending they passed.</div>
+      </section>
+
+      <section id="main-3" class="clip scene compact" data-start="15" data-duration="9" data-track-index="1">
+        <div class="kicker">result language</div>
+        <h1 class="headline small">The output is the product surface.</h1>
+        <div class="grid-4">
+          <div class="card"><h3 class="green">Verified</h3><p>Facts the command actually checked.</p><small>repo, quality, exact inputs</small></div>
+          <div class="card"><h3 class="amber">Warnings</h3><p>Risk signals with evidence and next steps.</p><small>review before shipping</small></div>
+          <div class="card"><h3 class="red">Failures</h3><p>Checks that ran and did not pass.</p><small>not hidden as noise</small></div>
+          <div class="card"><h3 class="muted">Not Verified</h3><p>Claims that still need proof.</p><small>unknown is not safe</small></div>
+        </div>
+        <div class="caption-bar">Verified, warning, failure, skipped, and not verified are separate states.</div>
+      </section>
+
+      <section id="main-4" class="clip scene split" data-start="24" data-duration="9" data-track-index="1">
+        <div class="stack">
+          <div class="kicker amber">evidence per finding</div>
+          <h1 class="headline small">A warning has to show its work.</h1>
+          <p class="copy">Findings include file, line, pattern class, operational meaning, and a next safe step without printing raw secrets.</p>
+        </div>
+        <div class="panel terminal">
+          <div class="term-header"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="term-title">redacted evidence card</span></div>
+          <div class="term-body"><span class="amber">Warning:</span> risky secret reference
+file: src/config.ts
+line: 12
+preview: <span class="amber">***REDACTED***</span>
+why: browser exposure risk
+next: move real values to secret storage</div>
+        </div>
+        <div class="caption-bar">The evidence is reviewable, but sensitive values stay out of the output.</div>
+      </section>
+
+      <section id="main-5" class="clip scene" data-start="33" data-duration="10" data-track-index="1">
+        <div class="kicker blue">current 0.2.0 truth</div>
+        <h1 class="headline small">More proof surfaces. Same read-only boundary.</h1>
+        <div class="grid-3">
+          <div class="proof-card"><h3 class="green">Exact-commit CI</h3><p>GitHub Actions metadata can be attached only when the run matches the local commit.</p><small>CI evidence is not production evidence.</small></div>
+          <div class="proof-card"><h3 class="blue">Supabase live proof</h3><p>Validates redacted local evidence files without calling Supabase or inspecting secrets.</p><small>explicit opt-in only</small></div>
+          <div class="proof-card"><h3 class="amber">Telemetry parser</h3><p>Accepts count-only provider output and rejects raw logs, headers, payloads, and token-like values.</p><small>fails closed on risky input</small></div>
+        </div>
+        <div class="caption-bar">OpsTruth 0.2.0 adds stronger evidence paths without silently making production calls.</div>
+      </section>
+
+      <section id="main-6" class="clip scene split" data-start="43" data-duration="8" data-track-index="1">
+        <div class="stack">
+          <div class="kicker">boundaries</div>
+          <h1 class="headline small">Read-only is not a footnote. <span class="green">It is the safety model.</span></h1>
+        </div>
+        <div class="panel terminal">
+          <div class="term-body"><span class="red">×</span> no deploys
+<span class="red">×</span> no database writes
+<span class="red">×</span> no service restarts
+<span class="red">×</span> no model calls
+<span class="red">×</span> no raw secret output
+
+<span class="blue">next safe step:</span> add the narrow input for the claim you need to prove</div>
+        </div>
+        <div class="caption-bar">The tool reports proof gaps because a skipped check is not a pass.</div>
+      </section>
+
+      <section id="main-7" class="clip scene" data-start="51" data-duration="5" data-track-index="1">
+        <div class="logo-lockup"><div class="logo-mark" aria-hidden="true">
+  <svg viewBox="0 0 32 32" fill="none">
+    <rect x="0.5" y="0.5" width="31" height="31" rx="6.5" fill="#22262e" stroke="#59616b" />
+    <path d="M8 9 L15 16 L8 23" stroke="#9ca3ad" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M14 17 L18.5 22 L25 11" stroke="#80d39c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+</div><div class="wordmark"><span>ops</span><span class="green">truth</span></div></div>
+        <div class="callout-line"></div>
+        <h1 class="headline small">Trust the evidence, not the handoff.</h1>
+        <div class="command-strip"><div class="command-chip">npm install -g opstruth</div><div class="command-chip">npx opstruth</div><div class="command-chip">github.com/AyobamiH/opstruth</div></div>
+        <div class="caption-bar">OpsTruth is a compact proof layer for AI-assisted engineering work.</div>
+      </section>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const scenes = Array.from(document.querySelectorAll('.scene'));
+      function animateIf(scene, selector, vars, at) {
+        const found = Array.from(scene.querySelectorAll(selector));
+        if (found.length) tl.from(found, vars, at);
+      }
+      for (const scene of scenes) {
+        const start = Number(scene.dataset.start || 0);
+        const duration = Number(scene.dataset.duration || 4);
+        animateIf(scene, '.kicker, .headline, .copy, .panel, .card, .proof-card, .step-card, .command-chip, .logo-lockup, .callout-line', {
+          opacity: 0,
+          y: 34,
+          scale: 0.992,
+          stagger: 0.055,
+          duration: 0.72,
+          ease: 'power3.out'
+        }, start + 0.18);
+        animateIf(scene, '.result-row', {
+          opacity: 0,
+          x: 26,
+          stagger: 0.07,
+          duration: 0.52,
+          ease: 'power3.out'
+        }, start + 0.78);
+        animateIf(scene, '.caption-bar', {
+          opacity: 0,
+          y: 18,
+          duration: 0.48,
+          ease: 'power2.out'
+        }, start + 0.45);
+        if (start + duration < 56) {
+          tl.to(scene, { opacity: 0, y: -26, duration: 0.55, ease: 'power2.in' }, start + duration - 0.62);
+        }
+      }
+      window.__timelines['ops-main-product'] = tl;
+    </script>
+  </body>
+</html>

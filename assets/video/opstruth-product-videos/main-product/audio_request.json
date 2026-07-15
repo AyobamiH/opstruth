@@ -1,0 +1,14 @@
+{
+  "provider": "auto",
+  "lang": "en",
+  "lines": [
+    { "id": "open", "text": "Sound cue only.", "sfx": ["impact-bass-1"] },
+    { "id": "proof-run", "text": "Sound cue only.", "sfx": ["click-soft"] },
+    { "id": "states", "text": "Sound cue only.", "sfx": ["chime"] },
+    { "id": "evidence", "text": "Sound cue only.", "sfx": ["key-press"] },
+    { "id": "live-proof", "text": "Sound cue only.", "sfx": ["ping"] },
+    { "id": "boundary", "text": "Sound cue only.", "sfx": ["whoosh-short"] },
+    { "id": "close", "text": "Sound cue only.", "sfx": ["notification"] }
+  ],
+  "bgm": { "mode": "none" }
+}

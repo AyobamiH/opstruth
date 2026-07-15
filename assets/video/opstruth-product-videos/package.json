@@ -1,0 +1,15 @@
+{
+  "name": "opstruth-product-videos",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "npx hyperframes lint main-product && npx hyperframes lint product-tour && npx hyperframes lint promo-short",
+    "validate": "npx hyperframes validate --timeout 30000 main-product && npx hyperframes validate --timeout 30000 product-tour && npx hyperframes validate --timeout 30000 promo-short",
+    "inspect": "npx hyperframes inspect --samples 9 main-product && npx hyperframes inspect --samples 11 product-tour && npx hyperframes inspect --samples 7 promo-short",
+    "render:main": "npx hyperframes render main-product --output ../../../website/public/demo/opstruth-main-product-video.mp4 --fps 30 --quality high --low-memory-mode",
+    "render:tour": "npx hyperframes render product-tour --output ../../../website/public/demo/opstruth-product-tour.mp4 --fps 30 --quality high --low-memory-mode",
+    "render:short": "npx hyperframes render promo-short --output ../../../website/public/demo/opstruth-proof-short-vertical.mp4 --fps 30 --quality high --low-memory-mode",
+    "render": "npm run render:main && npm run render:tour && npm run render:short",
+    "check": "npm run lint && npm run inspect"
+  }
+}

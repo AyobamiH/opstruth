@@ -187,14 +187,14 @@ UI primitives in `website/src/components/ui/` are shadcn-generated (button, card
 | `public/robots.txt` | Crawl rules | Root | Yes |
 | `public/llms.txt` | LLM-targeted summary | Root | Keep aligned with positioning |
 
-`website/src/assets/` (Lovable-managed asset manifests):
+`website/src/assets/` (historical Lovable-managed asset manifests):
 
 | Path | Purpose | Used where |
 |---|---|---|
-| `src/assets/opstruth-launch.mp4.asset.json` | Product launch video | `Hero.tsx` `<video>` |
-| `src/assets/opstruth-poster.jpg.asset.json` | Poster/fallback thumbnail for the hero video | `Hero.tsx` `poster` |
+| `src/assets/opstruth-launch.mp4.asset.json` | Superseded product launch video manifest | Removed from active website source |
+| `src/assets/opstruth-poster.jpg.asset.json` | Superseded poster/fallback manifest | Removed from active website source |
 
-Do not delete the `.asset.json` files — they reference Lovable-hosted binaries.
+The active website now serves current in-repo video assets from `website/public/demo/` instead of Lovable-hosted asset manifests.
 
 ---
 

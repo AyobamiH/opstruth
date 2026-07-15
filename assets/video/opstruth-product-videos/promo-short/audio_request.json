@@ -1,0 +1,12 @@
+{
+  "provider": "auto",
+  "lang": "en",
+  "lines": [
+    { "id": "claim", "text": "Sound cue only.", "sfx": ["impact-bass-2"] },
+    { "id": "question", "text": "Sound cue only.", "sfx": ["whoosh-short"] },
+    { "id": "states", "text": "Sound cue only.", "sfx": ["chime"] },
+    { "id": "proof", "text": "Sound cue only.", "sfx": ["ping"] },
+    { "id": "close", "text": "Sound cue only.", "sfx": ["notification"] }
+  ],
+  "bgm": { "mode": "none" }
+}

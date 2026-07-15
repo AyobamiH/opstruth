@@ -1,0 +1,27 @@
+1
+00:00:00,000 --> 00:00:07,000
+AI coding tools move quickly. OpsTruth checks what is actually true afterwards.
+
+2
+00:00:07,000 --> 00:00:15,000
+It runs local checks first and keeps missing runtime inputs visible instead of pretending they passed.
+
+3
+00:00:15,000 --> 00:00:24,000
+Verified, warning, failure, skipped, and not verified are separate states.
+
+4
+00:00:24,000 --> 00:00:33,000
+The evidence is reviewable, but sensitive values stay out of the output.
+
+5
+00:00:33,000 --> 00:00:43,000
+OpsTruth 0.2.0 adds stronger evidence paths without silently making production calls.
+
+6
+00:00:43,000 --> 00:00:51,000
+The tool reports proof gaps because a skipped check is not a pass.
+
+7
+00:00:51,000 --> 00:00:56,000
+OpsTruth is a compact proof layer for AI-assisted engineering work.

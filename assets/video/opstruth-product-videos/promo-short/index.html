@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>OpsTruth Promo Short</title>
+    <link rel="stylesheet" href="assets/opstruth-video.css" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  </head>
+  <body>
+    <div id="root" class="portrait" data-composition-id="ops-promo-short" data-start="0" data-duration="26" data-width="1080" data-height="1920">
+      <audio id="short-audio-bed" src="assets/audio/ops-short-bed.mp3" data-start="0" data-duration="26" data-track-index="20" data-volume="0.31"></audio>
+      <audio id="short-sfx-claim" src="assets/sfx/impact-bass-2.mp3" data-start="0.16" data-duration="1.8" data-track-index="21" data-volume="0.34"></audio>
+      <audio id="short-sfx-question" src="assets/sfx/whoosh-short.mp3" data-start="4.08" data-duration="0.57" data-track-index="22" data-volume="0.24"></audio>
+      <audio id="short-sfx-states" src="assets/sfx/chime.mp3" data-start="9.06" data-duration="1.4" data-track-index="23" data-volume="0.25"></audio>
+      <audio id="short-sfx-proof" src="assets/sfx/ping.mp3" data-start="15.08" data-duration="1.0" data-track-index="24" data-volume="0.22"></audio>
+      <audio id="short-sfx-close" src="assets/sfx/notification.mp3" data-start="21.08" data-duration="1.4" data-track-index="25" data-volume="0.24"></audio>
+      <div class="backdrop" data-layout-ignore></div>
+      <div class="grain" data-layout-ignore></div>
+      <div class="vignette" data-layout-ignore></div>
+      <section id="short-1" class="clip scene" data-start="0" data-duration="4" data-track-index="1">
+        <div class="kicker">AI handoff</div>
+        <h1 class="headline">“Done.” “Safe.” “Deployed.”</h1>
+        <p class="copy muted">That is a claim, not proof.</p>
+        <div class="caption-bar">AI agents move fast, but the handoff still needs evidence.</div>
+      </section>
+
+      <section id="short-2" class="clip scene" data-start="4" data-duration="5" data-track-index="1">
+        <div class="logo-lockup"><div class="logo-mark" aria-hidden="true">
+  <svg viewBox="0 0 32 32" fill="none">
+    <rect x="0.5" y="0.5" width="31" height="31" rx="6.5" fill="#22262e" stroke="#59616b" />
+    <path d="M8 9 L15 16 L8 23" stroke="#9ca3ad" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M14 17 L18.5 22 L25 11" stroke="#80d39c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+</div><div class="wordmark"><span>ops</span><span class="green">truth</span></div></div>
+        <h1 class="headline small">What can we actually prove?</h1>
+        <div class="panel terminal"><div class="term-body"><span class="prompt">$</span> npx opstruth</div></div>
+        <div class="caption-bar">OpsTruth asks the operational question after code changes.</div>
+      </section>
+
+      <section id="short-3" class="clip scene" data-start="9" data-duration="6" data-track-index="1">
+        <div class="kicker">result states</div>
+        <div class="grid-2">
+          <div class="card"><h3 class="green">Verified</h3><p>checked facts</p></div>
+          <div class="card"><h3 class="amber">Warnings</h3><p>review evidence</p></div>
+          <div class="card"><h3 class="red">Failures</h3><p>failed checks</p></div>
+          <div class="card"><h3 class="muted">Not Verified</h3><p>proof gaps</p></div>
+        </div>
+        <div class="caption-bar">Skipped is not passed. Not verified is not safe.</div>
+      </section>
+
+      <section id="short-4" class="clip scene" data-start="15" data-duration="6" data-track-index="1">
+        <div class="kicker blue">0.2.0</div>
+        <h1 class="headline small">Exact-commit CI. Redacted live evidence. Count-only telemetry.</h1>
+        <p class="copy">Explicit opt-in. No deploys. No database writes. No raw secrets.</p>
+        <div class="caption-bar">Production proof stays separate from local and CI proof.</div>
+      </section>
+
+      <section id="short-5" class="clip scene" data-start="21" data-duration="5" data-track-index="1">
+        <div class="logo-lockup"><div class="logo-mark" aria-hidden="true">
+  <svg viewBox="0 0 32 32" fill="none">
+    <rect x="0.5" y="0.5" width="31" height="31" rx="6.5" fill="#22262e" stroke="#59616b" />
+    <path d="M8 9 L15 16 L8 23" stroke="#9ca3ad" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M14 17 L18.5 22 L25 11" stroke="#80d39c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+</div><div class="wordmark"><span>ops</span><span class="green">truth</span></div></div>
+        <div class="callout-line"></div>
+        <h1 class="headline small">Trust the evidence, not the handoff.</h1>
+        <div class="command-chip">npm install -g opstruth</div>
+        <div class="caption-bar">Run OpsTruth before you trust “done”.</div>
+      </section>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const scenes = Array.from(document.querySelectorAll('.scene'));
+      function animateIf(scene, selector, vars, at) {
+        const found = Array.from(scene.querySelectorAll(selector));
+        if (found.length) tl.from(found, vars, at);
+      }
+      for (const scene of scenes) {
+        const start = Number(scene.dataset.start || 0);
+        const duration = Number(scene.dataset.duration || 4);
+        animateIf(scene, '.kicker, .headline, .copy, .panel, .card, .proof-card, .step-card, .command-chip, .logo-lockup, .callout-line', {
+          opacity: 0,
+          y: 34,
+          scale: 0.992,
+          stagger: 0.055,
+          duration: 0.72,
+          ease: 'power3.out'
+        }, start + 0.18);
+        animateIf(scene, '.result-row', {
+          opacity: 0,
+          x: 26,
+          stagger: 0.07,
+          duration: 0.52,
+          ease: 'power3.out'
+        }, start + 0.78);
+        animateIf(scene, '.caption-bar', {
+          opacity: 0,
+          y: 18,
+          duration: 0.48,
+          ease: 'power2.out'
+        }, start + 0.45);
+        if (start + duration < 26) {
+          tl.to(scene, { opacity: 0, y: -26, duration: 0.55, ease: 'power2.in' }, start + duration - 0.62);
+        }
+      }
+      window.__timelines['ops-promo-short'] = tl;
+    </script>
+  </body>
+</html>

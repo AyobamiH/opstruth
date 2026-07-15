@@ -2,7 +2,8 @@ import { CommandBlock } from "./CommandBlock";
 import { ArrowUpRight } from "lucide-react";
 import { LogoMark, Logo } from "./Logo";
 
-const launchVideoSrc = "/demo/opstruth-hero-runtime-truth.mp4";
+const desktopHeroVideoSrc = "/demo/opstruth-main-product-video.mp4";
+const mobileHeroVideoSrc = "/demo/opstruth-proof-short-vertical.mp4";
 
 export function Hero() {
   return (
@@ -52,28 +53,46 @@ export function Hero() {
           </a>
         </div>
 
-        <div className="mt-12 min-w-0 overflow-hidden rounded-xl border border-border bg-surface shadow-[0_30px_80px_-30px_oklch(0_0_0/0.6)]">
-          <div className="flex flex-col gap-1 border-b border-border bg-background/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="font-mono text-xs uppercase tracking-wide text-muted-foreground">
-              Runtime truth walkthrough
-            </p>
-            <p className="font-mono text-xs text-muted-foreground">
-              See verified, warning, and not verified states.
-            </p>
+        <div className="mt-12">
+          <div className="hidden min-w-0 overflow-hidden rounded-xl border border-border bg-surface shadow-[0_30px_80px_-30px_oklch(0_0_0/0.6)] md:block">
+            <div className="flex flex-col gap-1 border-b border-border bg-background/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="font-mono text-xs uppercase tracking-wide text-muted-foreground">
+                Current product demo
+              </p>
+              <p className="font-mono text-xs text-muted-foreground">56 seconds · 16:9 · sound</p>
+            </div>
+            <video
+              className="block aspect-video w-full bg-background"
+              src={desktopHeroVideoSrc}
+              playsInline
+              controls
+              preload="metadata"
+              aria-label="OpsTruth current product demo"
+            >
+              <a href={desktopHeroVideoSrc}>Watch the OpsTruth current product demo.</a>
+            </video>
           </div>
-          <video
-            className="block aspect-video w-full bg-background"
-            src={launchVideoSrc}
-            autoPlay
-            muted
-            loop
-            playsInline
-            controls
-            preload="metadata"
-            aria-label="OpsTruth runtime truth walkthrough"
-          >
-            <a href={launchVideoSrc}>Watch the OpsTruth runtime truth walkthrough.</a>
-          </video>
+
+          <div className="mx-auto w-full max-w-[24rem] overflow-hidden rounded-xl border border-border bg-surface shadow-[0_30px_80px_-30px_oklch(0_0_0/0.6)] md:hidden">
+            <div className="border-b border-border bg-background/60 px-4 py-3">
+              <p className="font-mono text-xs uppercase tracking-wide text-muted-foreground">
+                Mobile proof short
+              </p>
+              <p className="mt-1 font-mono text-xs text-muted-foreground">
+                26 seconds · 9:16 · sound
+              </p>
+            </div>
+            <video
+              className="block aspect-[9/16] w-full bg-background object-cover"
+              src={mobileHeroVideoSrc}
+              playsInline
+              controls
+              preload="metadata"
+              aria-label="OpsTruth mobile proof short"
+            >
+              <a href={mobileHeroVideoSrc}>Watch the OpsTruth mobile proof short.</a>
+            </video>
+          </div>
         </div>
 
         <dl className="mt-12 grid min-w-0 grid-cols-1 gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2 md:mt-16 md:grid-cols-4">

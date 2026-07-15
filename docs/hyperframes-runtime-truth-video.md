@@ -1,12 +1,12 @@
 # opstruth Runtime Truth Launch Video
 
-## Current Production Video Decision
+## Historical Production Video Decision
 
 Decision date: 2026-06-06.
 
 Decision: SUPERSEDE the Lovable-origin hero asset with current-truth video assets generated from inspected repo, CLI, npm, GitHub release, and Cloudflare evidence.
 
-The previous production hero path remains historical material:
+This document is now historical. The previous production hero path has been removed from the active public asset tree:
 
 ```text
 website/public/demo/opstruth-runtime-truth.mp4
@@ -14,18 +14,20 @@ website/public/demo/opstruth-runtime-truth.mp4
 
 It should not be treated as the current product truth asset because it came from Lovable's frontend-only understanding.
 
-The active website video paths are:
+The active website video paths are now:
 
 ```text
-website/public/demo/opstruth-hero-runtime-truth.mp4
-website/public/demo/opstruth-current-runtime-truth.mp4
+website/public/demo/opstruth-main-product-video.mp4
+website/public/demo/opstruth-product-tour.mp4
+website/public/demo/opstruth-proof-short-vertical.mp4
 ```
 
 The website references them as:
 
 ```text
-/demo/opstruth-hero-runtime-truth.mp4
-/demo/opstruth-current-runtime-truth.mp4
+/demo/opstruth-main-product-video.mp4
+/demo/opstruth-product-tour.mp4
+/demo/opstruth-proof-short-vertical.mp4
 ```
 
 The older long HyperFrames plan below is now historical source material and narrative reference. Future render work must start from `docs/current-video-truth-brief.md` and re-inspect current product truth before creating new assets.
@@ -459,12 +461,12 @@ Evidence:
 
 ## Asset Requirements
 
-Generated assets:
+Generated assets from the historical run:
 
 - `assets/video/opstruth-runtime-truth/index.html` for the HyperFrames composition.
 - `assets/video/opstruth-runtime-truth/snapshots/` for rendered verification stills and a contact sheet.
-- `website/public/demo/opstruth-hero-runtime-truth.mp4` for the active website hero loop.
-- `website/public/demo/opstruth-current-runtime-truth.mp4` for the active controlled product film.
+- `website/public/demo/opstruth-hero-runtime-truth.mp4` for the former website hero loop.
+- `website/public/demo/opstruth-current-runtime-truth.mp4` for the former controlled product film.
 - No stock footage.
 - No fake production screenshots.
 - No raw private repo paths or secrets.
@@ -499,13 +501,13 @@ Use the voiceover script and scene list from docs/hyperframes-runtime-truth-vide
 
 ## Render Instructions
 
-The HyperFrames project lives at:
+The historical HyperFrames project lived at:
 
 ```text
 assets/video/opstruth-runtime-truth/
 ```
 
-Validate and render from that directory. These instructions are historical for the old HyperFrames composition and should be refreshed against `docs/current-video-truth-brief.md` before use:
+That source composition has been removed from the active repo layout. These instructions are historical for the old HyperFrames composition and should be refreshed against `docs/current-video-truth-brief.md` before use:
 
 ```bash
 cd assets/video/opstruth-runtime-truth
@@ -517,6 +519,7 @@ npx hyperframes render --output ../../../website/public/demo/opstruth-current-ru
 The current rendered output paths are:
 
 ```text
-public/demo/opstruth-hero-runtime-truth.mp4
-public/demo/opstruth-current-runtime-truth.mp4
+public/demo/opstruth-main-product-video.mp4
+public/demo/opstruth-product-tour.mp4
+public/demo/opstruth-proof-short-vertical.mp4
 ```

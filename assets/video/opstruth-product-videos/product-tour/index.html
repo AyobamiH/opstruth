@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>OpsTruth Product Tour</title>
+    <link rel="stylesheet" href="assets/opstruth-video.css" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  </head>
+  <body>
+    <div id="root" class="" data-composition-id="ops-product-tour" data-start="0" data-duration="96" data-width="1920" data-height="1080">
+      <audio id="tour-audio-bed" src="assets/audio/ops-tour-bed.mp3" data-start="0" data-duration="96" data-track-index="20" data-volume="0.19"></audio>
+      <audio id="tour-sfx-install" src="assets/sfx/click-soft.mp3" data-start="0.28" data-duration="0.37" data-track-index="21" data-volume="0.18"></audio>
+      <audio id="tour-sfx-welcome" src="assets/sfx/key-press.mp3" data-start="8.22" data-duration="0.4" data-track-index="22" data-volume="0.16"></audio>
+      <audio id="tour-sfx-config" src="assets/sfx/click-soft.mp3" data-start="19.24" data-duration="0.37" data-track-index="23" data-volume="0.17"></audio>
+      <audio id="tour-sfx-probes" src="assets/sfx/chime.mp3" data-start="30.18" data-duration="1.4" data-track-index="24" data-volume="0.18"></audio>
+      <audio id="tour-sfx-secrets" src="assets/sfx/error.mp3" data-start="41.2" data-duration="1.2" data-track-index="25" data-volume="0.14"></audio>
+      <audio id="tour-sfx-runtime" src="assets/sfx/ping.mp3" data-start="52.2" data-duration="1.0" data-track-index="26" data-volume="0.16"></audio>
+      <audio id="tour-sfx-ci" src="assets/sfx/notification.mp3" data-start="65.24" data-duration="1.4" data-track-index="27" data-volume="0.17"></audio>
+      <audio id="tour-sfx-supabase" src="assets/sfx/whoosh-short.mp3" data-start="76.22" data-duration="0.57" data-track-index="28" data-volume="0.16"></audio>
+      <audio id="tour-sfx-handoff" src="assets/sfx/chime.mp3" data-start="87.22" data-duration="1.4" data-track-index="29" data-volume="0.18"></audio>
+      <div class="backdrop" data-layout-ignore></div>
+      <div class="grain" data-layout-ignore></div>
+      <div class="vignette" data-layout-ignore></div>
+      <section id="tour-1" class="clip scene split" data-start="0" data-duration="8" data-track-index="1">
+        <div class="stack">
+          <div class="kicker">product tour</div>
+          <h1 class="headline">A practical OpsTruth run, from first command to evidence.</h1>
+          <p class="copy">Everything shown here is grounded in the current CLI surface.</p>
+        </div>
+        <div class="panel terminal"><div class="term-header"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="term-title">install</span></div><div class="term-body"><span class="prompt">$</span> npm install -g opstruth
+<span class="prompt">$</span> opstruth welcome</div></div>
+        <div class="caption-bar">Install globally, or run it one-off with npx.</div>
+      </section>
+
+      <section id="tour-2" class="clip scene" data-start="8" data-duration="11" data-track-index="1">
+        <div class="kicker">welcome</div>
+        <div class="panel terminal"><div class="term-body">Welcome to opstruth.
+
+This tool runs read-only operational checks to help you understand:
+- what changed
+- what is configured
+- what looks risky
+- what was verified
+- what was not verified
+
+It will not deploy, mutate databases, trigger jobs, publish content, restart services, call AI providers, or print raw secrets.</div></div>
+        <div class="caption-bar">The first screen explains the safety boundary before any proof is collected.</div>
+      </section>
+
+      <section id="tour-3" class="clip scene split" data-start="19" data-duration="11" data-track-index="1">
+        <div class="stack"><div class="kicker">optional config</div><h1 class="headline small">Add explicit inputs when route or runtime proof matters.</h1></div>
+        <div class="panel terminal"><div class="term-body"><span class="prompt">$</span> opstruth init --yes
+Created opstruth.config.json
+
+routes: ["/", "/health"]
+local: ports + health paths
+secrets: allowlist paths when reviewed</div></div>
+        <div class="caption-bar">Config improves confidence, but the command still only checks the inputs you provide.</div>
+      </section>
+
+      <section id="tour-4" class="clip scene" data-start="30" data-duration="11" data-track-index="1">
+        <div class="kicker">probe catalogue</div><h1 class="headline small">Before it checks, it explains what can be checked.</h1>
+        <div class="grid-3">
+          <div class="card"><h3 class="green">30 probes</h3><p>Repo, quality, Node, routes, local, secrets, Supabase, Cloudflare, Docker, GitHub, hosting.</p></div>
+          <div class="card"><h3 class="green">30 safe-read-only</h3><p>The catalogue is designed around non-mutating proof collection.</p></div>
+          <div class="card"><h3 class="amber">15 selected here</h3><p>Skipped probes report the exact missing precondition.</p></div>
+        </div>
+        <div class="caption-bar">Run opstruth probes to see the catalogue and proof gaps without mutating anything.</div>
+      </section>
+
+      <section id="tour-5" class="clip scene split" data-start="41" data-duration="11" data-track-index="1">
+        <div class="stack"><div class="kicker amber">secret scan</div><h1 class="headline small">Risky references are evidence, not exposed values.</h1></div>
+        <div class="panel terminal"><div class="term-body"><span class="prompt">$</span> opstruth secrets
+
+warning: risky secret reference
+file: src/config.ts
+line: 12
+preview: ***REDACTED***
+next: move real values to secret storage</div></div>
+        <div class="caption-bar">Secret scans show where to look while keeping raw values out of terminal output.</div>
+      </section>
+
+      <section id="tour-6" class="clip scene" data-start="52" data-duration="13" data-track-index="1">
+        <div class="kicker blue">runtime inputs</div><h1 class="headline small">Route and local checks are explicit-input probes.</h1>
+        <div class="grid-2">
+          <div class="panel terminal"><div class="term-body"><span class="prompt">$</span> opstruth routes --base-url https://example.com
+
+HEAD / 200
+GET /health 200
+headers checked
+production still means observed-at-this-time</div></div>
+          <div class="panel terminal"><div class="term-body"><span class="prompt">$</span> opstruth local --port 3000 --health /health
+
+port listening
+health path responded
+service not started
+process not killed</div></div>
+        </div>
+        <div class="caption-bar">OpsTruth never starts or repairs services just to make a check look green.</div>
+      </section>
+
+      <section id="tour-7" class="clip scene split" data-start="65" data-duration="11" data-track-index="1">
+        <div class="stack"><div class="kicker">hosted quality proof</div><h1 class="headline small">CI evidence only counts when it matches the exact commit.</h1></div>
+        <div class="panel terminal"><div class="term-body"><span class="prompt">$</span> opstruth github-ci --workflow CI
+
+exact commit match: yes
+workflow: CI
+conclusion: success
+
+CI proof remains separate from production proof.</div></div>
+        <div class="caption-bar">A successful workflow for another SHA is reported as a proof gap.</div>
+      </section>
+
+      <section id="tour-8" class="clip scene split" data-start="76" data-duration="11" data-track-index="1">
+        <div class="stack"><div class="kicker">production evidence files</div><h1 class="headline small">Supabase live proof is explicit and offline.</h1></div>
+        <div class="panel terminal"><div class="term-body"><span class="prompt">$</span> opstruth supabase-live --evidence-file redacted.json
+
+verified: function deployed
+verified: scheduler configured
+verified: autonomous run observed
+not verified: filtered function logs
+unsafe to test: rate-limit branch</div></div>
+        <div class="caption-bar">It validates reviewed redacted evidence without querying production or inspecting secrets.</div>
+      </section>
+
+      <section id="tour-9" class="clip scene" data-start="87" data-duration="9" data-track-index="1">
+        <div class="kicker">handoff</div>
+        <div class="panel terminal"><div class="term-body"><span class="prompt">$</span> opstruth --json --skip evidence
+
+machine-readable result
+ANSI-free output
+verified, warnings, failures, skipped, not verified
+next safe step included</div></div>
+        <div class="logo-lockup"><div class="logo-mark" aria-hidden="true">
+  <svg viewBox="0 0 32 32" fill="none">
+    <rect x="0.5" y="0.5" width="31" height="31" rx="6.5" fill="#22262e" stroke="#59616b" />
+    <path d="M8 9 L15 16 L8 23" stroke="#9ca3ad" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M14 17 L18.5 22 L25 11" stroke="#80d39c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+</div><div class="wordmark"><span>ops</span><span class="green">truth</span></div></div>
+        <div class="caption-bar">Attach the evidence pack to the review, then prove the next narrow claim.</div>
+      </section>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const scenes = Array.from(document.querySelectorAll('.scene'));
+      function animateIf(scene, selector, vars, at) {
+        const found = Array.from(scene.querySelectorAll(selector));
+        if (found.length) tl.from(found, vars, at);
+      }
+      for (const scene of scenes) {
+        const start = Number(scene.dataset.start || 0);
+        const duration = Number(scene.dataset.duration || 4);
+        animateIf(scene, '.kicker, .headline, .copy, .panel, .card, .proof-card, .step-card, .command-chip, .logo-lockup, .callout-line', {
+          opacity: 0,
+          y: 34,
+          scale: 0.992,
+          stagger: 0.055,
+          duration: 0.72,
+          ease: 'power3.out'
+        }, start + 0.18);
+        animateIf(scene, '.result-row', {
+          opacity: 0,
+          x: 26,
+          stagger: 0.07,
+          duration: 0.52,
+          ease: 'power3.out'
+        }, start + 0.78);
+        animateIf(scene, '.caption-bar', {
+          opacity: 0,
+          y: 18,
+          duration: 0.48,
+          ease: 'power2.out'
+        }, start + 0.45);
+        if (start + duration < 96) {
+          tl.to(scene, { opacity: 0, y: -26, duration: 0.55, ease: 'power2.in' }, start + duration - 0.62);
+        }
+      }
+      window.__timelines['ops-product-tour'] = tl;
+    </script>
+  </body>
+</html>

@@ -72,26 +72,38 @@ Secrets for Cloudflare and release operations belong in GitHub, Cloudflare, or n
 
 ## Production Assets
 
-The current website hero loop is served from:
+The current desktop/tablet product demo is served from:
 
 ```text
-/demo/opstruth-hero-runtime-truth.mp4
+/demo/opstruth-main-product-video.mp4
 ```
 
 The canonical source file is:
 
 ```text
-website/public/demo/opstruth-hero-runtime-truth.mp4
+website/public/demo/opstruth-main-product-video.mp4
 ```
 
-The controlled current-truth product film is served from:
+The current product tour is served from:
 
 ```text
-/demo/opstruth-current-runtime-truth.mp4
+/demo/opstruth-product-tour.mp4
 ```
 
 The canonical source file is:
 
 ```text
-website/public/demo/opstruth-current-runtime-truth.mp4
+website/public/demo/opstruth-product-tour.mp4
+```
+
+The current portrait/mobile short is served from:
+
+```text
+/demo/opstruth-proof-short-vertical.mp4
+```
+
+The canonical source file is:
+
+```text
+website/public/demo/opstruth-proof-short-vertical.mp4
 ```

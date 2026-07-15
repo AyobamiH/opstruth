@@ -1,0 +1,16 @@
+{
+  "provider": "auto",
+  "lang": "en",
+  "lines": [
+    { "id": "install", "text": "Sound cue only.", "sfx": ["click-soft"] },
+    { "id": "welcome", "text": "Sound cue only.", "sfx": ["key-press"] },
+    { "id": "config", "text": "Sound cue only.", "sfx": ["click-soft"] },
+    { "id": "probes", "text": "Sound cue only.", "sfx": ["chime"] },
+    { "id": "secrets", "text": "Sound cue only.", "sfx": ["error"] },
+    { "id": "runtime", "text": "Sound cue only.", "sfx": ["ping"] },
+    { "id": "ci", "text": "Sound cue only.", "sfx": ["notification"] },
+    { "id": "supabase", "text": "Sound cue only.", "sfx": ["whoosh-short"] },
+    { "id": "handoff", "text": "Sound cue only.", "sfx": ["chime"] }
+  ],
+  "bgm": { "mode": "none" }
+}

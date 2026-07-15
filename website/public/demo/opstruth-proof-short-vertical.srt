@@ -1,0 +1,19 @@
+1
+00:00:00,000 --> 00:00:04,000
+AI agents move fast, but the handoff still needs evidence.
+
+2
+00:00:04,000 --> 00:00:09,000
+OpsTruth asks the operational question after code changes.
+
+3
+00:00:09,000 --> 00:00:15,000
+Skipped is not passed. Not verified is not safe.
+
+4
+00:00:15,000 --> 00:00:21,000
+Production proof stays separate from local and CI proof.
+
+5
+00:00:21,000 --> 00:00:26,000
+Run OpsTruth before you trust done.
