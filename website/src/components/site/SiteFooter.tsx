@@ -18,18 +18,36 @@ export function SiteFooter() {
             github
           </a>
           <a
-            href="#checks"
+            href="/#checks"
             className="inline-flex min-h-11 items-center transition-colors hover:text-foreground"
           >
             probes
           </a>
           <a
-            href="#evidence"
+            href="/#evidence"
             className="inline-flex min-h-11 items-center transition-colors hover:text-foreground"
           >
             evidence
           </a>
-          <span className="text-status-skip">v0.1.3 · public testing</span>
+          <a
+            href="/privacy"
+            className="inline-flex min-h-11 items-center transition-colors hover:text-foreground"
+          >
+            privacy
+          </a>
+          <a
+            href="/terms"
+            className="inline-flex min-h-11 items-center transition-colors hover:text-foreground"
+          >
+            terms
+          </a>
+          <a
+            href="/support"
+            className="inline-flex min-h-11 items-center transition-colors hover:text-foreground"
+          >
+            support
+          </a>
+          <span className="text-status-skip">v0.2.0 · public testing</span>
         </div>
       </div>
     </footer>

@@ -9,24 +9,24 @@ export function SiteHeader() {
         <Link to="/" className="group flex min-h-11 min-w-0 items-center gap-2">
           <Logo size={26} />
           <span className="hidden md:inline font-mono text-[11px] text-muted-foreground">
-            v0.1.3 · read-only
+            v0.2.0 · read-only
           </span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-7 font-mono text-[13px] text-muted-foreground">
-          <a href="#checks" className="hover:text-foreground transition-colors">
+          <a href="/#checks" className="hover:text-foreground transition-colors">
             probes
           </a>
-          <a href="#output" className="hover:text-foreground transition-colors">
+          <a href="/#output" className="hover:text-foreground transition-colors">
             output
           </a>
-          <a href="#github" className="hover:text-foreground transition-colors">
+          <a href="/#github" className="hover:text-foreground transition-colors">
             github
           </a>
-          <a href="#boundaries" className="hover:text-foreground transition-colors">
+          <a href="/#boundaries" className="hover:text-foreground transition-colors">
             boundaries
           </a>
-          <a href="#evidence" className="hover:text-foreground transition-colors">
+          <a href="/#evidence" className="hover:text-foreground transition-colors">
             evidence
           </a>
         </nav>

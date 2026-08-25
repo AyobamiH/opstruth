@@ -1,0 +1,4 @@
+interface:
+  display_name: "Runtime Truth"
+  short_description: "Verify what is actually running"
+  default_prompt: "Use $runtime-truth to verify what is actually running."

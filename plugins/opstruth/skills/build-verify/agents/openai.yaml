@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build Verification"
+  short_description: "Verify existing project checks safely"
+  default_prompt: "Use $build-verify to run the repository's approved checks."
