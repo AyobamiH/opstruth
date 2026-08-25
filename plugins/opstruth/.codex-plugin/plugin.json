@@ -1,0 +1,37 @@
+{
+  "name": "opstruth",
+  "version": "0.1.0",
+  "description": "Evidence-led verification workflows for AI-assisted repository work.",
+  "author": {
+    "name": "Ayobami Haastrup",
+    "url": "https://opstruth.woeinvests.workers.dev"
+  },
+  "homepage": "https://opstruth.woeinvests.workers.dev",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "OpsTruth",
+    "shortDescription": "Verify AI coding work",
+    "longDescription": "OpsTruth helps developers verify AI-assisted repository work with evidence instead of confidence. It maps repository structure, checks for redacted secret-exposure risks, runs approved project-native validation, inspects Git readiness, verifies observable local runtime state, and reconciles agent claims with the available proof. Every workflow separates verified facts, warnings, skipped checks, missing inputs, and facts that remain unverified. OpsTruth is read-only by default and stops before deployment, publication, database mutation, credential use, or other production changes.",
+    "developerName": "Ayobami Haastrup",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Map repository identity and structure",
+      "Audit secret exposure without revealing values",
+      "Run approved project-native validation checks",
+      "Assess Git handoff readiness without mutation",
+      "Verify observable local runtime state",
+      "Reconcile agent claims with available evidence"
+    ],
+    "websiteURL": "https://opstruth.woeinvests.workers.dev",
+    "privacyPolicyURL": "https://opstruth.woeinvests.workers.dev/privacy",
+    "termsOfServiceURL": "https://opstruth.woeinvests.workers.dev/terms",
+    "supportURL": "https://opstruth.woeinvests.workers.dev/support",
+    "logo": "./assets/logo-mark.png",
+    "composerIcon": "./assets/logo-mark.png",
+    "defaultPrompt": [
+      "Map this repository and show what is verified, risky, skipped, or still unknown.",
+      "Run the safest available checks and tell me whether this change is ready to hand off.",
+      "Compare the agent's claims with repository, Git, test, and runtime evidence."
+    ]
+  }
+}

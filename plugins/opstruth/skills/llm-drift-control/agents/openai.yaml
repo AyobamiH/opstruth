@@ -1,0 +1,4 @@
+interface:
+  display_name: "Claim Reconciliation"
+  short_description: "Compare agent claims with evidence"
+  default_prompt: "Use $llm-drift-control to reconcile agent claims with evidence."

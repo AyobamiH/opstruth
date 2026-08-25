@@ -2,15 +2,18 @@
 
 > A local, read-only CLI that verifies what is actually true after AI-assisted engineering changes. Evidence-backed findings, honest proof gaps, zero deploys.
 
-OpsTruth is an operational proof tool for developers who use AI coding assistants. AI tools generate, edit, and refactor code quickly, but developers still need to verify what changed, what is configured, what looks risky, and what was verified. OpsTruth answers those questions with a single local command — no deploys, no SaaS, no side effects.
+OpsTruth is an operational proof tool for developers who use AI coding assistants. AI tools generate, edit, and refactor code quickly, but developers still need to verify what changed, what is configured, what looks risky, and what was verified. OpsTruth answers those questions with a local CLI and a skills-only ChatGPT plugin. Both preserve proof gaps and stop before production writes.
 
 ## Pages
 
 - [/](/): Landing page with product overview, what OpsTruth checks, example output, evidence format, scope boundaries, community links, and installation instructions.
+- [/privacy](/privacy): Data handling for the skills-only ChatGPT plugin, website, and GitHub support process.
+- [/terms](/terms): Terms and evidence limitations for the plugin and open-source tools.
+- [/support](/support): Safe support process and reporting boundary.
 
 ## Optional
 
-- [npm package](https://www.npmjs.com/package/opstruth): Published as `opstruth@0.1.3`; install with `npm install -g opstruth` or run once with `npx opstruth`.
+- [npm package](https://www.npmjs.com/package/opstruth): Published as `opstruth@0.2.0`; install with `npm install -g opstruth` or run once with `npx opstruth`.
 - [GitHub repository](https://github.com/AyobamiH/opstruth): Source code, issues, and contributions.
-- [GitHub release v0.1.3](https://github.com/AyobamiH/opstruth/releases/tag/v0.1.3): Public testing release evidence and install details.
+- [GitHub release v0.2.0](https://github.com/AyobamiH/opstruth/releases/tag/v0.2.0): Public testing release evidence and install details.
 - [Production website](https://opstruth.woeinvests.workers.dev): Cloudflare Workers production deployment.

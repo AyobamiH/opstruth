@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repository Map"
+  short_description: "Map repository identity and structure"
+  default_prompt: "Use $repo-map to map this repository before any changes."

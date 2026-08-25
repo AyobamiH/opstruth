@@ -1,0 +1,4 @@
+interface:
+  display_name: "Secret Exposure Audit"
+  short_description: "Find secret exposure risks safely"
+  default_prompt: "Use $secret-audit to find redacted secret exposure risks."

@@ -78,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "OpsTruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes. Evidence-backed findings, honest proof gaps, zero deploys.",
       },
-      { name: "author", content: "OpsTruth" },
+      { name: "author", content: "Ayobami Haastrup" },
       { name: "theme-color", content: "#0a0a0f" },
       { property: "og:title", content: "OpsTruth — Operational proof for AI-assisted engineering" },
       {
@@ -87,7 +87,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "OpsTruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes. Evidence-backed findings, honest proof gaps, zero deploys.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://github.com/ayobamih/opstruth" },
+      { property: "og:url", content: "https://opstruth.woeinvests.workers.dev" },
       { property: "og:image", content: "/og-card.png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
@@ -117,13 +117,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             {
               "@type": "Organization",
               name: "OpsTruth",
-              url: "https://github.com/ayobamih/opstruth",
+              url: "https://opstruth.woeinvests.workers.dev",
               logo: "/logo-mark.png",
             },
             {
               "@type": "WebSite",
               name: "OpsTruth",
-              url: "https://github.com/ayobamih/opstruth",
+              url: "https://opstruth.woeinvests.workers.dev",
             },
           ],
         }),

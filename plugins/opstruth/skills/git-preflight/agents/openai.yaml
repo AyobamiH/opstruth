@@ -1,0 +1,4 @@
+interface:
+  display_name: "Git Preflight"
+  short_description: "Assess Git readiness without changes"
+  default_prompt: "Use $git-preflight to assess this repository's Git readiness."
