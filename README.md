@@ -2,6 +2,8 @@
 
 Read-only operational truth checks for AI-assisted engineering.
 
+The canonical website is [opstruth.io](https://opstruth.io), and the independent hosted MCP service is [mcp.opstruth.io/mcp](https://mcp.opstruth.io/mcp). Deployment receipts are indexed in [the owned-domain cutover evidence](evidence/owned-domain-cutover-2026-08-30.md).
+
 AI coding tools are fast, but developers still need proof:
 
 - what changed
