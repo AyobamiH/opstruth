@@ -9,5 +9,9 @@
   },
   "compatibility_flags": [
     "nodejs_compat"
+  ],
+  "workers_dev": true,
+  "routes": [
+    { "pattern": "opstruth.io", "custom_domain": true }
   ]
 }

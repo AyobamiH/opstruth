@@ -16,4 +16,4 @@ OpsTruth is an operational proof tool for developers who use AI coding assistant
 - [npm package](https://www.npmjs.com/package/opstruth): Published as `opstruth@0.2.0`; install with `npm install -g opstruth` or run once with `npx opstruth`.
 - [GitHub repository](https://github.com/AyobamiH/opstruth): Source code, issues, and contributions.
 - [GitHub release v0.2.0](https://github.com/AyobamiH/opstruth/releases/tag/v0.2.0): Public testing release evidence and install details.
-- [Production website](https://opstruth.woeinvests.workers.dev): Cloudflare Workers production deployment.
+- [Production website](https://opstruth.io): canonical Cloudflare Workers production deployment.

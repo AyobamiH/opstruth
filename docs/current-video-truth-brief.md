@@ -12,9 +12,9 @@ This brief is the source of truth for the refreshed opstruth website videos.
 - npm package at video production time: `opstruth@0.1.3`
 - current npm package: `opstruth@0.2.0`
 - npm package description: `Read-only operational truth checks for AI-assisted engineering workflows.`
-- npm package homepage: `https://opstruth.woeinvests.workers.dev`
+- npm package homepage: `https://opstruth.io`
 - npm package binary: `opstruth -> bin/opstruth.js`
-- production website: `https://opstruth.woeinvests.workers.dev`
+- production website: `https://opstruth.io`
 - production runtime: Cloudflare Workers
 - production response inspected: `HTTP/2 200`
 - GitHub release at video production time: `v0.1.3`

@@ -3,7 +3,7 @@
 The production opstruth website is deployed from the canonical monorepo to Cloudflare Workers.
 
 ```text
-https://opstruth.woeinvests.workers.dev
+https://opstruth.io
 ```
 
 The public CLI is published separately on npm as `opstruth@0.2.0`:

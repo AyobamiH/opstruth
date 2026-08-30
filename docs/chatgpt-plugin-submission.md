@@ -8,10 +8,10 @@ This is the source of truth for the initial skills-only public submission.
 - **Publisher:** Ayobami Haastrup
 - **Category:** Developer Tools
 - **Short description:** Verify AI coding work
-- **Website:** https://opstruth.woeinvests.workers.dev
-- **Support:** https://opstruth.woeinvests.workers.dev/support
-- **Privacy:** https://opstruth.woeinvests.workers.dev/privacy
-- **Terms:** https://opstruth.woeinvests.workers.dev/terms
+- **Website:** https://opstruth.io
+- **Support:** https://opstruth.io/support
+- **Privacy:** https://opstruth.io/privacy
+- **Terms:** https://opstruth.io/terms
 
 Long description:
 
