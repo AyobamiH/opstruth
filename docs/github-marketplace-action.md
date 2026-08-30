@@ -43,3 +43,13 @@ jobs:
 The action reads the checked-out repository and may write only the requested local evidence report. It does not push commits, approve or merge pull requests, deploy, publish, mutate databases, trigger queues, call AI providers, or print raw secrets. A successful run is repository evidence, not proof of a production deployment.
 
 Marketplace publication uses an Action-interface `v1.0.0` release and a stable `v1` major tag. That Action version is independent of the bundled OpsTruth CLI package version. Consumers should pin the full commit SHA when their supply-chain policy requires exact immutability.
+
+## Published release
+
+- Marketplace listing: https://github.com/marketplace/actions/opstruth-evidence
+- Immutable Action release: `v1.0.0`
+- Stable major reference: `v1`
+- Source commit: `45f4debbd3fbe8217599ab697b8f6c855b372e0b`
+- Categories: Code quality and AI Assisted
+
+Both published references resolve to the same verified source commit. The Marketplace publication does not change the read-only authority boundary above.
