@@ -1,0 +1,39 @@
+name: OpsTruth evidence
+description: Produce a read-only evidence report for AI-assisted repository changes
+author: AYOBAMI JOHN HAASTRUP
+
+branding:
+  icon: check-circle
+  color: green
+
+inputs:
+  output_path:
+    description: Repository-relative path for the Markdown evidence report
+    required: false
+    default: evidence/opstruth.md
+  strict:
+    description: Fail when OpsTruth reports unresolved warnings
+    required: false
+    default: "false"
+  base_url:
+    description: Optional public HTTPS base URL for bounded route checks
+    required: false
+    default: ""
+
+outputs:
+  report_path:
+    description: Path of the generated Markdown evidence report
+    value: ${{ steps.run-opstruth.outputs.report_path }}
+
+runs:
+  using: composite
+  steps:
+    - id: run-opstruth
+      name: Generate OpsTruth evidence
+      shell: bash
+      env:
+        OPSTRUTH_ACTION_OUTPUT_PATH: ${{ inputs.output_path }}
+        OPSTRUTH_ACTION_STRICT: ${{ inputs.strict }}
+        OPSTRUTH_ACTION_BASE_URL: ${{ inputs.base_url }}
+      run: |
+        bash "$GITHUB_ACTION_PATH/scripts/run-github-action.sh"
