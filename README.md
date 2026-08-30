@@ -62,6 +62,16 @@ One-off usage:
 npx opstruth
 ```
 
+GitHub Actions:
+
+```yaml
+- uses: AyobamiH/opstruth@v1
+  with:
+    output_path: evidence/opstruth.md
+```
+
+The Marketplace action runs the bundled CLI source with `contents: read` sufficient for repository evidence. It writes only the configured local evidence report and does not deploy, push, merge, publish, or mutate target systems. See [GitHub Marketplace action](docs/github-marketplace-action.md).
+
 The latest published npm package is `opstruth@0.2.0`. This is an early public testing release,
 not a claim of mature production coverage.
 

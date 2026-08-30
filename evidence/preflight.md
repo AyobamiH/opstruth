@@ -90,3 +90,42 @@
 ### Next safe step
 
 Publish the exact domain-migration branch through the authenticated GitHub integration, require hosted CI, merge only after checks pass, then verify `https://opstruth.io`, its policy/video routes, and the separate `https://mcp.opstruth.io` service before indexing final evidence.
+
+## 2026-08-30 GitHub Marketplace Action preflight
+
+- **Scope:** add a public, read-only OpsTruth GitHub Action from the repository root for GitHub Marketplace discovery.
+- **Starting branch:** `codex/opstruth-marketplace-action` from `origin/main` at `2503b4d`.
+- **Production writes during preflight:** none.
+
+### Verified
+
+| Check | Result |
+| --- | --- |
+| `node cli/bin/opstruth.js repo` before changes | Pass. Canonical Git root and repository platforms established before implementation. |
+| `npm run validate:action` | Pass. The composite Action executes bundled source, completes an isolated fixture run, rejects absolute/traversing/multiline report paths, rejects invalid strict values and non-HTTPS route inputs, and contains no install, publish, deploy, or target-mutation commands. |
+| Isolated Action fixture | Pass. Exit `0`; `evidence/opstruth.md` produced in a fresh Git repository. |
+| `cd cli && npm run lint && npm test` | Pass. All 80 CLI tests passed. |
+| `node bin/opstruth.js --help`, `welcome`, `probes`, and `--skip evidence` | Pass. The broad evidence run retained documented redacted fixture warnings and produced no new failure. |
+| `cd cli && ./scripts/demo-fixtures.sh` | Pass. All six fixture reports regenerated; generated differences were restored because they are unrelated to this Action-only change. |
+| `node bin/opstruth.js secrets` | Partial pass with no failures. Existing redacted fixture/parser/documentation warnings remain; no secret values or credentials were added. |
+| `npm run ci` | Pass. CLI lint/tests, plugin validation, Action validation, website client/SSR build, and deployment bundle sync completed. |
+| `bash ./scripts/opstruth-completion-gate.sh --mode quick` | Pass. Required CLI, repository, secret, probe, JSON parsing, npm metadata, and production reachability checks completed. `https://opstruth.io` returned `200`. |
+| `git diff --check` | Pass. |
+| Connected GitHub authority | Verified as `AyobamiH`, with admin and push authority on the public `AyobamiH/opstruth` repository. Local `gh` is unavailable, so PR publication uses the authenticated GitHub connector. |
+
+### Authority boundary
+
+- The Action requests only repository `contents: read` in the documented workflow.
+- It may write the configured evidence report inside the checked-out GitHub Actions workspace.
+- It does not push, approve, merge, deploy, publish packages, mutate target systems, call AI providers, or print raw secrets.
+- An Action-interface `v1.0.0` release and stable `v1` tag are independent of the bundled `opstruth` npm package version.
+
+### Proof gaps before Marketplace publication
+
+- Hosted CI must pass on the exact pull-request commit before merge.
+- GitHub Marketplace publication requires the post-merge `v1.0.0` release to be created with the Marketplace publication option. That external release action has not been performed during preflight.
+- The live npm registry still reports the historical `https://opstruth.woeinvests.workers.dev` homepage for `opstruth@0.2.0`; repository source already uses `https://opstruth.io`, but registry metadata will remain historical until a separately approved npm release.
+
+### Next safe step
+
+Publish the exact Action branch through the authenticated GitHub connector, require hosted CI, merge only after all checks pass, then create the `v1.0.0` Marketplace release and stable `v1` tag from the verified merge commit.
