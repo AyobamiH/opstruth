@@ -5,7 +5,7 @@
 - npm package: `opstruth@0.2.0`
 - GitHub repository: `https://github.com/AyobamiH/opstruth`
 - GitHub release: `v0.2.0`
-- Production website: `https://opstruth.woeinvests.workers.dev`
+- Production website: `https://opstruth.io`
 - Production runtime: Cloudflare Workers
 - CLI source path: `cli/`
 - Website source path: `website/`

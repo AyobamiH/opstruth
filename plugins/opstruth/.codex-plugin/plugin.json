@@ -4,9 +4,9 @@
   "description": "Evidence-led verification workflows for AI-assisted repository work.",
   "author": {
     "name": "Ayobami Haastrup",
-    "url": "https://opstruth.woeinvests.workers.dev"
+    "url": "https://opstruth.io"
   },
-  "homepage": "https://opstruth.woeinvests.workers.dev",
+  "homepage": "https://opstruth.io",
   "skills": "./skills/",
   "interface": {
     "displayName": "OpsTruth",
@@ -22,10 +22,10 @@
       "Verify observable local runtime state",
       "Reconcile agent claims with available evidence"
     ],
-    "websiteURL": "https://opstruth.woeinvests.workers.dev",
-    "privacyPolicyURL": "https://opstruth.woeinvests.workers.dev/privacy",
-    "termsOfServiceURL": "https://opstruth.woeinvests.workers.dev/terms",
-    "supportURL": "https://opstruth.woeinvests.workers.dev/support",
+    "websiteURL": "https://opstruth.io",
+    "privacyPolicyURL": "https://opstruth.io/privacy",
+    "termsOfServiceURL": "https://opstruth.io/terms",
+    "supportURL": "https://opstruth.io/support",
     "logo": "./assets/logo-mark.png",
     "composerIcon": "./assets/logo-mark.png",
     "defaultPrompt": [

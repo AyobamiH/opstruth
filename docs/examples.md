@@ -89,4 +89,4 @@ opstruth local --port 3000 --health /health
 ## Release Links
 
 - GitHub release: `https://github.com/AyobamiH/opstruth/releases/tag/v0.2.0`
-- Production website: `https://opstruth.woeinvests.workers.dev`
+- Production website: `https://opstruth.io`

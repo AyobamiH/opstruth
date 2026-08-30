@@ -54,7 +54,7 @@ npm view opstruth version description homepage repository bin --json
 If the task touched production or website assets, verify:
 
 ```bash
-curl -I https://opstruth.woeinvests.workers.dev
+curl -I https://opstruth.io
 ```
 
 and any relevant asset URLs.

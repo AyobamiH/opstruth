@@ -5,9 +5,9 @@
 - Commit: `85b694da18e47cd2b9b5f4b5f59ee9b4b4762285`
 - Short SHA: `85b694d`
 - Commit title: `Regenerate website videos from current runtime truth`
-- Production URL: `https://opstruth.woeinvests.workers.dev`
-- Hero video URL: `https://opstruth.woeinvests.workers.dev/demo/opstruth-hero-runtime-truth.mp4`
-- Flagship video URL: `https://opstruth.woeinvests.workers.dev/demo/opstruth-current-runtime-truth.mp4`
+- Production URL: `https://opstruth.io`
+- Hero video URL: `https://opstruth.io/demo/opstruth-hero-runtime-truth.mp4`
+- Flagship video URL: `https://opstruth.io/demo/opstruth-current-runtime-truth.mp4`
 - Verified at: `2026-06-06`
 
 ## GitHub Actions Deploy Run
@@ -31,7 +31,7 @@ The run was triggered by commit `85b694da18e47cd2b9b5f4b5f59ee9b4b4762285`.
 Homepage:
 
 ```text
-URL: https://opstruth.woeinvests.workers.dev
+URL: https://opstruth.io
 Status: HTTP/2 200
 Content-Type: text/html; charset=utf-8
 Server: cloudflare
@@ -40,7 +40,7 @@ Server: cloudflare
 Hero video:
 
 ```text
-URL: https://opstruth.woeinvests.workers.dev/demo/opstruth-hero-runtime-truth.mp4
+URL: https://opstruth.io/demo/opstruth-hero-runtime-truth.mp4
 Status: HTTP/2 200
 Content-Type: video/mp4
 Server: cloudflare
@@ -50,7 +50,7 @@ Cache: HIT
 Flagship video:
 
 ```text
-URL: https://opstruth.woeinvests.workers.dev/demo/opstruth-current-runtime-truth.mp4
+URL: https://opstruth.io/demo/opstruth-current-runtime-truth.mp4
 Status: HTTP/2 200
 Content-Type: video/mp4
 Server: cloudflare

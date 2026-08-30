@@ -276,7 +276,7 @@ From `website/package.json` and `website/vite.config.ts`:
 - Build command: `bun run build` from `website/`.
 - Build tool: Vite 7 + TanStack Start.
 - Likely output: `website/dist/client` + `website/dist/server` (SSR-capable). Nitro target / hosting adapter — *not verified in this knowledge pass.*
-- Production URL: `https://opstruth.woeinvests.workers.dev` (Cloudflare Workers, deployed from the canonical monorepo).
+- Production URL: `https://opstruth.io` (canonical Cloudflare Workers domain, deployed from the canonical monorepo).
 
 **Not verified:**
 - Whether Lovable's production build serves SSR or static output for this project.

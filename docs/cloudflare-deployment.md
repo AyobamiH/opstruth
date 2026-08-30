@@ -7,7 +7,7 @@ opstruth treats Lovable as a frontend editing surface, not the production deploy
 The current production website is served by Cloudflare Workers:
 
 ```text
-https://opstruth.woeinvests.workers.dev
+https://opstruth.io
 ```
 
 Lovable is not the production deployment source. GitHub Actions deploys from the canonical monorepo using GitHub repository secrets; Cloudflare credentials must never be committed to the repository.

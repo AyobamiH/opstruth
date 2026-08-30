@@ -291,7 +291,7 @@ Fixture evidence is written to root `evidence/fixture-runs/`.
 The production website is served by Cloudflare Workers:
 
 ```text
-https://opstruth.woeinvests.workers.dev
+https://opstruth.io
 ```
 
 Lovable is the frontend editing surface, not the production deployment source. Production deploys run from the canonical monorepo through `.github/workflows/deploy-cloudflare.yml`, using only GitHub repository secrets for Cloudflare credentials. Website dependencies stay in `website/package.json`.

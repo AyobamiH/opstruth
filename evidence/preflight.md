@@ -60,3 +60,33 @@
 3. Merge only the verified candidate to `main`, which is the repository's configured Cloudflare deployment path.
 4. Verify the live privacy, terms and support URLs after deployment.
 5. Install the plugin from its local marketplace and execute the representative prompt set in new conversations before public submission.
+
+## 2026-08-30 canonical-domain migration preflight
+
+- **Scope:** bind the OpsTruth website to `https://opstruth.io`, move the independent MCP service to `https://mcp.opstruth.io`, and retain `workers.dev` only for compatibility or historical evidence.
+- **Starting branch:** `main` at `d37c5d1983d889e4d1563e654b4684e7d839f39e`.
+- **Production writes during preflight:** none.
+
+### Verified
+
+| Check | Result |
+| --- | --- |
+| `node cli/bin/opstruth.js repo` before changes | Pass. Canonical Git root and Cloudflare configuration detected. |
+| `npm run ci` | Pass. CLI lint and all 80 tests passed; plugin validation passed; website client and SSR builds passed. |
+| `cd cli && npm run lint && npm test` | Pass. All 80 CLI tests passed. |
+| `node bin/opstruth.js --help`, `welcome`, `probes`, and `--skip evidence` | Pass or partial pass with no failures. The broad run retained its documented proof gaps and redacted fixture warnings. |
+| `./scripts/demo-fixtures.sh` | Pass. Six fixture evidence files regenerated successfully, inspected, and restored because the generated output was unrelated to this domain-only change. |
+| `node bin/opstruth.js secrets` | Partial pass with no failures. Existing redacted fixture/parser/documentation warnings remain; no new secret material was introduced. |
+| `./scripts/opstruth-completion-gate.sh --mode quick` | Pass. Required CLI checks completed; the production reachability probe truthfully observed the pre-migration `502`. |
+| `git diff --check` | Pass. |
+| GitHub connector identity and repository authority | Verified for `AyobamiH/opstruth` with admin and push access. The local `gh` executable is unavailable, so publication must use the connected GitHub integration rather than local `gh`. |
+
+### Proof gaps before merge
+
+- The owned domain was observed at `502 Connection refused` before the custom-domain binding.
+- Production deployment, DNS replacement, and post-deploy route checks remain unverified until the pull request is merged and the existing Cloudflare workflow completes.
+- The repository's existing six Fast Refresh warnings and redacted secret-fixture warnings remain warnings, not failures and not new findings from this change.
+
+### Next safe step
+
+Publish the exact domain-migration branch through the authenticated GitHub integration, require hosted CI, merge only after checks pass, then verify `https://opstruth.io`, its policy/video routes, and the separate `https://mcp.opstruth.io` service before indexing final evidence.

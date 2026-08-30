@@ -76,5 +76,5 @@ https://github.com/AyobamiH/opstruth
 The public website is:
 
 ```text
-https://opstruth.woeinvests.workers.dev
+https://opstruth.io
 ```

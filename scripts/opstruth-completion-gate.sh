@@ -230,6 +230,6 @@ fi
 
 NETWORK_SECONDS="$(duration_seconds "$(duration_arg "$NETWORK_TIMEOUT")")"
 run_optional "npm metadata" "$NETWORK_TIMEOUT" npm view opstruth version description homepage repository bin --json
-run_optional "production reachability" "$NETWORK_TIMEOUT" curl -I --max-time "$NETWORK_SECONDS" https://opstruth.woeinvests.workers.dev
+run_optional "production reachability" "$NETWORK_TIMEOUT" curl -I --max-time "$NETWORK_SECONDS" https://opstruth.io
 
 echo "== completion gate done =="
