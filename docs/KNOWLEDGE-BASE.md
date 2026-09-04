@@ -47,6 +47,8 @@ A verification claim must be bound to the exact subject it evaluates. Repository
 
 The DoneState production canary on 3 September 2026 exposed and repaired a verifier adapter defect where GitHub's numeric repository ID was serialised with the wrong runtime type. The correct product behaviour is to preserve the verification contract, repair the evidence adapter, and never weaken DoneState's sealed-subject comparison to accept malformed verifier output.
 
+DoneState 0.3.0 subsequently froze new hosted runs on the complete `donestate.verification-contract.v2` response path. Its production canary #114 rejected a malformed verifier response before accepting a complete independent OpsTruth response bound to the exact sealed subject. This strengthens, rather than widens, the boundary: OpsTruth remains read-only, DoneState cannot self-verify, an uncertain result remains `AWAITING_VERIFICATION`, and historical outcomes are not rewritten. The immutable cross-repository references are DoneState release commit [`4ab47e099c3303d08565a7dbf4cda36bc68b74ce`](https://github.com/AyobamiH/donestate/commit/4ab47e099c3303d08565a7dbf4cda36bc68b74ce), its [verification contract lock](https://github.com/AyobamiH/donestate/blob/4ab47e099c3303d08565a7dbf4cda36bc68b74ce/governance/verification-contract-lock.json), and its [0.3.0 release notes](https://github.com/AyobamiH/donestate/blob/4ab47e099c3303d08565a7dbf4cda36bc68b74ce/distribution/openai-0.3.0-release-notes.md).
+
 ## Anti-drift rules
 
 1. This KB indexes canonical sources; it does not duplicate mutable deployment, review or release state.
