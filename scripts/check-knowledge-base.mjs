@@ -24,7 +24,8 @@ for (const token of [
   "independent, read-only verification layer",
   "Missing evidence is a proof gap",
   "subject mismatch fails closed",
-  "DoneState",
+  "donestate.verification-contract.v2",
+  "DoneState cannot self-verify",
   "completion gate",
 ]) {
   if (!kb.includes(token)) throw new Error(`Knowledge base missing product-boundary token: ${token}`);
