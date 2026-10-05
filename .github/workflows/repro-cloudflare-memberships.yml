@@ -27,27 +27,17 @@ jobs:
           unset CLOUDFLARE_ACCOUNT_ID || true
 
           probe() {
-            local label="$1"
-            local url="$2"
-            local tmp
+            label="$1"
+            url="$2"
             tmp="$(mktemp)"
-            local status
-            status="$(curl --silent --show-error --output "$tmp" --write-out "%{http_code}"               -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"               -H "Content-Type: application/json"               "$url")"
-
-            LABEL="$label" STATUS="$status" FILE="$tmp" python - <<'PY'
-import json, os
-label=os.environ["LABEL"]
-status=os.environ["STATUS"]
-with open(os.environ["FILE"], "r", encoding="utf-8") as f:
-    data=json.load(f)
-errors=data.get("errors") or []
-codes=[e.get("code") for e in errors if isinstance(e, dict)]
-messages=[e.get("message") for e in errors if isinstance(e, dict)]
-print(f"{label}_http={status}")
-print(f"{label}_success={data.get('success')}")
-print(f"{label}_error_codes={codes}")
-print(f"{label}_error_messages={messages}")
-PY
+            status="$(curl --silent --show-error --output "$tmp" --write-out "%{http_code}" -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Type: application/json" "$url")"
+            success="$(jq -r '.success // "null"' "$tmp")"
+            codes="$(jq -c '[.errors[]?.code]' "$tmp")"
+            messages="$(jq -c '[.errors[]?.message]' "$tmp")"
+            echo "${label}_http=${status}"
+            echo "${label}_success=${success}"
+            echo "${label}_error_codes=${codes}"
+            echo "${label}_error_messages=${messages}"
             rm -f "$tmp"
           }
 
@@ -68,5 +58,4 @@ PY
           set -e
 
           echo "wrangler_whoami_exit=$status"
-          printf '%s
-' "$output" | grep -Eo '/memberships|/accounts|\[code: [0-9]+\]|code: [0-9]+' | sort -u || true
+          printf '%s\n' "$output" | grep -Eo '/memberships|/accounts|\[code: [0-9]+\]|code: [0-9]+' | sort -u || true
