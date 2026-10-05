@@ -59,3 +59,19 @@ jobs:
 
           echo "wrangler_whoami_exit=$status"
           printf '%s\n' "$output" | grep -Eo '/memberships|/accounts|\[code: [0-9]+\]|code: [0-9]+' | sort -u || true
+
+      - name: Exercise Wrangler 3.109.2 account discovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          unset CLOUDFLARE_ACCOUNT_ID || true
+          npx --yes wrangler@3.109.2 --version
+
+          for cmd in "whoami" "deployments list"; do
+            set +e
+            output="$(npx --yes wrangler@3.109.2 $cmd 2>&1)"
+            status=$?
+            set -e
+            echo "wrangler_3_109_2_${cmd// /_}_exit=$status"
+            printf '%s\n' "$output" | grep -Eo '/memberships|/accounts|\[code: [0-9]+\]|code: [0-9]+' | sort -u || true
+          done
