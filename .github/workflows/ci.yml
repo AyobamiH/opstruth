@@ -41,6 +41,8 @@ jobs:
           node-version: 20
       - run: npm install
         working-directory: website
+      - run: npm run test:analytics
+        working-directory: website
       - run: npm run lint
         working-directory: website
       - run: npm run build

@@ -12,6 +12,12 @@ export function SiteFooter() {
         </div>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3 font-mono text-sm text-muted-foreground">
           <a
+            href="https://chatgpt.com/plugins/plugins_6a8d4dc60bf081918a06094873890eb4"
+            className="inline-flex min-h-11 items-center transition-colors hover:text-foreground"
+          >
+            Try OpsTruth in ChatGPT
+          </a>
+          <a
             href="https://github.com/ayobamih/opstruth"
             className="inline-flex min-h-11 items-center transition-colors hover:text-foreground"
           >
