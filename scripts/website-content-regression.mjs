@@ -16,6 +16,9 @@ const files = [
   "website/src/routes/__root.tsx",
   "website/src/styles.css",
   "website/public/llms.txt",
+  "website/public/sitemap.xml",
+  "website/public/agents.txt",
+  "website/public/robots.txt",
 ];
 
 const failures = [];
@@ -104,6 +107,46 @@ for (const stalePath of staleVideoPaths) {
   if (hero.includes(stalePath) || film.includes(stalePath)) {
     failures.push(`Active website components still reference ${stalePath}.`);
   }
+}
+
+
+
+const indexRoute = textFor("website/src/routes/index.tsx");
+if (!indexRoute.includes('{ rel: "canonical", href: "https://opstruth.io/" }')) {
+  failures.push("index route canonical root link missing");
+}
+
+const robots = textFor("website/public/robots.txt");
+for (const crawler of [
+  "OAI-SearchBot",
+  "GPTBot",
+  "Claude-SearchBot",
+  "ClaudeBot",
+  "PerplexityBot",
+  "Googlebot",
+  "bingbot",
+  "Applebot",
+]) {
+  if (!robots.includes(`User-agent: ${crawler}`)) failures.push(`robots missing ${crawler}`);
+}
+if (!robots.includes("User-agent: *") || !robots.includes("Allow: /")) {
+  failures.push("robots public wildcard policy missing");
+}
+if (!robots.includes("Sitemap: https://opstruth.io/sitemap.xml")) {
+  failures.push("robots sitemap pointer missing");
+}
+
+const agents = textFor("website/public/agents.txt");
+if (!agents.includes("local, read-only verification CLI")) {
+  failures.push("agents.txt capability identity missing");
+}
+if (!agents.includes("Missing evidence stays unknown")) {
+  failures.push("agents.txt evidence boundary missing");
+}
+
+const sitemap = textFor("website/public/sitemap.xml");
+for (const path of ["/agents.txt", "/llms.txt"]) {
+  if (!sitemap.includes(`https://opstruth.io${path}`)) failures.push(`sitemap missing ${path}`);
 }
 
 if (failures.length) {
