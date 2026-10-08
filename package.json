@@ -17,9 +17,11 @@
     "validate:plugin": "node scripts/validate-chatgpt-plugin.mjs",
     "validate:action": "node scripts/validate-github-action.mjs",
     "kb:check": "node scripts/check-knowledge-base.mjs",
-    "ci": "npm run lint && npm run test && npm run validate:plugin && npm run validate:action && npm run kb:check && npm run build",
+    "ci": "npm run lint && npm run test && npm run validate:plugin && npm run validate:action && npm run kb:check && npm run test:website-content && npm run build",
     "preview:cloudflare": "npm run build:website && npx wrangler dev",
     "deploy:cloudflare": "npm run build:website && npx wrangler deploy"
   },
-  "engines": {"node": ">=20"}
+  "engines": {
+    "node": ">=20"
+  }
 }

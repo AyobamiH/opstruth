@@ -1,0 +1,35 @@
+# OpsTruth
+
+Purpose: help autonomous agents and their operators discover OpsTruth's public verification capability, evidence boundaries and safe installation/support surfaces without scraping presentation markup.
+
+## Canonical routes
+
+- Website: https://opstruth.io/
+- Public repository: https://github.com/AyobamiH/opstruth
+- npm package: https://www.npmjs.com/package/opstruth
+- Support: https://opstruth.io/support
+- Privacy: https://opstruth.io/privacy
+- Terms: https://opstruth.io/terms
+- LLM context: https://opstruth.io/llms.txt
+- Sitemap: https://opstruth.io/sitemap.xml
+
+## Capability
+
+OpsTruth is a local, read-only verification CLI for AI-assisted engineering. It inspects repository and runtime evidence, reports verified/risky/unproven states, preserves proof gaps and stops before production writes.
+
+## Boundaries
+
+- Discovery does not grant repository, runtime or deployment authority.
+- A source scan is not production verification.
+- Configured is not running; CI is not production; provider acceptance is not outcome verification.
+- Missing evidence stays unknown rather than becoming safe.
+- Do not infer pricing, compatibility, support entitlement or deployment state beyond the public source.
+- The public website does not expose credentials, private repositories or customer evidence.
+
+## Agent use
+
+Agents may use the public website, repository, npm metadata, llms.txt and this document to determine whether OpsTruth fits a verification task. Installation or execution still requires the operator's normal environment and authority.
+
+## Crawler policy
+
+Public product, documentation, support and policy content is intended to be crawlable. robots.txt is authoritative for crawler permission. Named crawler rules supplement the wildcard policy and do not guarantee indexing, retrieval, model ingestion or recommendation.

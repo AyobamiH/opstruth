@@ -17,3 +17,12 @@ OpsTruth is an operational proof tool for developers who use AI coding assistant
 - [GitHub repository](https://github.com/AyobamiH/opstruth): Source code, issues, and contributions.
 - [GitHub release v0.2.0](https://github.com/AyobamiH/opstruth/releases/tag/v0.2.0): Public testing release evidence and install details.
 - [Production website](https://opstruth.io): canonical Cloudflare Workers production deployment.
+
+
+## Agent discovery
+
+- [agents.txt](https://opstruth.io/agents.txt): machine-oriented capability, authority and evidence boundaries.
+- [robots.txt](https://opstruth.io/robots.txt): crawler permission.
+- [sitemap.xml](https://opstruth.io/sitemap.xml): canonical public route inventory.
+
+Crawler access and sitemap presence do not imply provider indexing or model ingestion.

@@ -32,6 +32,7 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: "/og-card.png" },
     ],
+    links: [{ rel: "canonical", href: "https://opstruth.io/" }],
     scripts: [
       {
         type: "application/ld+json",
