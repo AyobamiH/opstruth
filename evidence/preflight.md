@@ -129,3 +129,11 @@ Publish the exact domain-migration branch through the authenticated GitHub integ
 ### Next safe step
 
 Publish the exact Action branch through the authenticated GitHub connector, require hosted CI, merge only after all checks pass, then create the `v1.0.0` Marketplace release and stable `v1` tag from the verified merge commit.
+
+## Owner-approved builder footer — 11 October 2026
+
+The footer adds the exact Tail Wagging builder credit, public location NN4 6LZ and tap-to-call 07402342694. Product branding and execution behaviour remain unchanged. No private tax identifier was retrieved or published.
+
+Extended completion gate passed: CLI lint, 80 CLI tests, repo/secrets/probe self-checks, parsed JSON, website and root production builds, Wrangler dry-run and public reachability. The default test fixture inherited SSH signing and waited for an interactive signer; the successful run used command-scoped commit.gpgsign=false only for disposable fixture commits. Owner source commits use GitHub verification.
+
+Required help, welcome, probes, default orchestrator, preflight without evidence and demo fixture commands completed. Self-scan warnings about existing secret-reference patterns remain review gaps; they are not findings fixed by this footer change. Wrangler reported ignored bare-import warnings. No production mutation occurred during these checks.
