@@ -38,8 +38,9 @@ export function AnalyticsConsent() {
       {open ? (
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-4">
           <p className="flex-1">
-            Allow optional Google Analytics cookies to measure visits to public pages and clicks to
-            the ChatGPT listing? We do not send prompts, form answers or account details.{" "}
+            Allow optional Google Analytics cookies to measure visits to public pages and fixed
+            product actions such as MCP, GitHub, npm, release and ChatGPT listing clicks? We do not
+            send prompts, repository contents, form answers or account details.{" "}
             <a href="/privacy" className="underline">
               Privacy details
             </a>
