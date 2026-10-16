@@ -40,3 +40,12 @@ jobs:
       - name: Deploy website to Cloudflare
         if: steps.cloudflare-secrets.outputs.available == 'true'
         run: npx wrangler deploy
+      - name: Verify agent discovery and emit bounded crawler canary
+        if: steps.cloudflare-secrets.outputs.available == 'true'
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error -A "GPTBot/1.2" https://opstruth.io/agents.txt > /tmp/agents.txt
+          grep --fixed-strings --quiet "https://mcp.opstruth.io/mcp" /tmp/agents.txt
+          curl --fail --silent --show-error -A "OAI-SearchBot/1.0" https://opstruth.io/llms.txt > /tmp/llms.txt
+          grep --fixed-strings --quiet "OpsTruth" /tmp/llms.txt
+          curl --fail --silent --show-error https://opstruth.io/robots.txt | grep --fixed-strings --quiet "OAI-SearchBot"
