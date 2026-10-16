@@ -4,6 +4,7 @@ export function createMarketingAnalytics({
   origin,
   paths,
   pluginUrl,
+  outboundTargets = {},
   key,
   win = window,
   doc = document,
@@ -36,6 +37,12 @@ export function createMarketingAnalytics({
   const privacySignal = () =>
     win.navigator.globalPrivacyControl === true || win.navigator.doNotTrack === "1";
   const allowed = () => win.location.origin === origin && paths.includes(win.location.pathname);
+  const pageGroup = () =>
+    win.location.pathname === "/"
+      ? "home"
+      : win.location.pathname === "/support"
+        ? "support"
+        : "legal";
   const send = (name, fields = {}) => {
     if (!granted || !allowed() || privacySignal()) return;
     win.gtag("event", name, {
@@ -43,6 +50,12 @@ export function createMarketingAnalytics({
       page_location: origin + win.location.pathname,
       page_referrer: "",
       page_title: "",
+      product_surface: "opstruth",
+      page_group: pageGroup(),
+      discovery_source: campaign.campaign_source || "unattributed",
+      discovery_campaign: campaign.campaign_name || "none",
+      interaction_type: name,
+      outbound_target: fields.outbound_target || "none",
       ...campaign,
       ...fields,
     });
@@ -128,9 +141,15 @@ export function createMarketingAnalytics({
     } catch {
       return;
     }
-    // Fixed catalogue destination only: no link text, query strings or other URLs.
-    if (target.origin + target.pathname === pluginUrl)
-      send("plugin_listing_click", { product: key });
+    // Fixed catalogue destinations only: no link text, query strings or arbitrary URLs.
+    const clean = target.origin + target.pathname;
+    const fixedTarget =
+      clean === pluginUrl ? "chatgpt_plugin" : outboundTargets[clean];
+    if (!fixedTarget) return;
+    send(fixedTarget === "chatgpt_plugin" ? "plugin_listing_click" : "outbound_click", {
+      product: key,
+      outbound_target: fixedTarget,
+    });
   }
   function scroll() {
     const height = doc.documentElement.scrollHeight - win.innerHeight;
