@@ -32,7 +32,8 @@ export function isMachineDiscoveryPath(path) {
 function surface(path) {
   const machine = machineSurfaces.get(path);
   if (machine) return machine;
-  if (["/", "/privacy", "/terms", "/support"].includes(path)) return "public_page";
+  if (["/", "/privacy", "/terms", "/support"].includes(path))
+    return "public_page";
   return null;
 }
 
@@ -40,11 +41,16 @@ export function recordDiscovery(request, status, env) {
   const binding = env.DISCOVERY_ANALYTICS;
   if (!binding || !["GET", "HEAD"].includes(request.method)) return;
   let url;
-  try { url = new URL(request.url); } catch { return; }
+  try {
+    url = new URL(request.url);
+  } catch {
+    return;
+  }
   if (url.hostname !== "opstruth.io") return;
   const publicSurface = surface(url.pathname);
   const crawler = crawlerFamily(request.headers.get("user-agent") ?? "");
-  if (!publicSurface || (!crawler && !machineSurfaces.has(url.pathname))) return;
+  if (!publicSurface || (!crawler && !machineSurfaces.has(url.pathname)))
+    return;
   try {
     binding.writeDataPoint({
       indexes: ["opstruth:" + (crawler ?? "unclassified_client")],
