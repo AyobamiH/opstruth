@@ -28,6 +28,8 @@ jobs:
           node-version: 20
       - name: Build website
         run: npm run build:website
+      - name: Verify website analytics and crawler measurement
+        run: npm run test:analytics
       - name: Check Cloudflare secrets
         id: cloudflare-secrets
         run: |
