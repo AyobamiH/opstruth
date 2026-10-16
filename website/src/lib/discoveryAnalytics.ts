@@ -3,6 +3,7 @@ export type DiscoveryAnalyticsBinding = {
 };
 export type DiscoveryAnalyticsEnv = {
   DISCOVERY_ANALYTICS?: DiscoveryAnalyticsBinding;
+  ASSETS?: { fetch(request: Request): Promise<Response> };
 };
 
 const crawlerPatterns: Array<[string, string]> = [
@@ -24,6 +25,12 @@ const crawlerPatterns: Array<[string, string]> = [
 function crawlerFamily(userAgent: string): string | null {
   const ua = userAgent.toLowerCase();
   return crawlerPatterns.find(([needle]) => ua.includes(needle))?.[1] ?? null;
+}
+
+const machinePaths = new Set(["/agents.txt", "/llms.txt", "/robots.txt", "/sitemap.xml"]);
+
+export function isMachineDiscoveryPath(path: string): boolean {
+  return machinePaths.has(path);
 }
 
 function publicSurface(path: string): string | null {
