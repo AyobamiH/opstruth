@@ -28,15 +28,19 @@ export function createMarketingAnalytics({
     });
     const content = params.get("utm_content");
     if (
-      ["oneclick_brief_demo_01", "opstruth_evidence_check_01", "founder_plugin_launch_01"].includes(
-        content,
-      )
+      [
+        "oneclick_brief_demo_01",
+        "opstruth_evidence_check_01",
+        "founder_plugin_launch_01",
+      ].includes(content)
     )
       campaign.campaign_content = content;
   }
   const privacySignal = () =>
-    win.navigator.globalPrivacyControl === true || win.navigator.doNotTrack === "1";
-  const allowed = () => win.location.origin === origin && paths.includes(win.location.pathname);
+    win.navigator.globalPrivacyControl === true ||
+    win.navigator.doNotTrack === "1";
+  const allowed = () =>
+    win.location.origin === origin && paths.includes(win.location.pathname);
   const pageGroup = () =>
     win.location.pathname === "/"
       ? "home"
@@ -98,7 +102,8 @@ export function createMarketingAnalytics({
       });
       const script = doc.createElement("script");
       script.async = true;
-      script.src = "https://www.googletagmanager.com/gtag/js?id=" + measurementId;
+      script.src =
+        "https://www.googletagmanager.com/gtag/js?id=" + measurementId;
       doc.head.appendChild(script);
     }
     if (lastPage !== win.location.pathname) {
@@ -108,7 +113,10 @@ export function createMarketingAnalytics({
   }
   function choose(accept) {
     try {
-      win.localStorage.setItem(key, accept && !privacySignal() ? "granted" : "denied");
+      win.localStorage.setItem(
+        key,
+        accept && !privacySignal() ? "granted" : "denied",
+      );
     } catch {
       return;
     }
@@ -123,7 +131,10 @@ export function createMarketingAnalytics({
           win.location.hostname,
           "." + win.location.hostname.replace(/^www\./, ""),
         ]) {
-          doc.cookie = name + "=; Max-Age=0; Path=/" + (domain ? "; Domain=" + domain : "");
+          doc.cookie =
+            name +
+            "=; Max-Age=0; Path=/" +
+            (domain ? "; Domain=" + domain : "");
         }
       }
       // A new document removes the tag and its listeners after withdrawal.
@@ -146,10 +157,15 @@ export function createMarketingAnalytics({
     const fixedTarget =
       clean === pluginUrl ? "chatgpt_plugin" : outboundTargets[clean];
     if (!fixedTarget) return;
-    send(fixedTarget === "chatgpt_plugin" ? "plugin_listing_click" : "outbound_click", {
-      product: key,
-      outbound_target: fixedTarget,
-    });
+    send(
+      fixedTarget === "chatgpt_plugin"
+        ? "plugin_listing_click"
+        : "outbound_click",
+      {
+        product: key,
+        outbound_target: fixedTarget,
+      },
+    );
   }
   function scroll() {
     const height = doc.documentElement.scrollHeight - win.innerHeight;
