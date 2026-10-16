@@ -14,10 +14,11 @@
     "lint:website": "cd website && npm run lint",
     "test": "cd cli && npm test",
     "test:website-content": "node scripts/website-content-regression.mjs",
+    "test:analytics": "cd website && npm run test:analytics",
     "validate:plugin": "node scripts/validate-chatgpt-plugin.mjs",
     "validate:action": "node scripts/validate-github-action.mjs",
     "kb:check": "node scripts/check-knowledge-base.mjs",
-    "ci": "npm run lint && npm run test && npm run validate:plugin && npm run validate:action && npm run kb:check && npm run test:website-content && npm run build",
+    "ci": "npm run lint && npm run test && npm run validate:plugin && npm run validate:action && npm run kb:check && npm run test:website-content && npm run test:analytics && npm run build",
     "preview:cloudflare": "npm run build:website && npx wrangler dev",
     "deploy:cloudflare": "npm run build:website && npx wrangler deploy"
   },
