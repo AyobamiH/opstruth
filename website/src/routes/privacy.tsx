@@ -55,20 +55,33 @@ function Privacy() {
       <PolicySection title="Website and support data">
         <p>
           The website has no user accounts or contact form. With your permission, Google Analytics
-          measures public-page visits, 90% scrolls and clicks to the ChatGPT listing. It does not
-          measure plugin installs or activity inside ChatGPT. Analytics is blocked until you allow
+          measures public-page visits, 90% scrolls and clicks to fixed OpsTruth destinations such
+          as the npm package, GitHub source, GitHub Marketplace, hosted MCP and ChatGPT listing. It
+          does not measure installs or activity inside those services. Analytics is blocked until you allow
           it; declining leaves the website usable. You can withdraw permission using Analytics
           preferences on the page. Browser Do Not Track and Global Privacy Control signals keep this
           optional measurement disabled.
         </p>
         <p>
-          We send fixed event labels and public page paths, excluding URL queries, fragments,
-          prompts, repository contents, form answers and account details. Google Analytics uses
-          cookies after permission is granted and processes associated technical data under its own
-          privacy terms. Withdrawal removes this site's Google Analytics cookies and reloads the
-          page to stop its tag. Google's retention settings govern previously collected data.
-          Cloudflare may process standard request metadata needed to deliver and protect the site
-          under its own terms and retention controls.
+          We send fixed event labels, public page paths, the fixed product label
+          <code>opstruth</code>, fixed page/interaction categories and allowlisted campaign/source
+          labels. We exclude URL queries, fragments, prompts, repository contents, form answers,
+          account details and referrers. Google Analytics uses cookies after permission is granted
+          and processes associated technical data under its own privacy terms. Google Signals and
+          advertising personalisation are disabled, the property has no Google Ads links, email and
+          query redaction are enabled, and event/user retention is configured to two months.
+          Withdrawal removes this site's Google Analytics cookies and reloads the page to stop its
+          tag.
+        </p>
+        <p>
+          To learn whether public AI/search crawlers can discover OpsTruth, the Cloudflare Worker
+          records aggregate counters for fixed crawler families and public/machine-readable surfaces
+          such as <code>agents.txt</code>, <code>llms.txt</code>, <code>robots.txt</code> and the
+          sitemap. Those counters contain only a fixed crawler category, fixed surface category,
+          product label, request method and HTTP status. They do not contain IP addresses, raw
+          user-agent strings, query strings or referrers. Cloudflare may separately process standard
+          request metadata needed to deliver and protect the site under its own terms and retention
+          controls.
         </p>
         <p>
           If you open a GitHub issue, GitHub provides the publisher with the profile information and
@@ -86,8 +99,9 @@ function Privacy() {
         </p>
         <p>
           The relevant service providers are OpenAI for the ChatGPT or Codex environment, Cloudflare
-          for website delivery and the separate hosted plugin, GitHub for source hosting and
-          support, and Google for optional website analytics after consent.
+          for website delivery, aggregate crawler-discovery measurement and the separate hosted
+          plugin, GitHub for source hosting and support, and Google for optional website analytics
+          after consent.
         </p>
       </PolicySection>
 
