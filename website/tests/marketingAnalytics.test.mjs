@@ -42,6 +42,10 @@ function fixture({
     origin: "https://example.com",
     paths: ["/", "/privacy"],
     pluginUrl: "https://chatgpt.com/plugins/fixed",
+    outboundTargets: {
+      "https://www.npmjs.com/package/opstruth": "npm_package",
+      "https://github.com/AyobamiH/opstruth": "github_source",
+    },
     key: "consent",
     win,
     doc,
@@ -91,6 +95,11 @@ test("consent loads one tag and exactly one sanitised page view per public navig
   assert.equal(f.scripts.length, 1);
   assert.equal(f.events().length, 1);
   assert.equal(f.events()[0][2].page_location, "https://example.com/");
+  assert.equal(f.events()[0][2].product_surface, "opstruth");
+  assert.equal(f.events()[0][2].page_group, "home");
+  assert.equal(f.events()[0][2].discovery_source, "unattributed");
+  assert.equal(f.events()[0][2].interaction_type, "page_view");
+  assert.equal(f.events()[0][2].outbound_target, "none");
   assert.ok(!JSON.stringify(f.calls).includes("private@example.com"));
   const config = f.calls.find((c) => c[0] === "config")[2];
   assert.equal(config.send_page_view, false);
@@ -124,6 +133,17 @@ test("only the fixed listing is counted; no outbound URL or text is sent", () =>
   assert.equal(f.events()[1][1], "plugin_listing_click");
   assert.ok(!JSON.stringify(f.calls).includes("secret"));
 });
+test("only fixed product destinations add outbound measurement", () => {
+  const f = fixture({ consent: "granted" });
+  f.analytics.start();
+  f.click("https://www.npmjs.com/package/opstruth?token=secret");
+  const event = f.events().at(-1);
+  assert.equal(event[1], "outbound_click");
+  assert.equal(event[2].outbound_target, "npm_package");
+  assert.equal(event[2].product_surface, "opstruth");
+  assert.ok(!JSON.stringify(f.calls).includes("secret"));
+});
+
 test("ninety-percent scroll is counted once per page", () => {
   const f = fixture({ consent: "granted" });
   f.analytics.start();
