@@ -11,6 +11,12 @@
     "nodejs_compat"
   ],
   "workers_dev": true,
+  "analytics_engine_datasets": [
+    {
+      "binding": "CRAWLER_ANALYTICS",
+      "dataset": "opstruth_agent_discovery"
+    }
+  ],
   "routes": [
     { "pattern": "opstruth.io", "custom_domain": true }
   ]

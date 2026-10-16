@@ -55,20 +55,30 @@ function Privacy() {
       <PolicySection title="Website and support data">
         <p>
           The website has no user accounts or contact form. With your permission, Google Analytics
-          measures public-page visits, 90% scrolls and clicks to the ChatGPT listing. It does not
-          measure plugin installs or activity inside ChatGPT. Analytics is blocked until you allow
-          it; declining leaves the website usable. You can withdraw permission using Analytics
-          preferences on the page. Browser Do Not Track and Global Privacy Control signals keep this
-          optional measurement disabled.
+          measures public-page visits, 90% scrolls and fixed product actions such as MCP, GitHub,
+          npm, release, Marketplace and ChatGPT directory clicks. It does not measure plugin
+          installs or activity inside ChatGPT. Analytics is blocked until you allow it; declining
+          leaves the website usable. You can withdraw permission using Analytics preferences on the
+          page. Browser Do Not Track and Global Privacy Control signals keep this optional
+          measurement disabled.
         </p>
         <p>
-          We send fixed event labels and public page paths, excluding URL queries, fragments,
-          prompts, repository contents, form answers and account details. Google Analytics uses
-          cookies after permission is granted and processes associated technical data under its own
-          privacy terms. Withdrawal removes this site's Google Analytics cookies and reloads the
-          page to stop its tag. Google's retention settings govern previously collected data.
-          Cloudflare may process standard request metadata needed to deliver and protect the site
-          under its own terms and retention controls.
+          We send fixed event labels, product/page groups and allowlisted discovery attribution,
+          excluding URL queries, fragments, prompts, repository contents, form answers and account
+          details. Google Analytics uses cookies after permission is granted and processes
+          associated technical data under its own privacy terms. Google Signals, advertising
+          features and automatic enhanced measurement are disabled, and event/user retention is
+          configured to two months. Withdrawal removes this site's Google Analytics cookies and
+          reloads the page to stop its tag. Cloudflare may process standard request metadata needed
+          to deliver and protect the site under its own terms and retention controls.
+        </p>
+        <p>
+          Named AI crawler requests such as GPTBot, OAI-SearchBot, Claude and Perplexity are counted
+          server-side in Cloudflare Analytics Engine so machine discovery can be measured even when
+          a crawler does not execute JavaScript. This crawler ledger stores only the crawler class,
+          coarse public page group, request method, response status and count. It does not store IP
+          addresses, query strings, raw user-agent strings, prompts, account data or repository
+          content.
         </p>
         <p>
           If you open a GitHub issue, GitHub provides the publisher with the profile information and

@@ -91,6 +91,8 @@ test("consent loads one tag and exactly one sanitised page view per public navig
   assert.equal(f.scripts.length, 1);
   assert.equal(f.events().length, 1);
   assert.equal(f.events()[0][2].page_location, "https://example.com/");
+  assert.equal(f.events()[0][2].product_surface, "opstruth");
+  assert.equal(f.events()[0][2].page_group, "home");
   assert.ok(!JSON.stringify(f.calls).includes("private@example.com"));
   const config = f.calls.find((c) => c[0] === "config")[2];
   assert.equal(config.send_page_view, false);
@@ -121,7 +123,9 @@ test("only the fixed listing is counted; no outbound URL or text is sent", () =>
   f.click("https://chatgpt.com/plugins/other");
   assert.equal(f.events().length, 1);
   f.click("https://chatgpt.com/plugins/fixed?prompt=secret");
-  assert.equal(f.events()[1][1], "plugin_listing_click");
+  assert.equal(f.events()[1][1], "product_action");
+  assert.equal(f.events()[1][2].interaction_type, "directory");
+  assert.equal(f.events()[1][2].outbound_target, "opstruth_plugin");
   assert.ok(!JSON.stringify(f.calls).includes("secret"));
 });
 test("ninety-percent scroll is counted once per page", () => {
@@ -150,13 +154,15 @@ test("only a fixed campaign vocabulary is measured", () => {
       "?utm_source=linkedin&utm_medium=organic_social&utm_campaign=chatgpt_plugins_2026q4&utm_content=opstruth_evidence_check_01&email=secret",
   });
   f.analytics.start();
-  assert.equal(f.events()[0][2].campaign_content, "opstruth_evidence_check_01");
+  assert.equal(f.events()[0][2].discovery_source, "linkedin");
+  assert.equal(f.events()[0][2].discovery_campaign, "chatgpt_plugins_2026q4");
   assert.ok(!JSON.stringify(f.calls).includes("secret"));
   const bad = fixture({
     consent: "granted",
     search: "?utm_source=private@example.com&utm_content=secret",
   });
   bad.analytics.start();
+  assert.equal(bad.events()[0][2].discovery_source, "unattributed");
   assert.equal(bad.events()[0][2].campaign_source, undefined);
   assert.ok(!JSON.stringify(bad.calls).includes("secret"));
 });
