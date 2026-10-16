@@ -14,7 +14,9 @@ export function createMarketingAnalytics({
   let scrolledPage = "";
   let diagnostic = false;
   try {
-    diagnostic = win.sessionStorage?.getItem("opstruth:analytics-diagnostic") === "operator";
+    diagnostic =
+      win.sessionStorage?.getItem("opstruth:analytics-diagnostic") ===
+      "operator";
   } catch {
     diagnostic = false;
   }
@@ -35,20 +37,28 @@ export function createMarketingAnalytics({
     });
     const item = params.get("utm_content");
     if (
-      ["oneclick_brief_demo_01", "opstruth_evidence_check_01", "founder_plugin_launch_01"].includes(
-        item,
-      )
+      [
+        "oneclick_brief_demo_01",
+        "opstruth_evidence_check_01",
+        "founder_plugin_launch_01",
+      ].includes(item)
     )
       campaign.campaign_content = item;
   }
 
   const privacySignal = () =>
-    win.navigator.globalPrivacyControl === true || win.navigator.doNotTrack === "1";
-  const allowed = () => win.location.origin === origin && paths.includes(win.location.pathname);
+    win.navigator.globalPrivacyControl === true ||
+    win.navigator.doNotTrack === "1";
+  const allowed = () =>
+    win.location.origin === origin && paths.includes(win.location.pathname);
   const pageGroup = () => {
     if (win.location.pathname === "/") return "product";
     if (win.location.pathname === "/support") return "support";
-    if (win.location.pathname === "/privacy" || win.location.pathname === "/terms") return "legal";
+    if (
+      win.location.pathname === "/privacy" ||
+      win.location.pathname === "/terms"
+    )
+      return "legal";
     return "public";
   };
   const send = (name, fields = {}) => {
@@ -66,7 +76,9 @@ export function createMarketingAnalytics({
       outbound_target: fields.outbound_target || "none",
       ...campaign,
       ...fields,
-      ...(diagnostic ? { diagnostic_event: name, diagnostic_origin: "operator_acceptance" } : {}),
+      ...(diagnostic
+        ? { diagnostic_event: name, diagnostic_origin: "operator_acceptance" }
+        : {}),
     });
   };
   function readConsent() {
@@ -108,7 +120,8 @@ export function createMarketingAnalytics({
       const script = doc.createElement("script");
       script.async = true;
       script.referrerPolicy = "no-referrer";
-      script.src = "https://www.googletagmanager.com/gtag/js?id=" + measurementId;
+      script.src =
+        "https://www.googletagmanager.com/gtag/js?id=" + measurementId;
       doc.head.appendChild(script);
     }
     if (lastPage !== win.location.pathname) {
@@ -118,7 +131,10 @@ export function createMarketingAnalytics({
   }
   function choose(accept) {
     try {
-      win.localStorage.setItem(key, accept && !privacySignal() ? "granted" : "denied");
+      win.localStorage.setItem(
+        key,
+        accept && !privacySignal() ? "granted" : "denied",
+      );
     } catch {
       return;
     }
@@ -128,8 +144,15 @@ export function createMarketingAnalytics({
       for (const cookie of doc.cookie.split(";")) {
         const name = cookie.trim().split("=")[0];
         if (!/^_ga(?:_|$)/.test(name)) continue;
-        for (const domain of ["", win.location.hostname, "." + win.location.hostname.replace(/^www\./, "")]) {
-          doc.cookie = name + "=; Max-Age=0; Path=/" + (domain ? "; Domain=" + domain : "");
+        for (const domain of [
+          "",
+          win.location.hostname,
+          "." + win.location.hostname.replace(/^www\./, ""),
+        ]) {
+          doc.cookie =
+            name +
+            "=; Max-Age=0; Path=/" +
+            (domain ? "; Domain=" + domain : "");
         }
       }
       win.location.reload();
@@ -140,11 +163,17 @@ export function createMarketingAnalytics({
   function outboundAction(target) {
     const clean = target.origin + target.pathname;
     if (clean === pluginUrl) return ["plugin_listing_click", "chatgpt_plugin"];
-    if (clean === "https://mcp.opstruth.io/mcp") return ["mcp_click", "opstruth_mcp"];
-    if (clean === "https://github.com/AyobamiH/opstruth") return ["github_click", "opstruth_source"];
-    if (target.origin === "https://github.com" && target.pathname.startsWith("/AyobamiH/opstruth/releases/"))
+    if (clean === "https://mcp.opstruth.io/mcp")
+      return ["mcp_click", "opstruth_mcp"];
+    if (clean === "https://github.com/AyobamiH/opstruth")
+      return ["github_click", "opstruth_source"];
+    if (
+      target.origin === "https://github.com" &&
+      target.pathname.startsWith("/AyobamiH/opstruth/releases/")
+    )
       return ["release_click", "opstruth_release"];
-    if (clean === "https://www.npmjs.com/package/opstruth") return ["npm_click", "opstruth_npm"];
+    if (clean === "https://www.npmjs.com/package/opstruth")
+      return ["npm_click", "opstruth_npm"];
     if (clean === "https://github.com/marketplace/actions/opstruth-evidence")
       return ["release_click", "opstruth_marketplace"];
     return null;
