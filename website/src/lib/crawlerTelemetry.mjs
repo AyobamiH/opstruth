@@ -1,3 +1,14 @@
+export const MACHINE_DISCOVERY_PATHS = Object.freeze([
+  "/agents.txt",
+  "/llms.txt",
+  "/robots.txt",
+  "/sitemap.xml",
+]);
+
+export function isMachineDiscoveryPath(pathname) {
+  return MACHINE_DISCOVERY_PATHS.includes(pathname);
+}
+
 const CRAWLERS = [
   ["oai_search", /(?:^|\s|\()oai-searchbot(?:\/|\s|\)|$)/i],
   ["gptbot", /(?:^|\s|\()gptbot(?:\/|\s|\)|$)/i],
@@ -18,8 +29,7 @@ export function classifyAgentCrawler(userAgent) {
 
 export function crawlerPathGroup(pathname) {
   if (pathname === "/") return "home";
-  if (["/agents.txt", "/llms.txt", "/robots.txt", "/sitemap.xml"].includes(pathname))
-    return "machine_discovery";
+  if (isMachineDiscoveryPath(pathname)) return "machine_discovery";
   if (pathname === "/support") return "support";
   if (pathname === "/privacy" || pathname === "/terms") return "legal";
   return "other_public";
