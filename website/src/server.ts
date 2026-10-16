@@ -6,7 +6,7 @@ import {
   isMachineDiscoveryPath,
   recordDiscovery,
   type DiscoveryEnv,
-} from "./lib/discoveryAnalytics";
+} from "./lib/discoveryAnalytics.mjs";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
