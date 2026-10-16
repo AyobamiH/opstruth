@@ -2,7 +2,7 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
-import { recordDiscoveryObservation, type DiscoveryAnalyticsEnv } from "./lib/discoveryAnalytics";
+import { isMachineDiscoveryPath, recordDiscoveryObservation, type DiscoveryAnalyticsEnv } from "./lib/discoveryAnalytics";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -57,10 +57,17 @@ function withSecurityHeaders(response: Response): Response {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const discoveryEnv = env && typeof env === "object" ? (env as DiscoveryAnalyticsEnv) : {};
+      const pathname = new URL(request.url).pathname;
+      if (isMachineDiscoveryPath(pathname) && discoveryEnv.ASSETS) {
+        const asset = await discoveryEnv.ASSETS.fetch(request);
+        const secured = withSecurityHeaders(asset);
+        recordDiscoveryObservation(request, secured.status, discoveryEnv);
+        return secured;
+      }
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       const normalized = withSecurityHeaders(await normalizeCatastrophicSsrResponse(response));
-      const discoveryEnv = env && typeof env === "object" ? (env as DiscoveryAnalyticsEnv) : {};
       recordDiscoveryObservation(request, normalized.status, discoveryEnv);
       return normalized;
     } catch (error) {
