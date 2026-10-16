@@ -4,25 +4,30 @@ import { createMarketingAnalytics } from "@/lib/marketingAnalytics.mjs";
 
 let analytics: ReturnType<typeof createMarketingAnalytics> | undefined;
 export function AnalyticsConsent() {
-  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
   const [open, setOpen] = useState(false);
   useEffect(() => {
     analytics ??= createMarketingAnalytics({
       measurementId: "G-55ENMEPB2Y",
       origin: "https://opstruth.io",
       paths: ["/", "/privacy", "/terms", "/support"],
-      pluginUrl: "https://chatgpt.com/plugins/plugins_6a8d4dc60bf081918a06094873890eb4",
+      pluginUrl:
+        "https://chatgpt.com/plugins/plugins_6a8d4dc60bf081918a06094873890eb4",
       outboundTargets: {
         "https://www.npmjs.com/package/opstruth": "npm_package",
         "https://github.com/AyobamiH/opstruth": "github_source",
-        "https://github.com/marketplace/actions/opstruth-evidence": "github_marketplace",
+        "https://github.com/marketplace/actions/opstruth-evidence":
+          "github_marketplace",
         "https://mcp.opstruth.io/mcp": "hosted_mcp",
       },
       key: "opstruth-marketing-consent-v1",
     });
     let saved = false;
     try {
-      saved = window.localStorage.getItem("opstruth-marketing-consent-v1") !== null;
+      saved =
+        window.localStorage.getItem("opstruth-marketing-consent-v1") !== null;
     } catch {
       /* Remain opted out. */
     }
@@ -44,8 +49,9 @@ export function AnalyticsConsent() {
       {open ? (
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-4">
           <p className="flex-1">
-            Allow optional Google Analytics cookies to measure visits to public pages and fixed
-            OpsTruth product links? We do not send prompts, form answers or account details.{" "}
+            Allow optional Google Analytics cookies to measure visits to public
+            pages and fixed OpsTruth product links? We do not send prompts, form
+            answers or account details.{" "}
             <a href="/privacy" className="underline">
               Privacy details
             </a>
@@ -67,7 +73,11 @@ export function AnalyticsConsent() {
           </button>
         </div>
       ) : (
-        <button type="button" className="min-h-11 underline" onClick={() => setOpen(true)}>
+        <button
+          type="button"
+          className="min-h-11 underline"
+          onClick={() => setOpen(true)}
+        >
           Analytics preferences
         </button>
       )}
