@@ -50,8 +50,7 @@ function fixture({
     doc,
   });
   const events = () => calls.filter((c) => c[0] === "event");
-  const click = (href) =>
-    listeners.get("click")({ target: { closest: () => ({ href }) } });
+  const click = (href) => listeners.get("click")({ target: { closest: () => ({ href }) } });
   return {
     analytics,
     win,
@@ -78,10 +77,7 @@ test("unknown and declined consent do not load Google or send events", () => {
   }
 });
 test("DNT and GPC override both stored and newly requested consent", () => {
-  for (const navigator of [
-    { doNotTrack: "1" },
-    { globalPrivacyControl: true },
-  ]) {
+  for (const navigator of [{ doNotTrack: "1" }, { globalPrivacyControl: true }]) {
     const f = fixture({ consent: "granted", navigator });
     f.analytics.start();
     f.analytics.choose(true);
