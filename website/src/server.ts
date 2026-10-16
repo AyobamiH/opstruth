@@ -9,11 +9,7 @@ import {
 } from "./lib/discoveryAnalytics";
 
 type ServerEntry = {
-  fetch: (
-    request: Request,
-    env: unknown,
-    ctx: unknown,
-  ) => Promise<Response> | Response;
+  fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
 };
 
 let serverEntryPromise: Promise<ServerEntry> | undefined;
@@ -29,24 +25,17 @@ async function getServerEntry(): Promise<ServerEntry> {
 
 // h3 swallows in-handler throws into a normal 500 Response with body
 // {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
-async function normalizeCatastrophicSsrResponse(
-  response: Response,
-): Promise<Response> {
+async function normalizeCatastrophicSsrResponse(response: Response): Promise<Response> {
   if (response.status < 500) return response;
   const contentType = response.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) return response;
 
   const body = await response.clone().text();
-  if (
-    !body.includes('"unhandled":true') ||
-    !body.includes('"message":"HTTPError"')
-  ) {
+  if (!body.includes('"unhandled":true') || !body.includes('"message":"HTTPError"')) {
     return response;
   }
 
-  console.error(
-    consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`),
-  );
+  console.error(consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`));
   return new Response(renderErrorPage(), {
     status: 500,
     headers: { "content-type": "text/html; charset=utf-8" },
@@ -60,10 +49,7 @@ function withSecurityHeaders(response: Response): Response {
   headers.set("referrer-policy", "strict-origin-when-cross-origin");
   headers.set("x-frame-options", "DENY");
   headers.set("strict-transport-security", "max-age=31536000");
-  headers.set(
-    "permissions-policy",
-    "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
-  );
+  headers.set("permissions-policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=()");
 
   return new Response(response.body, {
     status: response.status,
@@ -75,8 +61,7 @@ function withSecurityHeaders(response: Response): Response {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
-      const discoveryEnv =
-        env && typeof env === "object" ? (env as DiscoveryAnalyticsEnv) : {};
+      const discoveryEnv = env && typeof env === "object" ? (env as DiscoveryAnalyticsEnv) : {};
       const pathname = new URL(request.url).pathname;
       if (isMachineDiscoveryPath(pathname) && discoveryEnv.ASSETS) {
         const asset = await discoveryEnv.ASSETS.fetch(request);
@@ -86,9 +71,7 @@ export default {
       }
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      const normalized = withSecurityHeaders(
-        await normalizeCatastrophicSsrResponse(response),
-      );
+      const normalized = withSecurityHeaders(await normalizeCatastrophicSsrResponse(response));
       recordDiscoveryObservation(request, normalized.status, discoveryEnv);
       return normalized;
     } catch (error) {
@@ -99,8 +82,7 @@ export default {
           headers: { "content-type": "text/html; charset=utf-8" },
         }),
       );
-      const discoveryEnv =
-        env && typeof env === "object" ? (env as DiscoveryAnalyticsEnv) : {};
+      const discoveryEnv = env && typeof env === "object" ? (env as DiscoveryAnalyticsEnv) : {};
       recordDiscoveryObservation(request, response.status, discoveryEnv);
       return response;
     }
