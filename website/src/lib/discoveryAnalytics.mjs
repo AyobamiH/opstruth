@@ -39,7 +39,7 @@ function surface(path) {
 export function recordDiscovery(request, status, env) {
   const binding = env.DISCOVERY_ANALYTICS;
   if (!binding || !["GET", "HEAD"].includes(request.method)) return;
-  let url: URL;
+  let url;
   try { url = new URL(request.url); } catch { return; }
   if (url.hostname !== "opstruth.io") return;
   const publicSurface = surface(url.pathname);
