@@ -55,9 +55,10 @@ function Privacy() {
       <PolicySection title="Website and support data">
         <p>
           The website has no user accounts or contact form. With your permission, Google Analytics
-          measures public-page visits, 90% scrolls and clicks to the ChatGPT listing. It does not
-          measure plugin installs or activity inside ChatGPT. Analytics is blocked until you allow
-          it; declining leaves the website usable. You can withdraw permission using Analytics
+          measures public-page visits, 90% scrolls and fixed public product actions such as MCP,
+          GitHub, npm, release, Marketplace and ChatGPT-listing clicks. It does not measure plugin
+          installs, repository contents or activity inside ChatGPT. Analytics is blocked until you
+          allow it; declining leaves the website usable. You can withdraw permission using Analytics
           preferences on the page. Browser Do Not Track and Global Privacy Control signals keep this
           optional measurement disabled.
         </p>
@@ -68,7 +69,11 @@ function Privacy() {
           privacy terms. Withdrawal removes this site's Google Analytics cookies and reloads the
           page to stop its tag. Google's retention settings govern previously collected data.
           Cloudflare may process standard request metadata needed to deliver and protect the site
-          under its own terms and retention controls.
+          under its own terms and retention controls. For recognised public AI/search crawlers, the
+          Worker also records a bounded server-side discovery counter in Cloudflare Analytics Engine:
+          crawler family, fixed public surface, request method and response status. That counter does
+          not store IP address, query string, cookies, request body, account identity, repository,
+          prompt or free text.
         </p>
         <p>
           If you open a GitHub issue, GitHub provides the publisher with the profile information and
