@@ -2,6 +2,7 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import { recordDiscoveryObservation, type DiscoveryAnalyticsEnv } from "./lib/discoveryAnalytics";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -58,15 +59,21 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return withSecurityHeaders(await normalizeCatastrophicSsrResponse(response));
+      const normalized = withSecurityHeaders(await normalizeCatastrophicSsrResponse(response));
+      const discoveryEnv = env && typeof env === "object" ? (env as DiscoveryAnalyticsEnv) : {};
+      recordDiscoveryObservation(request, normalized.status, discoveryEnv);
+      return normalized;
     } catch (error) {
       console.error(error);
-      return withSecurityHeaders(
+      const response = withSecurityHeaders(
         new Response(renderErrorPage(), {
           status: 500,
           headers: { "content-type": "text/html; charset=utf-8" },
         }),
       );
+      const discoveryEnv = env && typeof env === "object" ? (env as DiscoveryAnalyticsEnv) : {};
+      recordDiscoveryObservation(request, response.status, discoveryEnv);
+      return response;
     }
   },
 };
