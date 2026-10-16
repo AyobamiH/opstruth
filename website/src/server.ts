@@ -2,8 +2,12 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
-import { recordAgentCrawler } from "./lib/crawlerTelemetry.mjs";
+import { isMachineDiscoveryPath, recordAgentCrawler } from "./lib/crawlerTelemetry.mjs";
 import type { AnalyticsEngineDataset } from "./lib/crawlerTelemetry.mjs";
+
+type StaticAssets = {
+  fetch(request: Request): Promise<Response> | Response;
+};
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -57,13 +61,20 @@ function withSecurityHeaders(response: Response): Response {
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
-    const dataset = (env as { CRAWLER_ANALYTICS?: AnalyticsEngineDataset } | undefined)
-      ?.CRAWLER_ANALYTICS;
+    const runtimeEnv = env as
+      | { CRAWLER_ANALYTICS?: AnalyticsEngineDataset; ASSETS?: StaticAssets }
+      | undefined;
+    const dataset = runtimeEnv?.CRAWLER_ANALYTICS;
     const finish = (response: Response) => {
       recordAgentCrawler(request, response.status, dataset);
       return response;
     };
     try {
+      const url = new URL(request.url);
+      if (isMachineDiscoveryPath(url.pathname) && runtimeEnv?.ASSETS?.fetch) {
+        const assetResponse = await runtimeEnv.ASSETS.fetch(request);
+        return finish(withSecurityHeaders(assetResponse));
+      }
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return finish(withSecurityHeaders(await normalizeCatastrophicSsrResponse(response)));

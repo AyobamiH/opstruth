@@ -1,7 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+  MACHINE_DISCOVERY_PATHS,
   classifyAgentCrawler,
+  isMachineDiscoveryPath,
   crawlerPathGroup,
   crawlerTelemetryPoint,
   recordAgentCrawler,
@@ -16,6 +18,14 @@ test("recognises named AI crawlers", () => {
 });
 
 test("groups public and machine discovery paths", () => {
+  assert.deepEqual(MACHINE_DISCOVERY_PATHS, [
+    "/agents.txt",
+    "/llms.txt",
+    "/robots.txt",
+    "/sitemap.xml",
+  ]);
+  assert.equal(isMachineDiscoveryPath("/llms.txt"), true);
+  assert.equal(isMachineDiscoveryPath("/support"), false);
   assert.equal(crawlerPathGroup("/"), "home");
   assert.equal(crawlerPathGroup("/agents.txt"), "machine_discovery");
   assert.equal(crawlerPathGroup("/llms.txt"), "machine_discovery");
