@@ -2,6 +2,8 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import { recordAgentCrawler } from "./lib/crawlerTelemetry.mjs";
+import type { AnalyticsEngineDataset } from "./lib/crawlerTelemetry.mjs";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -55,17 +57,25 @@ function withSecurityHeaders(response: Response): Response {
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const dataset = (env as { CRAWLER_ANALYTICS?: AnalyticsEngineDataset } | undefined)
+      ?.CRAWLER_ANALYTICS;
+    const finish = (response: Response) => {
+      recordAgentCrawler(request, response.status, dataset);
+      return response;
+    };
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return withSecurityHeaders(await normalizeCatastrophicSsrResponse(response));
+      return finish(withSecurityHeaders(await normalizeCatastrophicSsrResponse(response)));
     } catch (error) {
       console.error(error);
-      return withSecurityHeaders(
-        new Response(renderErrorPage(), {
-          status: 500,
-          headers: { "content-type": "text/html; charset=utf-8" },
-        }),
+      return finish(
+        withSecurityHeaders(
+          new Response(renderErrorPage(), {
+            status: 500,
+            headers: { "content-type": "text/html; charset=utf-8" },
+          }),
+        ),
       );
     }
   },

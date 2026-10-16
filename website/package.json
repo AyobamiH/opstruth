@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test:analytics": "node --test tests/marketingAnalytics.test.mjs"
+    "test:analytics": "node --test tests/marketingAnalytics.test.mjs tests/crawlerTelemetry.test.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
