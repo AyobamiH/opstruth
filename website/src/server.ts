@@ -2,6 +2,11 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import {
+  isMachineDiscoveryPath,
+  recordDiscovery,
+  type DiscoveryEnv,
+} from "./lib/discoveryAnalytics";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -55,18 +60,31 @@ function withSecurityHeaders(response: Response): Response {
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const discoveryEnv = env && typeof env === "object" ? (env as DiscoveryEnv) : {};
     try {
+      const pathname = new URL(request.url).pathname;
+      if (isMachineDiscoveryPath(pathname) && discoveryEnv.ASSETS) {
+        const asset = withSecurityHeaders(await discoveryEnv.ASSETS.fetch(request));
+        recordDiscovery(request, asset.status, discoveryEnv);
+        return asset;
+      }
+
       const handler = await getServerEntry();
-      const response = await handler.fetch(request, env, ctx);
-      return withSecurityHeaders(await normalizeCatastrophicSsrResponse(response));
+      const response = withSecurityHeaders(
+        await normalizeCatastrophicSsrResponse(await handler.fetch(request, env, ctx)),
+      );
+      recordDiscovery(request, response.status, discoveryEnv);
+      return response;
     } catch (error) {
       console.error(error);
-      return withSecurityHeaders(
+      const response = withSecurityHeaders(
         new Response(renderErrorPage(), {
           status: 500,
           headers: { "content-type": "text/html; charset=utf-8" },
         }),
       );
+      recordDiscovery(request, response.status, discoveryEnv);
+      return response;
     }
   },
 };
