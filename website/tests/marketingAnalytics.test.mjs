@@ -124,6 +124,25 @@ test("only the fixed listing is counted; no outbound URL or text is sent", () =>
   assert.equal(f.events()[1][1], "plugin_listing_click");
   assert.ok(!JSON.stringify(f.calls).includes("secret"));
 });
+test("fixed product actions are distinct and contain only bounded product metadata", () => {
+  const f = fixture({ consent: "granted" });
+  f.analytics.start();
+  f.click("https://mcp.opstruth.io/mcp");
+  f.click("https://github.com/AyobamiH/opstruth");
+  f.click("https://www.npmjs.com/package/opstruth");
+  f.click("https://github.com/AyobamiH/opstruth/releases/tag/v0.2.0");
+  const actions = f.events().slice(1);
+  assert.deepEqual(actions.map((e) => e[1]), ["mcp_click", "github_click", "npm_click", "release_click"]);
+  assert.deepEqual(actions.map((e) => e[2].outbound_target), [
+    "opstruth_mcp",
+    "opstruth_source",
+    "opstruth_npm",
+    "opstruth_release",
+  ]);
+  assert.ok(actions.every((e) => e[2].product_surface === "opstruth"));
+  assert.ok(actions.every((e) => e[2].page_group === "product"));
+});
+
 test("ninety-percent scroll is counted once per page", () => {
   const f = fixture({ consent: "granted" });
   f.analytics.start();
@@ -151,6 +170,8 @@ test("only a fixed campaign vocabulary is measured", () => {
   });
   f.analytics.start();
   assert.equal(f.events()[0][2].campaign_content, "opstruth_evidence_check_01");
+  assert.equal(f.events()[0][2].discovery_source, "linkedin");
+  assert.equal(f.events()[0][2].discovery_campaign, "chatgpt_plugins_2026q4");
   assert.ok(!JSON.stringify(f.calls).includes("secret"));
   const bad = fixture({
     consent: "granted",
