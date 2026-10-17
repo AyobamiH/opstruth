@@ -28,6 +28,7 @@ export const Route = createFileRoute("/")({
           "Read-only operational truth checks for AI-assisted engineering. One command. Evidence, not guesses.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://opstruth.io/" },
       { property: "og:image", content: "/og-card.png" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: "/og-card.png" },
