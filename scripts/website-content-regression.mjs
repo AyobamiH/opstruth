@@ -149,6 +149,43 @@ for (const path of ["/agents.txt", "/llms.txt"]) {
   if (!sitemap.includes(`https://opstruth.io${path}`)) failures.push(`sitemap missing ${path}`);
 }
 
+// Social card URL and dimensions must match what bots receive in server-rendered head.
+const rootRoute = textFor("website/src/routes/__root.tsx");
+const socialPreview = textFor("website/src/lib/socialPreview.ts");
+const previewUrl = socialPreview.match(/imageUrl:\s*"([^"]+)"/);
+if (!previewUrl || previewUrl[1] !== "https://opstruth.io/og-card-v2.png") {
+  failures.push("Social preview URL is not the absolute production HTTPS image URL.");
+} else {
+  const path = new URL(previewUrl[1]).pathname;
+  const png = readFileSync(join(root, "website/public", path.slice(1)));
+  if (png.subarray(0, 8).toString("hex") !== "89504e470d0a1a0a") {
+    failures.push("Social preview image must be a PNG.");
+  } else if (png.readUInt32BE(16) !== 1200 || png.readUInt32BE(20) !== 630) {
+    failures.push("Social preview image dimensions differ from 1200x630 metadata.");
+  }
+}
+if (!rootRoute.includes('import { SOCIAL_PREVIEW } from "@/lib/socialPreview"')) {
+  failures.push("Root route must use shared social preview metadata.");
+}
+for (const field of [
+  'property: "og:image", content: SOCIAL_PREVIEW.imageUrl',
+  'property: "og:image:secure_url", content: SOCIAL_PREVIEW.imageUrl',
+  'property: "og:image:type", content: "image/png"',
+  'property: "og:image:width", content: SOCIAL_PREVIEW.width',
+  'property: "og:image:height", content: SOCIAL_PREVIEW.height',
+  'property: "og:image:alt", content: SOCIAL_PREVIEW.imageAlt',
+  'name: "twitter:card", content: "summary_large_image"',
+  'name: "twitter:image", content: SOCIAL_PREVIEW.imageUrl',
+  'name: "twitter:image:alt", content: SOCIAL_PREVIEW.imageAlt',
+]) {
+  if (!rootRoute.includes(field)) failures.push("Missing social metadata: " + field);
+}
+for (const shadowed of ['property: "og:image"', 'name: "twitter:image"']) {
+  if (indexRoute.includes(shadowed)) {
+    failures.push("Homepage overrides the shared social image: " + shadowed);
+  }
+}
+
 if (failures.length) {
   console.error("Website content regression check failed:");
   for (const failure of failures) console.error(`- ${failure}`);

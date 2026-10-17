@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { SOCIAL_PREVIEW } from "@/lib/socialPreview";
 import { AnalyticsConsent } from "@/components/site/AnalyticsConsent";
 
 function NotFoundComponent() {
@@ -88,10 +89,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "OpsTruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes. Evidence-backed findings, honest proof gaps, zero deploys.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://opstruth.io" },
-      { property: "og:image", content: "/og-card.png" },
-      { property: "og:image:width", content: "1200" },
-      { property: "og:image:height", content: "630" },
+      { property: "og:url", content: "https://opstruth.io/" },
+      { property: "og:site_name", content: "OpsTruth" },
+      { property: "og:image", content: SOCIAL_PREVIEW.imageUrl },
+      { property: "og:image:secure_url", content: SOCIAL_PREVIEW.imageUrl },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: SOCIAL_PREVIEW.width },
+      { property: "og:image:height", content: SOCIAL_PREVIEW.height },
+      { property: "og:image:alt", content: SOCIAL_PREVIEW.imageAlt },
       { name: "twitter:card", content: "summary_large_image" },
       {
         name: "twitter:title",
@@ -102,7 +107,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "OpsTruth is a local, read-only CLI that verifies what is actually true after AI-assisted changes.",
       },
-      { name: "twitter:image", content: "/og-card.png" },
+      { name: "twitter:image", content: SOCIAL_PREVIEW.imageUrl },
+      { name: "twitter:image:alt", content: SOCIAL_PREVIEW.imageAlt },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
