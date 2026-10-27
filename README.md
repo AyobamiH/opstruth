@@ -2,6 +2,8 @@
 
 Read-only operational truth checks for AI-assisted engineering.
 
+Finding source code or a configured check is not proof that it executed. OpsTruth distinguishes inspected configuration, checks actually run, observed results, and missing evidence. A successful result applies only to the specific probe or workflow evidenced; skipped, unavailable, or unverified checks are not passes. The open-source CLI runs safe local probes and can read exact-commit GitHub Actions metadata when explicitly enabled; the hosted MCP service provides independent read-only checks, not a blanket guarantee of CI, branch protection, or production behaviour.
+
 The canonical website is [opstruth.io](https://opstruth.io), and the independent hosted MCP service is [mcp.opstruth.io/mcp](https://mcp.opstruth.io/mcp). Deployment receipts are indexed in [the owned-domain cutover evidence](evidence/owned-domain-cutover-2026-08-30.md).
 
 AI coding tools are fast, but developers still need proof:
