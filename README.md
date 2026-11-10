@@ -320,3 +320,7 @@ website/public/demo/opstruth-current-runtime-truth.mp4
 ```
 
 The older `website/public/demo/opstruth-runtime-truth.mp4` asset is historical launch material, not the current product truth source. See `docs/current-video-truth-brief.md` for the video evidence brief.
+
+## Agent development
+
+Start with [AGENTS.md](AGENTS.md) for repository-owned skills, project knowledge and validation guidance.
