@@ -137,3 +137,13 @@ The footer adds the exact Tail Wagging builder credit, public location NN4 6LZ a
 Extended completion gate passed: CLI lint, 80 CLI tests, repo/secrets/probe self-checks, parsed JSON, website and root production builds, Wrangler dry-run and public reachability. The default test fixture inherited SSH signing and waited for an interactive signer; the successful run used command-scoped commit.gpgsign=false only for disposable fixture commits. Owner source commits use GitHub verification.
 
 Required help, welcome, probes, default orchestrator, preflight without evidence and demo fixture commands completed. Self-scan warnings about existing secret-reference patterns remain review gaps; they are not findings fixed by this footer change. Wrangler reported ignored bare-import warnings. No production mutation occurred during these checks.
+
+## 2026-11-10 repository-owned agent foundations preflight
+
+- Scope: portable development skill resources, discovery instructions, source-backed knowledge and offline validation only. No runtime or CI policy changes.
+- Passed: CLI lint; all 80 CLI tests; help, welcome and probe catalogue; six fixture demo runs; knowledge-base closure; checkout discovery and negative fixtures.
+- Initial orchestration failed because website ESLint was absent. Installed locked website dependencies with lifecycle scripts disabled; no lockfile or tracked application change resulted. Rerun of `node cli/bin/opstruth.js --skip evidence --json` exited 0, with root CI, lint, tests and website build passing. Root typecheck is not configured.
+- Secret/orchestration results remain warnings, not a clean security pass: 41 matched lines were individually confirmed unchanged from the starting main revision. These include deliberate fixtures, redacted examples, scanner definitions and existing documentation/UI strings. No finding was suppressed or remediated by this change. Runtime inputs remain unverified.
+- Quick completion gate passed using `bash scripts/opstruth-completion-gate.sh --mode quick`; the checked-in script is not executable directly. The mode skips website/root build and Wrangler dry-run phases, while the separate orchestration above exercised the website/root build. Optional public npm metadata and production HTTP HEAD checks completed; reachability is not deployed-artifact verification. Standard/extended completion modes were not run.
+- Fixture output was inspected and retained privately; original tracked fixture reports were preserved. No generated output is part of the foundation change.
+- Next step: review the draft source PR and exact-head hosted checks. This evidence grants no merge, deployment, release or plugin-directory publication authority.
