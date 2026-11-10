@@ -66,3 +66,10 @@ Future capability work enters through:
 `product contract -> bounded change -> executable tests -> evidence -> documentation/KB impact -> completion gate -> separately authorised publication/deployment`
 
 If a proposed feature requires OpsTruth to mutate the target in order to prove the target, it violates the product boundary and must be redesigned.
+
+## Checkout orientation for agents
+
+- [CLI entry](../cli/bin/opstruth.js) dispatches the read-only probes under [CLI source](../cli/src). The public website is a separate [Vite project](../website/package.json); root [package scripts](../package.json) coordinate checks and website builds.
+- Node >=20 is declared. Dependency installation for website work follows [website instructions](../website/README.md). For local CLI work use `npm run lint:cli` and `npm test`; for documentation use `npm run kb:check`. Run `node cli/bin/opstruth.js repo` before changes.
+- The [completion gate](../scripts/opstruth-completion-gate.sh) is mandatory under the root instructions. Its quick mode still attempts optional npm and production HTTP reads: do not describe it as offline or silently suppress those phases. Where live calls are outside the task, report the aggregate gate not run and the narrower checks actually run.
+- Probe outputs and generated evidence are not production truth. Keep secrets out of evidence and preserve the read-only and exact-subject decisions above. See [safety model](safety-model.md), [configuration](configuration.md) and [probe catalogue](probe-catalogue.md).
